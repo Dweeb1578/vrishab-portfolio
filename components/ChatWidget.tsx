@@ -16,7 +16,6 @@ export default function ChatWidget() {
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Suggested questions for the empty state
     const sampleQuestions = [
         "Tell me about your internships 💼",
         "What is the PM Coach AI project? 🤖",
@@ -90,11 +89,11 @@ export default function ChatWidget() {
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end pointer-events-none">
 
             {/* NUDGE BUBBLE */}
             {!isOpen && showNudge && (
-                <div className="pointer-events-auto mb-4 mr-2 bg-slate-800 text-slate-200 p-4 rounded-xl shadow-2xl border border-slate-700 max-w-[250px] relative animate-in slide-in-from-bottom-5 fade-in duration-500">
+                <div className="pointer-events-auto mb-4 mr-2 bg-slate-800 text-slate-200 p-4 rounded-xl shadow-2xl border border-slate-700 max-w-[250px] relative animate-in slide-in-from-bottom-5 fade-in duration-500 hidden sm:block">
                     <button
                         onClick={() => setShowNudge(false)}
                         className="absolute top-2 right-2 text-slate-500 hover:text-white transition-colors"
@@ -116,13 +115,13 @@ export default function ChatWidget() {
                 </div>
             )}
 
-            {/* CHAT WINDOW */}
-            <div className={`transition-all duration-300 pointer-events-auto ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none h-0'}`}>
+            {/* CHAT WINDOW - RESPONSIVE SIZING */}
+            <div className={`transition-all duration-300 pointer-events-auto origin-bottom-right ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none h-0'}`}>
                 {isOpen && (
-                    <div className="mb-4 w-[350px] h-[550px] bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 flex flex-col overflow-hidden ring-1 ring-white/10">
+                    <div className="mb-16 sm:mb-4 w-[90vw] h-[75vh] sm:w-[350px] sm:h-[550px] bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 flex flex-col overflow-hidden ring-1 ring-white/10">
 
                         {/* Header */}
-                        <div className="bg-slate-800 p-4 flex justify-between items-center border-b border-slate-700">
+                        <div className="bg-slate-800 p-4 flex justify-between items-center border-b border-slate-700 shrink-0">
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
                                 <h3 className="font-bold text-slate-100">Vrishab's AI Agent</h3>
@@ -135,17 +134,16 @@ export default function ChatWidget() {
                         {/* Messages Area */}
                         <div className="flex-1 p-4 overflow-y-auto bg-slate-900 space-y-4 text-sm scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
 
-                            {/* EMPTY STATE - With Clickable Questions */}
                             {messages.length === 0 && (
                                 <div className="flex flex-col items-center justify-center h-full space-y-6">
                                     <div className="text-center">
-                                        <div className="bg-slate-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-700">
-                                            <Bot size={32} className="text-blue-500/50" />
+                                        <div className="bg-slate-800 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-700">
+                                            <Bot size={28} className="text-blue-500/50" />
                                         </div>
                                         <p className="font-medium text-slate-400">Hi! I'm Vrishab's virtual assistant.</p>
                                     </div>
 
-                                    <div className="w-full grid gap-2 px-2">
+                                    <div className="w-full grid gap-2 px-1">
                                         <p className="text-xs text-slate-500 font-mono mb-1 uppercase tracking-wider text-center">Suggested Questions</p>
                                         {sampleQuestions.map((q, i) => (
                                             <button
@@ -153,8 +151,8 @@ export default function ChatWidget() {
                                                 onClick={() => handleSendMessage(q)}
                                                 className="text-left text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-blue-500/50 text-slate-300 p-3 rounded-xl transition-all flex items-center justify-between group"
                                             >
-                                                {q}
-                                                <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 text-blue-400 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                                                <span className="truncate mr-2">{q}</span>
+                                                <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 text-blue-400 shrink-0 transition-all" />
                                             </button>
                                         ))}
                                     </div>
@@ -164,7 +162,7 @@ export default function ChatWidget() {
                             {messages.map((m, i) => (
                                 <div key={i} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     {m.role !== 'user' && (
-                                        <div className="w-6 h-6 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                        <div className="w-6 h-6 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center flex-shrink-0 mt-1 hidden sm:flex">
                                             <Bot size={12} className="text-blue-400" />
                                         </div>
                                     )}
@@ -179,7 +177,7 @@ export default function ChatWidget() {
 
                             {isLoading && (
                                 <div className="flex gap-2 justify-start">
-                                    <div className="w-6 h-6 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <div className="w-6 h-6 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center flex-shrink-0 hidden sm:flex">
                                         <Bot size={12} className="text-blue-400" />
                                     </div>
                                     <div className="bg-slate-800 border border-slate-700 p-3 rounded-2xl rounded-bl-none">
@@ -195,7 +193,7 @@ export default function ChatWidget() {
                         </div>
 
                         {/* Input Area */}
-                        <form onSubmit={handleSubmit} className="p-3 bg-slate-800 border-t border-slate-700 flex gap-2">
+                        <form onSubmit={handleSubmit} className="p-3 bg-slate-800 border-t border-slate-700 flex gap-2 shrink-0">
                             <input
                                 className="flex-1 p-2.5 text-sm bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 placeholder-slate-500 transition-all"
                                 value={input}
@@ -217,7 +215,7 @@ export default function ChatWidget() {
             {/* FLOATING BUTTON */}
             <button
                 onClick={toggleChat}
-                className="pointer-events-auto h-14 w-14 bg-blue-600 hover:bg-blue-500 text-white rounded-full shadow-[0_0_20px_rgba(37,99,235,0.3)] flex items-center justify-center transition-all hover:scale-110 active:scale-95 z-50 ring-2 ring-slate-900"
+                className="pointer-events-auto h-12 w-12 sm:h-14 sm:w-14 bg-blue-600 hover:bg-blue-500 text-white rounded-full shadow-[0_0_20px_rgba(37,99,235,0.3)] flex items-center justify-center transition-all hover:scale-110 active:scale-95 z-50 ring-2 ring-slate-900"
             >
                 {isOpen ? <X size={24} /> : <MessageCircle size={28} />}
             </button>
