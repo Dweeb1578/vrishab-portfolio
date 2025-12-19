@@ -91,9 +91,9 @@ export default function ChatWidget() {
     return (
         <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end pointer-events-none">
 
-            {/* NUDGE BUBBLE */}
+            {/* NUDGE BUBBLE - NOW VISIBLE ON MOBILE */}
             {!isOpen && showNudge && (
-                <div className="pointer-events-auto mb-4 mr-2 bg-slate-800 text-slate-200 p-4 rounded-xl shadow-2xl border border-slate-700 max-w-[250px] relative animate-in slide-in-from-bottom-5 fade-in duration-500 hidden sm:block">
+                <div className="pointer-events-auto mb-4 mr-2 bg-slate-800 text-slate-200 p-4 rounded-xl shadow-2xl border border-slate-700 w-[240px] relative animate-in slide-in-from-bottom-5 fade-in duration-500">
                     <button
                         onClick={() => setShowNudge(false)}
                         className="absolute top-2 right-2 text-slate-500 hover:text-white transition-colors"
@@ -115,7 +115,7 @@ export default function ChatWidget() {
                 </div>
             )}
 
-            {/* CHAT WINDOW - RESPONSIVE SIZING */}
+            {/* CHAT WINDOW */}
             <div className={`transition-all duration-300 pointer-events-auto origin-bottom-right ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none h-0'}`}>
                 {isOpen && (
                     <div className="mb-16 sm:mb-4 w-[90vw] h-[75vh] sm:w-[350px] sm:h-[550px] bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 flex flex-col overflow-hidden ring-1 ring-white/10">
