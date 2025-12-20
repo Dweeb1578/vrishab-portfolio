@@ -124,7 +124,7 @@ export default function ChatWidget() {
                         <div className="bg-slate-800 p-4 flex justify-between items-center border-b border-slate-700 shrink-0">
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
-                                <h3 className="font-bold text-slate-100">Vrishab's AI Agent</h3>
+                                <h3 className="font-bold text-slate-100">Dweeby</h3>
                             </div>
                             <button onClick={toggleChat} className="hover:bg-slate-700 p-1 rounded text-slate-400 hover:text-white transition-colors">
                                 <X size={18} />
@@ -167,8 +167,8 @@ export default function ChatWidget() {
                                         </div>
                                     )}
                                     <div className={`p-3 rounded-2xl max-w-[85%] shadow-sm ${m.role === 'user'
-                                            ? 'bg-blue-600 text-white rounded-br-none'
-                                            : 'bg-slate-800 border border-slate-700 text-slate-200 rounded-bl-none'
+                                        ? 'bg-blue-600 text-white rounded-br-none'
+                                        : 'bg-slate-800 border border-slate-700 text-slate-200 rounded-bl-none'
                                         }`}>
                                         <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
                                     </div>
