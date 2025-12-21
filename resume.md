@@ -32,7 +32,22 @@
 * **Timeline:** Jan 2025 – March 2025
 * Designed multi-channel campaign across Instagram, WhatsApp, and email to drive product awareness, increasing sales by 47% over a 2-month period (Valentine's Campaign).
 * Redesigned packaging based on customer feedback analysis and optimized Instagram content strategy using analytics, growing reach by 83% and followers by 15%.
+**Portfolio RAG AI** | *Next.js, Pinecone, AI SDK, Groq, Llama 3*
+* Built an intelligent portfolio assistant that answers recruiter questions in real-time by "reading" resume data.
+* Engineered a RAG (Retrieval-Augmented Generation) pipeline using **Pinecone** for vector storage and **Cohere** for semantic embeddings.
+* Implemented **Llama 3-70b** via Groq for ultra-low latency inference (<1s), ensuring a seamless chat experience.
+* Designed a responsive, dark-mode UI with **Next.js 14** and Tailwind CSS, featuring mobile-optimized chat widgets.
 
+**PM Coach AI** | *Llama 7B, Unsloth, ChromaDB, Python*
+* Developed a specialized AI mentor for aspiring Product Managers, capable of conducting mock interviews.
+* Fine-tuned **Llama 7B** using **Unsloth** on a dataset of 3,000+ FAANG product management interview questions.
+* Built a RAG pipeline with **ChromaDB** to index curated product strategy literature, reducing hallucinations by 40%.
+* Deployed the model to provide actionable feedback on user responses, mimicking a Senior PM's coaching style.
+
+**Sentiment Auto-Router** | *n8n, NLP, Webhooks, Automation*
+* Engineered an autonomous workflow to process anonymous student letters for a campus support group.
+* Integrated **NLP sentiment analysis** to automatically filter toxic content and flag critical messages for human review.
+* Routed positive messages to digital display boards via Webhooks, boosting operational efficiency by **200%** and eliminating manual moderation bottlenecks.
 # Leadership & Volunteering
 ## President at 180 Degrees Consulting (BITS Hyderabad)
 * **Timeline:** Aug 2025 – Present

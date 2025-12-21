@@ -159,18 +159,39 @@ export default function ChatWidget() {
                                 </div>
                             )}
 
+                            {/* ... inside the scrollable area ... */}
+
                             {messages.map((m, i) => (
-                                <div key={i} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                <div key={i} className={`flex gap-2 mb-4 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+
+                                    {/* AVATAR (Left side, Assistant only) */}
                                     {m.role !== 'user' && (
                                         <div className="w-6 h-6 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center flex-shrink-0 mt-1 hidden sm:flex">
                                             <Bot size={12} className="text-blue-400" />
                                         </div>
                                     )}
-                                    <div className={`p-3 rounded-2xl max-w-[85%] shadow-sm ${m.role === 'user'
-                                        ? 'bg-blue-600 text-white rounded-br-none'
-                                        : 'bg-slate-800 border border-slate-700 text-slate-200 rounded-bl-none'
-                                        }`}>
-                                        <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
+
+                                    {/* BUBBLE STACK CONTAINER */}
+                                    <div className={`flex flex-col gap-2 max-w-[85%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+
+                                        {/* Split content by '|||' and map each chunk to a separate bubble */}
+                                        {m.content.split('|||').map((bubbleText, index) => {
+                                            if (!bubbleText.trim()) return null; // Skip empty splits
+
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className={`p-3 rounded-2xl shadow-sm animate-in fade-in slide-in-from-bottom-1 duration-200 ${m.role === 'user'
+                                                        ? 'bg-blue-600 text-white rounded-br-none'
+                                                        : 'bg-slate-800 border border-slate-700 text-slate-200 rounded-bl-none'
+                                                        }`}
+                                                >
+                                                    <p className="whitespace-pre-wrap leading-relaxed">
+                                                        {bubbleText.trim()}
+                                                    </p>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             ))}
