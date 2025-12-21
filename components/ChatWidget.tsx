@@ -15,15 +15,18 @@ export default function ChatWidget() {
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    // 🆕 State for dynamic suggestions
-    const [suggestions, setSuggestions] = useState<string[]>([
+    // 🆕 CHANGE 1: Start EMPTY so it doesn't show above the bar initially
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Initial "Welcome" Questions (Shown ONLY in the chat body)
+    const initialQuestions = [
         "Tell me about your internships 💼",
         "What is the PM Coach AI? 🤖",
         "What are your top technical skills? 💻",
         "Explain your product strategy 📈"
-    ]);
-
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+    ];
 
     // 1. Nudge Timer
     useEffect(() => {
@@ -31,15 +34,18 @@ export default function ChatWidget() {
         return () => clearTimeout(timer);
     }, []);
 
-    // 2. Auto-scroll to bottom
+    // 2. Auto-scroll
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    // 3. Update suggestions when AI finishes responding
+    // 3. Dynamic Suggestions Logic
     useEffect(() => {
+        // Only run if not loading and we have messages (meaning chat has started)
         if (!isLoading && messages.length > 0) {
             const lastMsg = messages[messages.length - 1];
+
+            // If the AI just finished talking, generate new suggestions
             if (lastMsg.role === 'assistant') {
                 const newSuggestions = getSmartSuggestions(lastMsg.content);
                 setSuggestions(newSuggestions);
@@ -55,7 +61,7 @@ export default function ChatWidget() {
         setMessages(newMessages);
         setInput('');
         setIsLoading(true);
-        setSuggestions([]); // Clear suggestions while thinking
+        setSuggestions([]); // Hide suggestions while thinking
 
         try {
             const response = await fetch('/api/chat', {
@@ -136,11 +142,27 @@ export default function ChatWidget() {
 
                         {/* Messages Area */}
                         <div className="flex-1 p-4 overflow-y-auto bg-slate-900 space-y-4 text-sm scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+
+                            {/* 🆕 CHANGE 2: "Welcome" State - These are the initial buttons */}
                             {messages.length === 0 && (
                                 <div className="flex flex-col items-center justify-center h-full space-y-6">
                                     <div className="text-center">
                                         <div className="bg-slate-800 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-700"><Bot size={28} className="text-blue-500/50" /></div>
                                         <p className="font-medium text-slate-400">Hi! I'm Vrishab's virtual assistant.</p>
+                                    </div>
+
+                                    <div className="w-full grid gap-2 px-1">
+                                        <p className="text-xs text-slate-500 font-mono mb-1 uppercase tracking-wider text-center">Suggested Questions</p>
+                                        {initialQuestions.map((q, i) => (
+                                            <button
+                                                key={i}
+                                                onClick={() => handleSendMessage(q)}
+                                                className="text-left text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-blue-500/50 text-slate-300 p-3 rounded-xl transition-all flex items-center justify-between group"
+                                            >
+                                                <span className="truncate mr-2">{q}</span>
+                                                <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 text-blue-400 shrink-0 transition-all" />
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
                             )}
@@ -177,8 +199,8 @@ export default function ChatWidget() {
                             <div ref={messagesEndRef} />
                         </div>
 
-                        {/* SUGGESTIONS BAR (Dynamic) */}
-                        {suggestions.length > 0 && !isLoading && (
+                        {/* 🆕 CHANGE 3: The Bar only shows AFTER chat starts (messages > 0) */}
+                        {suggestions.length > 0 && !isLoading && messages.length > 0 && (
                             <div className="px-4 py-2 bg-slate-900 border-t border-slate-800/50 flex gap-2 overflow-x-auto no-scrollbar mask-gradient">
                                 {suggestions.map((s, i) => (
                                     <button
@@ -213,25 +235,25 @@ export default function ChatWidget() {
     );
 }
 
-// 👇 HELPER FUNCTION (Outside the component)
+// 🆕 CHANGE 4: Updated Logic with BROADER keywords
 function getSmartSuggestions(text: string): string[] {
     const lower = text.toLowerCase();
 
-    // 1. Projects & Tech
-    if (lower.includes("project") || lower.includes("built") || lower.includes("stack")) {
-        return ["What tech stack did you use? 💻", "What was the hardest challenge? 🧩", "Show me another project 🚀"];
+    // 1. Projects (Matches "PM Coach", "Project", "Built", "Developed")
+    if (lower.includes("project") || lower.includes("built") || lower.includes("develop") || lower.includes("pm coach") || lower.includes("pipeline")) {
+        return ["What tech stack did you use? 💻", "What was the hardest challenge? 🧩", "Show me the results/metrics 🏆"];
     }
 
-    // 2. Work & Internships (Pinch, 180DC)
-    if (lower.includes("pinch") || lower.includes("intern") || lower.includes("work")) {
+    // 2. Work & Experience (Matches "Pinch", "Intern", "Work", "Startup")
+    if (lower.includes("pinch") || lower.includes("intern") || lower.includes("work") || lower.includes("startup") || lower.includes("180")) {
         return ["What features did you launch? 🚀", "How much did retention increase? 📈", "Did you work with engineers? 🤝"];
     }
 
-    // 3. PM / Strategy / AI
-    if (lower.includes("pm") || lower.includes("product") || lower.includes("hallucinat")) {
-        return ["How do you prioritize features? ⚖️", "Tell me about the RAG pipeline 🤖", "What metrics did you track? 📊"];
+    // 3. Technical Skills (Matches "React", "Next", "Python", "AI", "RAG")
+    if (lower.includes("react") || lower.includes("python") || lower.includes("ai") || lower.includes("rag") || lower.includes("stack")) {
+        return ["What is your favorite language? ❤️", "Have you used LangChain? 🦜", "Tell me about your DB choices 🗄️"];
     }
 
-    // 4. Default Fallback
-    return ["Tell me about your internships 💼", "What is the PM Coach AI? 🤖", "What are your top technical skills? 💻"];
+    // 4. Default Fallback (Distinct from initial list so you know it changed)
+    return ["Tell me about a challenge you faced 🧩", "What are you working on now? ⚡", "Do you have leadership experience? 🏆"];
 }
