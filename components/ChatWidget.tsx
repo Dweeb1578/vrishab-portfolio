@@ -14,8 +14,6 @@ export default function ChatWidget() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
-    // 🆕 CHANGE 1: Start EMPTY so it doesn't show above the bar initially
     const [suggestions, setSuggestions] = useState<string[]>([]);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -28,24 +26,19 @@ export default function ChatWidget() {
         "Explain your product strategy 📈"
     ];
 
-    // 1. Nudge Timer
     useEffect(() => {
         const timer = setTimeout(() => { setShowNudge(true); }, 3000);
         return () => clearTimeout(timer);
     }, []);
 
-    // 2. Auto-scroll
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    // 3. Dynamic Suggestions Logic
+    // Dynamic Suggestions Logic
     useEffect(() => {
-        // Only run if not loading and we have messages (meaning chat has started)
         if (!isLoading && messages.length > 0) {
             const lastMsg = messages[messages.length - 1];
-
-            // If the AI just finished talking, generate new suggestions
             if (lastMsg.role === 'assistant') {
                 const newSuggestions = getSmartSuggestions(lastMsg.content);
                 setSuggestions(newSuggestions);
@@ -143,7 +136,6 @@ export default function ChatWidget() {
                         {/* Messages Area */}
                         <div className="flex-1 p-4 overflow-y-auto bg-slate-900 space-y-4 text-sm scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
 
-                            {/* 🆕 CHANGE 2: "Welcome" State - These are the initial buttons */}
                             {messages.length === 0 && (
                                 <div className="flex flex-col items-center justify-center h-full space-y-6">
                                     <div className="text-center">
@@ -199,14 +191,14 @@ export default function ChatWidget() {
                             <div ref={messagesEndRef} />
                         </div>
 
-                        {/* 🆕 CHANGE 3: The Bar only shows AFTER chat starts (messages > 0) */}
+                        {/* 🆕 SUGGESTIONS BAR (WRAPPED & DYNAMIC) */}
                         {suggestions.length > 0 && !isLoading && messages.length > 0 && (
-                            <div className="px-4 py-2 bg-slate-900 border-t border-slate-800/50 flex gap-2 overflow-x-auto no-scrollbar mask-gradient">
+                            <div className="p-3 bg-slate-900 border-t border-slate-800/50 flex flex-wrap gap-2 animate-in fade-in slide-in-from-bottom-2">
                                 {suggestions.map((s, i) => (
                                     <button
                                         key={i}
                                         onClick={() => handleSendMessage(s)}
-                                        className="whitespace-nowrap flex-shrink-0 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg border border-slate-700 transition-colors animate-in fade-in slide-in-from-bottom-2"
+                                        className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-full border border-slate-700 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
                                         style={{ animationDelay: `${i * 0.1}s` }}
                                     >
                                         {s}
@@ -235,25 +227,33 @@ export default function ChatWidget() {
     );
 }
 
-// 🆕 CHANGE 4: Updated Logic with BROADER keywords
+// 🆕 UPDATED LOGIC ENGINE (Determistic Randomness)
 function getSmartSuggestions(text: string): string[] {
     const lower = text.toLowerCase();
 
-    // 1. Projects (Matches "PM Coach", "Project", "Built", "Developed")
-    if (lower.includes("project") || lower.includes("built") || lower.includes("develop") || lower.includes("pm coach") || lower.includes("pipeline")) {
-        return ["What tech stack did you use? 💻", "What was the hardest challenge? 🧩", "Show me the results/metrics 🏆"];
+    // 1. Projects & Tech Matches
+    if (lower.includes("project") || lower.includes("built") || lower.includes("stack") || lower.includes("coach")) {
+        return ["What tech stack did you use? 💻", "What was the hardest challenge? 🧩", "Did you deploy it? 🚀"];
     }
 
-    // 2. Work & Experience (Matches "Pinch", "Intern", "Work", "Startup")
-    if (lower.includes("pinch") || lower.includes("intern") || lower.includes("work") || lower.includes("startup") || lower.includes("180")) {
-        return ["What features did you launch? 🚀", "How much did retention increase? 📈", "Did you work with engineers? 🤝"];
+    // 2. Internship & Work Matches
+    if (lower.includes("pinch") || lower.includes("intern") || lower.includes("work") || lower.includes("team") || lower.includes("180")) {
+        return ["What was your impact? 📈", "Did you work with engineers? 🤝", "Tell me about the culture 🏢"];
     }
 
-    // 3. Technical Skills (Matches "React", "Next", "Python", "AI", "RAG")
-    if (lower.includes("react") || lower.includes("python") || lower.includes("ai") || lower.includes("rag") || lower.includes("stack")) {
-        return ["What is your favorite language? ❤️", "Have you used LangChain? 🦜", "Tell me about your DB choices 🗄️"];
+    // 3. Product & Strategy Matches
+    if (lower.includes("strategy") || lower.includes("priorit") || lower.includes("road") || lower.includes("vision")) {
+        return ["How do you use data? 📊", "Tell me about a failed feature 📉", "What tools do you use? 🛠️"];
     }
 
-    // 4. Default Fallback (Distinct from initial list so you know it changed)
-    return ["Tell me about a challenge you faced 🧩", "What are you working on now? ⚡", "Do you have leadership experience? 🏆"];
+    // 4. "DETERMINISTIC RANDOM" FALLBACK
+    // If no keywords match, use the length of the text to cycle through 3 different options.
+    // This ensures it changes every time the answer length is different.
+    const cycleIndex = text.length % 3;
+
+    if (cycleIndex === 0) return ["Tell me about your internships 💼", "What are your hobbies? 🎮", "Show me a design project 🎨"];
+    if (cycleIndex === 1) return ["What is the PM Coach AI? 🤖", "What are your top skills? 💻", "Do you know Python? 🐍"];
+
+    // cycleIndex === 2
+    return ["What are you working on now? ⚡", "Do you have leadership experience? 🏆", "Explain your PM philosophy 🧠"];
 }
