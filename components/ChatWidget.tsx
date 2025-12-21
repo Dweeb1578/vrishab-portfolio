@@ -14,12 +14,10 @@ export default function ChatWidget() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [suggestions, setSuggestions] = useState<string[]>([]);
-
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Initial "Welcome" Questions (Shown ONLY in the chat body)
-    const initialQuestions = [
+    // These only show up when the chat is empty (The "Welcome" state)
+    const sampleQuestions = [
         "Tell me about your internships 💼",
         "What is the PM Coach AI? 🤖",
         "What are your top technical skills? 💻",
@@ -35,17 +33,6 @@ export default function ChatWidget() {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    // Dynamic Suggestions Logic
-    useEffect(() => {
-        if (!isLoading && messages.length > 0) {
-            const lastMsg = messages[messages.length - 1];
-            if (lastMsg.role === 'assistant') {
-                const newSuggestions = getSmartSuggestions(lastMsg.content);
-                setSuggestions(newSuggestions);
-            }
-        }
-    }, [isLoading, messages]);
-
     const handleSendMessage = async (content: string) => {
         if (!content.trim()) return;
 
@@ -54,7 +41,6 @@ export default function ChatWidget() {
         setMessages(newMessages);
         setInput('');
         setIsLoading(true);
-        setSuggestions([]); // Hide suggestions while thinking
 
         try {
             const response = await fetch('/api/chat', {
@@ -136,6 +122,7 @@ export default function ChatWidget() {
                         {/* Messages Area */}
                         <div className="flex-1 p-4 overflow-y-auto bg-slate-900 space-y-4 text-sm scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
 
+                            {/* WELCOME STATE: Only shown when messages is empty */}
                             {messages.length === 0 && (
                                 <div className="flex flex-col items-center justify-center h-full space-y-6">
                                     <div className="text-center">
@@ -145,7 +132,7 @@ export default function ChatWidget() {
 
                                     <div className="w-full grid gap-2 px-1">
                                         <p className="text-xs text-slate-500 font-mono mb-1 uppercase tracking-wider text-center">Suggested Questions</p>
-                                        {initialQuestions.map((q, i) => (
+                                        {sampleQuestions.map((q, i) => (
                                             <button
                                                 key={i}
                                                 onClick={() => handleSendMessage(q)}
@@ -165,6 +152,7 @@ export default function ChatWidget() {
                                         <div className="w-6 h-6 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center flex-shrink-0 mt-1 hidden sm:flex"><Bot size={12} className="text-blue-400" /></div>
                                     )}
                                     <div className={`flex flex-col gap-2 max-w-[85%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+                                        {/* BUBBLE SPLITTING LOGIC */}
                                         {m.content.split('|||').map((bubbleText, bubbleIndex) => {
                                             if (!bubbleText.trim()) return null;
                                             return (
@@ -191,23 +179,7 @@ export default function ChatWidget() {
                             <div ref={messagesEndRef} />
                         </div>
 
-                        {/* 🆕 SUGGESTIONS BAR (WRAPPED & DYNAMIC) */}
-                        {suggestions.length > 0 && !isLoading && messages.length > 0 && (
-                            <div className="p-3 bg-slate-900 border-t border-slate-800/50 flex flex-wrap gap-2 animate-in fade-in slide-in-from-bottom-2">
-                                {suggestions.map((s, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => handleSendMessage(s)}
-                                        className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-full border border-slate-700 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
-                                        style={{ animationDelay: `${i * 0.1}s` }}
-                                    >
-                                        {s}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* Input Area */}
+                        {/* Input Area (No suggestions bar above it) */}
                         <form onSubmit={handleSubmit} className="p-3 bg-slate-800 border-t border-slate-700 flex gap-2 shrink-0">
                             <input
                                 className="flex-1 p-2.5 text-sm bg-slate-900 border border-slate-700 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-100 placeholder-slate-500 transition-all"
@@ -225,35 +197,4 @@ export default function ChatWidget() {
             <button onClick={toggleChat} className="pointer-events-auto h-12 w-12 sm:h-14 sm:w-14 bg-blue-600 hover:bg-blue-500 text-white rounded-full shadow-[0_0_20px_rgba(37,99,235,0.3)] flex items-center justify-center transition-all hover:scale-110 active:scale-95 z-50 ring-2 ring-slate-900">{isOpen ? <X size={24} /> : <MessageCircle size={28} />}</button>
         </div>
     );
-}
-
-// 🆕 UPDATED LOGIC ENGINE (Determistic Randomness)
-function getSmartSuggestions(text: string): string[] {
-    const lower = text.toLowerCase();
-
-    // 1. Projects & Tech Matches
-    if (lower.includes("project") || lower.includes("built") || lower.includes("stack") || lower.includes("coach")) {
-        return ["What tech stack did you use? 💻", "What was the hardest challenge? 🧩", "Did you deploy it? 🚀"];
-    }
-
-    // 2. Internship & Work Matches
-    if (lower.includes("pinch") || lower.includes("intern") || lower.includes("work") || lower.includes("team") || lower.includes("180")) {
-        return ["What was your impact? 📈", "Did you work with engineers? 🤝", "Tell me about the culture 🏢"];
-    }
-
-    // 3. Product & Strategy Matches
-    if (lower.includes("strategy") || lower.includes("priorit") || lower.includes("road") || lower.includes("vision")) {
-        return ["How do you use data? 📊", "Tell me about a failed feature 📉", "What tools do you use? 🛠️"];
-    }
-
-    // 4. "DETERMINISTIC RANDOM" FALLBACK
-    // If no keywords match, use the length of the text to cycle through 3 different options.
-    // This ensures it changes every time the answer length is different.
-    const cycleIndex = text.length % 3;
-
-    if (cycleIndex === 0) return ["Tell me about your internships 💼", "What are your hobbies? 🎮", "Show me a design project 🎨"];
-    if (cycleIndex === 1) return ["What is the PM Coach AI? 🤖", "What are your top skills? 💻", "Do you know Python? 🐍"];
-
-    // cycleIndex === 2
-    return ["What are you working on now? ⚡", "Do you have leadership experience? 🏆", "Explain your PM philosophy 🧠"];
 }
