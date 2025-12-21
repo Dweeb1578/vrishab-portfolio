@@ -162,8 +162,10 @@ export default function ChatWidget() {
                             {/* ... inside the scrollable area ... */}
 
                             {messages.map((m, i) => (
-                                <div key={i} className={`flex gap-2 mb-4 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-
+                                <div
+                                    key={i}
+                                    className={`flex gap-2 mb-4 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                                >
                                     {/* AVATAR (Left side, Assistant only) */}
                                     {m.role !== 'user' && (
                                         <div className="w-6 h-6 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center flex-shrink-0 mt-1 hidden sm:flex">
@@ -173,26 +175,42 @@ export default function ChatWidget() {
 
                                     {/* BUBBLE STACK CONTAINER */}
                                     <div className={`flex flex-col gap-2 max-w-[85%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
-                                        {/* Split content by '|||' and map each chunk */}
-                                        {m.content.split('|||').map((bubbleText, index) => {
+
+                                        {/* THE SPLIT LOGIC: 
+         1. Split the message by '|||'
+         2. Map each part to a bubble 
+      */}
+                                        {m.content.split('|||').map((bubbleText, bubbleIndex) => {
+                                            // Skip empty bubbles (happens during streaming sometimes)
                                             if (!bubbleText.trim()) return null;
 
                                             return (
                                                 <div
-                                                    key={index}
-                                                    // 1. DYNAMIC DELAY: We multiply the index by 500ms (0.5s)
+                                                    key={bubbleIndex}
                                                     style={{
-                                                        animationDelay: `${index * 0.5}s`,
+                                                        // 1. STAGGERED DELAY: 
+                                                        // Bubble 0 = 0s, Bubble 1 = 0.5s, Bubble 2 = 1.0s
+                                                        animationDelay: `${bubbleIndex * 0.5}s`,
+
+                                                        // 2. FILL MODE: 
+                                                        // 'both' ensures the bubble stays INVISIBLE (opacity: 0) 
+                                                        // until the delay timer finishes.
                                                         animationFillMode: 'both'
                                                     }}
-                                                    // 2. ANIMATION CLASSES: 
-                                                    // 'animate-in' handles the entrance. 
-                                                    // 'fade-in' and 'slide-in' make it look smooth.
-                                                    // 'hidden' isn't needed because 'fill-mode-both' keeps it invisible before the delay starts.
-                                                    className={`p-3 rounded-2xl shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500 ${m.role === 'user'
+                                                    className={`
+              p-3 rounded-2xl shadow-sm 
+              
+              /* ANIMATION BASE CLASSES */
+              animate-in fade-in slide-in-from-bottom-4 duration-500
+              
+              /* CRITICAL: Start invisible so we don't see it waiting */
+              opacity-0 
+              
+              ${m.role === 'user'
                                                             ? 'bg-blue-600 text-white rounded-br-none'
                                                             : 'bg-slate-800 border border-slate-700 text-slate-200 rounded-bl-none'
-                                                        }`}
+                                                        }
+            `}
                                                 >
                                                     <p className="whitespace-pre-wrap leading-relaxed">
                                                         {bubbleText.trim()}
@@ -203,7 +221,6 @@ export default function ChatWidget() {
                                     </div>
                                 </div>
                             ))}
-
                             {isLoading && (
                                 <div className="flex gap-2 justify-start">
                                     <div className="w-6 h-6 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center flex-shrink-0 hidden sm:flex">
