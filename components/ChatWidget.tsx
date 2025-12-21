@@ -173,17 +173,25 @@ export default function ChatWidget() {
 
                                     {/* BUBBLE STACK CONTAINER */}
                                     <div className={`flex flex-col gap-2 max-w-[85%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
-
-                                        {/* Split content by '|||' and map each chunk to a separate bubble */}
+                                        {/* Split content by '|||' and map each chunk */}
                                         {m.content.split('|||').map((bubbleText, index) => {
-                                            if (!bubbleText.trim()) return null; // Skip empty splits
+                                            if (!bubbleText.trim()) return null;
 
                                             return (
                                                 <div
                                                     key={index}
-                                                    className={`p-3 rounded-2xl shadow-sm animate-in fade-in slide-in-from-bottom-1 duration-200 ${m.role === 'user'
-                                                        ? 'bg-blue-600 text-white rounded-br-none'
-                                                        : 'bg-slate-800 border border-slate-700 text-slate-200 rounded-bl-none'
+                                                    // 1. DYNAMIC DELAY: We multiply the index by 500ms (0.5s)
+                                                    style={{
+                                                        animationDelay: `${index * 0.5}s`,
+                                                        animationFillMode: 'both'
+                                                    }}
+                                                    // 2. ANIMATION CLASSES: 
+                                                    // 'animate-in' handles the entrance. 
+                                                    // 'fade-in' and 'slide-in' make it look smooth.
+                                                    // 'hidden' isn't needed because 'fill-mode-both' keeps it invisible before the delay starts.
+                                                    className={`p-3 rounded-2xl shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500 ${m.role === 'user'
+                                                            ? 'bg-blue-600 text-white rounded-br-none'
+                                                            : 'bg-slate-800 border border-slate-700 text-slate-200 rounded-bl-none'
                                                         }`}
                                                 >
                                                     <p className="whitespace-pre-wrap leading-relaxed">
