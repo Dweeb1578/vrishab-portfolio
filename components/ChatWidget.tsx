@@ -166,46 +166,32 @@ export default function ChatWidget() {
                                     key={i}
                                     className={`flex gap-2 mb-4 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                                 >
-                                    {/* AVATAR (Left side, Assistant only) */}
+                                    {/* AVATAR (Assistant Only) */}
                                     {m.role !== 'user' && (
                                         <div className="w-6 h-6 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center flex-shrink-0 mt-1 hidden sm:flex">
                                             <Bot size={12} className="text-blue-400" />
                                         </div>
                                     )}
 
-                                    {/* BUBBLE STACK CONTAINER */}
+                                    {/* BUBBLE STACK */}
                                     <div className={`flex flex-col gap-2 max-w-[85%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
 
-                                        {/* THE SPLIT LOGIC: 
-         1. Split the message by '|||'
-         2. Map each part to a bubble 
-      */}
                                         {m.content.split('|||').map((bubbleText, bubbleIndex) => {
-                                            // Skip empty bubbles (happens during streaming sometimes)
                                             if (!bubbleText.trim()) return null;
 
                                             return (
                                                 <div
                                                     key={bubbleIndex}
                                                     style={{
-                                                        // 1. STAGGERED DELAY: 
-                                                        // Bubble 0 = 0s, Bubble 1 = 0.5s, Bubble 2 = 1.0s
+                                                        // 1. DELAY: Stagger the entrance
                                                         animationDelay: `${bubbleIndex * 0.5}s`,
-
-                                                        // 2. FILL MODE: 
-                                                        // 'both' ensures the bubble stays INVISIBLE (opacity: 0) 
-                                                        // until the delay timer finishes.
-                                                        animationFillMode: 'both'
                                                     }}
                                                     className={`
               p-3 rounded-2xl shadow-sm 
               
-              /* ANIMATION BASE CLASSES */
-              animate-in fade-in slide-in-from-bottom-4 duration-500
-              
-              /* CRITICAL: Start invisible so we don't see it waiting */
-              opacity-0 
-              
+              /* USE OUR CUSTOM ANIMATION */
+              opacity-0 animate-pop
+
               ${m.role === 'user'
                                                             ? 'bg-blue-600 text-white rounded-br-none'
                                                             : 'bg-slate-800 border border-slate-700 text-slate-200 rounded-bl-none'
