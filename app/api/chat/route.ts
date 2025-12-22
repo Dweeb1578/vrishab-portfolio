@@ -83,7 +83,7 @@ export async function POST(req: Request) {
             ],
             model: 'llama-3.3-70b-versatile',
             stream: true,
-            temperature: 0.3,
+            temperature: 0.8,
         });
 
         // 7. Stream Response
