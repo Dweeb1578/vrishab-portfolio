@@ -38,7 +38,7 @@ export default function Home() {
 
         {/* FOOTER */}
         <footer className="py-8 text-center text-stone-500 text-sm relative z-10 border-t border-stone-200">
-          <p>© 2024 Vrishab Nair. Built with Next.js, Framer Motion & Artificial Intelligence.</p>
+          <p>© 2025 Vrishab Nair. Built with Next.js, Framer Motion & Artificial Intelligence.</p>
         </footer>
       </div>
 
