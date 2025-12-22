@@ -34,7 +34,8 @@ export function Spotlight({ children, className = '' }: SpotlightProps) {
                 className="pointer-events-none absolute -inset-px transition opacity-500 duration-500"
                 style={{
                     opacity,
-                    background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(59,130,246,0.15), transparent 40%)`,
+                    // Using a bolder orange for readability on white
+                    background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(234,88,12,0.1), transparent 40%)`,
                 }}
             />
             {children}

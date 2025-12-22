@@ -16,7 +16,7 @@ const experiences = [
             "Executed end-to-end hiring for 2 Marketing Executives via LinkedIn and Founder's Network."
         ],
         skills: ['Product Strategy', 'Figma', 'Growth', 'Fundraising', 'SEO'],
-        color: "blue"
+        color: "orange"
     },
     {
         company: "Stamp My Visa",
@@ -28,7 +28,7 @@ const experiences = [
             "Produced 3 comprehensive training videos and onboarding decks, slashing new hire onboarding time from 2 weeks to just 5 days."
         ],
         skills: ['UX Design', 'Process Optimization', 'Operations', 'UI Mockups'],
-        color: "slate"
+        color: "stone"
     },
     {
         company: "Nam Nam Foods",
@@ -41,7 +41,7 @@ const experiences = [
             "Redesigned product packaging based on customer feedback analysis to improve brand perception."
         ],
         skills: ['Growth Marketing', 'Analytics', 'GTM Strategy', 'Content'],
-        color: "slate"
+        color: "stone"
     }
 ];
 
@@ -54,12 +54,12 @@ export default function Experience() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="text-3xl font-bold text-white mb-16 flex items-center gap-3"
+                    className="text-3xl font-bold text-stone-900 mb-16 flex items-center gap-3"
                 >
-                    <span className="h-px w-8 bg-blue-500"></span> Internships
+                    <span className="h-px w-8 bg-orange-500"></span> Internships
                 </motion.h2>
 
-                <div className="relative border-l border-slate-800 ml-3 md:ml-6 space-y-12">
+                <div className="relative border-l border-stone-200 ml-3 md:ml-6 space-y-12">
                     {experiences.map((exp, index) => (
                         <motion.div
                             key={index}
@@ -70,25 +70,25 @@ export default function Experience() {
                             className="relative pl-8 md:pl-12 group"
                         >
                             {/* Timeline Dot */}
-                            <div className={`absolute -left-[5px] top-6 h-2.5 w-2.5 rounded-full ring-4 ring-slate-950 transition-all duration-300 ${exp.color === 'blue' ? 'bg-blue-500 group-hover:ring-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-slate-700 group-hover:ring-slate-600/20'}`}></div>
+                            <div className={`absolute -left-[5px] top-6 h-2.5 w-2.5 rounded-full ring-4 ring-stone-100 transition-all duration-300 ${exp.color === 'orange' ? 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.4)]' : 'bg-stone-400'}`}></div>
 
                             {/* Card */}
-                            <div className="p-6 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-blue-500/30 transition-all duration-300 shadow-sm hover:shadow-[0_0_30px_-10px_rgba(59,130,246,0.1)] hover:-translate-y-1">
+                            <div className="p-6 rounded-2xl bg-white border border-stone-200 hover:border-orange-300 transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1">
                                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-2">
                                     <div>
-                                        <h3 className="text-xl font-bold text-slate-100">{exp.role}</h3>
-                                        <div className="text-blue-400 font-medium flex items-center gap-2 mt-1">
+                                        <h3 className="text-xl font-bold text-stone-900">{exp.role}</h3>
+                                        <div className="text-orange-600 font-medium flex items-center gap-2 mt-1">
                                             <Briefcase size={16} /> {exp.company}
                                         </div>
                                     </div>
-                                    <span className="text-xs font-mono text-slate-500 bg-slate-900 px-2 py-1 rounded border border-slate-800">
+                                    <span className="text-xs font-mono text-stone-500 bg-stone-100 px-2 py-1 rounded border border-stone-200">
                                         {exp.period}
                                     </span>
                                 </div>
 
-                                <div className="text-slate-400 leading-relaxed">
-                                    <p className="mb-3 italic text-slate-500">{exp.description}</p>
-                                    <ul className="list-disc list-outside ml-4 space-y-2 marker:text-blue-500/50 mb-6">
+                                <div className="text-stone-600 leading-relaxed">
+                                    <p className="mb-3 italic text-stone-500">{exp.description}</p>
+                                    <ul className="list-disc list-outside ml-4 space-y-2 marker:text-orange-500 mb-6">
                                         {exp.details.map((detail, i) => (
                                             <li key={i}>{detail}</li>
                                         ))}
@@ -96,7 +96,7 @@ export default function Experience() {
 
                                     <div className="flex flex-wrap gap-2">
                                         {exp.skills.map((tag) => (
-                                            <span key={tag} className="px-2 py-1 rounded text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-colors">
+                                            <span key={tag} className="px-2 py-1 rounded text-xs font-medium bg-orange-50/80 text-orange-600 border border-orange-100 hover:bg-orange-100 transition-colors">
                                                 {tag}
                                             </span>
                                         ))}
