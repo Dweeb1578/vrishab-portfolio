@@ -1,6 +1,14 @@
 import { Groq } from 'groq-sdk';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { CohereClient } from 'cohere-ai';
+import { createClient } from '@supabase/supabase-js';
+
+// 1. Initialize Supabase (Fixed the 'undefined' error with !)
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
 
 // 1. Initialize Clients
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -11,6 +19,13 @@ export async function POST(req: Request) {
     try {
         const { messages } = await req.json();
         const lastMessage = messages[messages.length - 1].content;
+
+        // 1. LOGGING (Supabase)
+        try {
+            await supabase.from('chat_logs').insert([{ user_question: lastMessage }]);
+        } catch (error) {
+            console.error("Logging failed:", error);
+        }
 
         // 2. Generate Embedding
         const embedResponse = await cohere.embed({
