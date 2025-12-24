@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, Sparkles, X, MessageCircle, ArrowRight } from 'lucide-react';
-import SkillsWidget from './SkillsWidget';
 
 type Message = {
     role: 'user' | 'assistant' | 'system';
