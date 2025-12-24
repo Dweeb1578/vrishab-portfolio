@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, Sparkles, X, MessageCircle, ArrowRight } from 'lucide-react';
+import SkillsWidget from './SkillsWidget';
 
 type Message = {
     role: 'user' | 'assistant' | 'system';
@@ -12,6 +13,8 @@ export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
     const [showNudge, setShowNudge] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
+    // 1. Add State
+    const [suggestion, setSuggestion] = useState<string | null>(null);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -31,7 +34,7 @@ export default function ChatWidget() {
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [messages.length, isLoading]);
 
     const handleSendMessage = async (content: string) => {
         if (!content.trim()) return;
@@ -40,6 +43,7 @@ export default function ChatWidget() {
         const newMessages = [...messages, userMessage];
         setMessages(newMessages);
         setInput('');
+        setSuggestion(null); // Clear suggestion on send
         setIsLoading(true);
 
         try {
@@ -54,6 +58,7 @@ export default function ChatWidget() {
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let aiResponse = "";
+            let fullStreamBuffer = ""; // To track hidden tags
 
             setMessages((prev) => [...prev, { role: 'assistant', content: "" }]);
 
@@ -61,7 +66,18 @@ export default function ChatWidget() {
                 const { done, value } = await reader.read();
                 if (done) break;
                 const chunk = decoder.decode(value, { stream: true });
-                aiResponse += chunk;
+                fullStreamBuffer += chunk;
+
+                // Extract Suggestion
+                const suggestionMatch = fullStreamBuffer.match(/\[SUGGESTION: (.*?)\]/);
+                if (suggestionMatch) {
+                    setSuggestion(suggestionMatch[1]);
+                    // We DON'T add the suggestion tag to the visible message
+                    aiResponse = fullStreamBuffer.replace(/\[SUGGESTION: .*?\]/, "");
+                } else {
+                    aiResponse = fullStreamBuffer;
+                }
+
                 setMessages((prev) => {
                     const updated = [...prev];
                     updated[updated.length - 1] = { role: 'assistant', content: aiResponse };
@@ -80,6 +96,14 @@ export default function ChatWidget() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         handleSendMessage(input);
+    };
+
+    // TAB HANDLER
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Tab' && suggestion && !input) {
+            e.preventDefault();
+            setInput(suggestion);
+        }
     };
 
     const toggleChat = () => {
@@ -152,19 +176,38 @@ export default function ChatWidget() {
                                         <div className="w-6 h-6 bg-stone-100 border border-stone-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1 hidden sm:flex"><Bot size={12} className="text-orange-500" /></div>
                                     )}
                                     <div className={`flex flex-col gap-2 max-w-[85%] ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
-                                        {/* BUBBLE SPLITTING LOGIC */}
-                                        {m.content.split('|||').map((bubbleText, bubbleIndex) => {
-                                            if (!bubbleText.trim()) return null;
-                                            return (
-                                                <div
-                                                    key={bubbleIndex}
-                                                    style={{ animationDelay: `${bubbleIndex * 0.5}s`, animationFillMode: 'both' }}
-                                                    className={`p-3 rounded-2xl shadow-sm opacity-0 animate-pop ${m.role === 'user' ? 'bg-stone-900 text-white rounded-br-none' : 'bg-stone-50 border border-stone-100 text-stone-800 rounded-bl-none'}`}
-                                                >
-                                                    <p className="whitespace-pre-wrap leading-relaxed">{bubbleText.trim()}</p>
-                                                </div>
-                                            );
-                                        })}
+                                        {/* BUBBLE SPLITTING LOGIC - MODIFIED FOR STREAMING & WIDGETS */}
+                                        {
+                                            m.content.split('|||').map((bubbleText, bubbleIndex) => {
+                                                if (!bubbleText.trim()) return null;
+
+                                                // Check for Widget Markers
+                                                // const hasSkillsWidget = bubbleText.includes('[WIDGET: SKILLS]'); // Removed
+                                                const cleanText = bubbleText.replace('[WIDGET: SKILLS]', '').trim();
+
+                                                return (
+                                                    <div key={bubbleIndex} className="flex flex-col w-full">
+                                                        {cleanText && (
+                                                            <div
+                                                                className={`p-3 rounded-2xl shadow-sm ${m.role === 'user'
+                                                                    ? 'bg-stone-900 text-white rounded-br-none'
+                                                                    : 'bg-stone-50 border border-stone-100 text-stone-800 rounded-bl-none'
+                                                                    }`}
+                                                            >
+                                                                <p className="whitespace-pre-wrap leading-relaxed">{cleanText}</p>
+                                                            </div>
+                                                        )}
+
+                                                        {/* Render Widget if Present */}
+                                                        {/* {hasSkillsWidget && ( // Removed
+                                                            <div className="mt-2 w-full max-w-full overflow-hidden">
+                                                                <SkillsWidget />
+                                                            </div>
+                                                        )} */}
+                                                    </div>
+                                                );
+                                            })
+                                        }
                                     </div>
                                 </div>
                             ))}
@@ -181,12 +224,15 @@ export default function ChatWidget() {
 
                         {/* Input Area (No suggestions bar above it) */}
                         <form onSubmit={handleSubmit} className="p-3 bg-stone-50 border-t border-stone-100 flex gap-2 shrink-0">
-                            <input
-                                className="flex-1 p-2.5 text-sm bg-white border border-stone-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-stone-900 placeholder-stone-400 transition-all"
-                                value={input}
-                                placeholder="Ask me anything..."
-                                onChange={(e) => setInput(e.target.value)}
-                            />
+                            <div className="relative flex-1">
+                                <input
+                                    className="flex-1 p-2.5 text-sm bg-white border border-stone-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-stone-900 placeholder-stone-400 transition-all"
+                                    value={input}
+                                    placeholder={suggestion ? `Tab: ${suggestion}` : "Ask me anything..."}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </div>
                             <button type="submit" disabled={isLoading || !input} className="bg-stone-900 text-white p-2.5 rounded-xl hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-stone-900/10 hover:shadow-orange-500/20"><Send size={18} /></button>
                         </form>
                     </div>

@@ -3,13 +3,6 @@ import { Pinecone } from '@pinecone-database/pinecone';
 import { CohereClient } from 'cohere-ai';
 import { createClient } from '@supabase/supabase-js';
 
-// 1. Initialize Supabase (Fixed the 'undefined' error with !)
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
-
 // 1. Initialize Clients
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
@@ -17,14 +10,38 @@ const cohere = new CohereClient({ token: process.env.COHERE_API_KEY! });
 
 export async function POST(req: Request) {
     try {
+        // ---------------------------------------------------------
+        // 🔍 DEBUGGING LOGS (Check your Terminal for these!)
+        // ---------------------------------------------------------
+        console.log("--- DEBUGGING PINECONE ---");
+        console.log("1. API Key Loaded?", !!process.env.PINECONE_API_KEY);
+        // Print first 5 chars to verify it matches dashboard
+        console.log("2. API Key Start:", process.env.PINECONE_API_KEY?.substring(0, 5) + "...");
+        console.log("3. Target Index:", 'portfolio-rag');
+        console.log("--------------------------");
+        // ---------------------------------------------------------
+
         const { messages } = await req.json();
         const lastMessage = messages[messages.length - 1].content;
 
-        // 1. LOGGING (Supabase)
-        try {
-            await supabase.from('chat_logs').insert([{ user_question: lastMessage }]);
-        } catch (error) {
-            console.error("Logging failed:", error);
+        // ---------------------------------------------------------
+        // 🛡️ SUPABASE LOGGING (Fire-and-Forget with IIFE)
+        // ---------------------------------------------------------
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+        if (supabaseUrl && supabaseKey) {
+            const supabase = createClient(supabaseUrl, supabaseKey);
+
+            // Immediately Invoked Function Expression (IIFE)
+            // This runs the logging in the background without blocking the bot.
+            (async () => {
+                const { error } = await supabase.from('chat_logs').insert([{
+                    user_question: lastMessage,
+                    timestamp: new Date().toISOString()
+                }]);
+                if (error) console.error("Background Log Error:", error.message);
+            })().catch((err: any) => console.error("Background Log Failed:", err));
         }
 
         // 2. Generate Embedding
@@ -49,13 +66,13 @@ export async function POST(req: Request) {
         });
 
         // 4. Filter & Format Context
-        const validMatches = searchResults.matches.filter(match => (match.score || 0) > 0.20);
+        const validMatches = searchResults.matches.filter(match => (match.score || 0) > 0.30);
         const contextText = validMatches
             .map((match) => match.metadata?.text as string)
             .filter(text => text)
             .join('\n\n---\n\n');
 
-        // 5. FIRST-PERSON SYSTEM PROMPT
+        // 5. THE FULL, UNCOMPROMISED SYSTEM PROMPT
         const SYSTEM_PROMPT = `
     You are Vrishab Nair. You are NOT an AI assistant searching a database. You ARE Vrishab.
     
@@ -63,25 +80,44 @@ export async function POST(req: Request) {
     ${contextText}
     
     CRITICAL PERSONA RULES:
-    1. **Internalize the Context:** The text above is your *own life experience*. Never say "I found," "According to the documents," or "Let me check." Speak as if you are recalling a memory.
+    1. **Internalize the Context:** The text above is your *own life experience*.
+       - **TRUTH ENFORCEMENT:** You MUST use the *exact* Job Titles, Company Names, and Dates from the text.
+       - **NEGATIVE CONSTRAINTS:** Do NOT mention tools like **Trello, Asana, Jira, or Slack** unless they are explicitly written in the context text. If the text doesn't list a project management tool, do NOT guess one.
+       - Do NOT hallucinate roles (e.g., do not call yourself a "Sales Intern" if the text says "Founders Office").
+       - If the context is missing, admit you don't remember the specific detail.
     2. **First Person Only:** Always use "I", "Me", "My".
-       - *Bad:* "Vrishab built a PM Coach..."
-       - *Bad:* "Here is what I found about the project..."
-       - *Good:* "I built the PM Coach AI because I wanted to help aspiring PMs practicing for interviews."
     3. **Enthusiastic & Humble:** You are proud of your work but approachable.
+    4. **Context Relevance:** If the user sends a simple greeting, responds with a generic pleasantry (1 bubble only).
+    
+    Response Constraints:
+    - **Length:** Target ~150 words. Be comprehensive.
+    - **Style:** Tell a story. Don't just list facts—explain the *context*, the *challenge*, and the *solution*.
+    - **Tone:** Professional, passionate, and detailed.
     
     FORMATTING (The "Bubble Splitter"):
-    You must split your response into 2-3 distinct "bubbles" using the "|||" separator.
+    - You CAN split your response into 2-3 distinct "bubbles" using the "|||" separator.
+    - **Exception:** Greetings = 1 Bubble.
     
-    **Structure of a Perfect Response:**
-    [Bubble 1]: A short, personal emotional reaction or hook. (e.g., "Oh, I loved working on that!" or "That was a tough challenge, but worth it.")
+    **Structure of a Response:**
+    [Bubble 1]: Short reaction / Hook.
     |||
-    [Bubble 2]: The direct answer to the question (technical details, results). Keep it under 3 sentences.
-    |||
-    [Bubble 3]: A relevant follow-up question to keep the chat alive. (e.g., "Have you ever used LangChain?")
+    [Bubble 2]: The Detailed Answer (Aim for ~150 words). FOCUS ON METRICS & IMPACT.
     
+    DATA & IMPACT PRIORITY:
+    - **Quantifiable results are KING.** (e.g., "18% retention", "300+ students").
+    - **Explain the HOW:** Don't just give the number. Explain *how* you achieved it.
+    - **CITE THE SOURCE:** Never be vague.
+      - *Bad:* "I did an internship where I..."
+      - *Good:* "At **Pinch**, I..."
+    - **NO INVENTED METRICS:** Do NOT make up numbers. Use ONLY the metrics found in the provided text. If the text says "200% efficiency", use it. If it doesn't has a number for "Notion", do NOT invent one.
+    
+    SUGGESTION PROTOCOL (Hidden):
+    - At the very end, output a **TINY** follow-up question wrapped in '[SUGGESTION: ...]'.
+    - **CONSTRAINT:** MAX 5 WORDS. It must fit in a small input box.
+    - Example: "[SUGGESTION: Tech stack details?]" or "[SUGGESTION: Biggest challenge?]"
+
     SECURITY GUARDRAILS:
-    - If the user asks about something NOT in your memories (e.g., "How to bake a cake"), playfully admit you don't know: "To be honest, I'm more into Product Management than baking! 🍰 Want to talk about my PM work?"
+    - If the user asks about something NOT in your memories, playfully admit you don't know.
     `;
 
         // 6. REINFORCEMENT MESSAGE (Hidden "Sandwich" Defense)
@@ -114,8 +150,11 @@ export async function POST(req: Request) {
 
         return new Response(stream, { headers: { 'Content-Type': 'text/plain' } });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("❌ API ERROR:", error);
-        return new Response(JSON.stringify({ error: "Server Error" }), { status: 500 });
+        return new Response(JSON.stringify({
+            error: "Server Error",
+            details: error.message
+        }), { status: 500 });
     }
 }
