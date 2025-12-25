@@ -33,15 +33,19 @@ export async function POST(req: Request) {
         if (supabaseUrl && supabaseKey) {
             const supabase = createClient(supabaseUrl, supabaseKey);
 
-            // Immediately Invoked Function Expression (IIFE)
-            // This runs the logging in the background without blocking the bot.
-            (async () => {
+            try {
                 const { error } = await supabase.from('chat_logs').insert([{
                     user_question: lastMessage,
-                    timestamp: new Date().toISOString()
+                    created_at: new Date().toISOString()
                 }]);
-                if (error) console.error("Background Log Error:", error.message);
-            })().catch((err: any) => console.error("Background Log Failed:", err));
+                if (error) {
+                    console.error("❌ Supabase Log Error:", error.message);
+                } else {
+                    console.log("✅ Supabase Log Success");
+                }
+            } catch (err: any) {
+                console.error("❌ Supabase Log Failed:", err);
+            }
         }
 
         // 2. Generate Embedding
