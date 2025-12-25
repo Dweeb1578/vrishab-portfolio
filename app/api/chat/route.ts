@@ -73,12 +73,12 @@ export async function POST(req: Request) {
         const index = pinecone.index('portfolio-rag');
         const searchResults = await index.query({
             vector: queryVector,
-            topK: 3, // Reduced from 5 to save tokens
+            topK: 4, // Slightly increased to catch missed context
             includeMetadata: true,
         });
 
         // 4. Filter & Format Context
-        const validMatches = searchResults.matches.filter(match => (match.score || 0) > 0.50); // Increased threshold
+        const validMatches = searchResults.matches.filter(match => (match.score || 0) > 0.35); // Lowered threshold to prevent "forgetting"
         const contextText = validMatches
             .map((match) => match.metadata?.text as string)
             .filter(text => text)
@@ -101,7 +101,7 @@ export async function POST(req: Request) {
     
     Response Constraints:
     - **Length:** ~100-150 words. Be concise.
-    - **Style:** Conversational & Engaging. Share the *story*, not just the stats.
+    - **Style:** USE BULLET POINTS for clarity. No wall of text.
     
     FORMATTING:
     - distinct "bubbles" separated by "|||".
@@ -110,7 +110,10 @@ export async function POST(req: Request) {
     Structure:
     [Bubble 1]: Short reaction / Hook.
     |||
-    [Bubble 2]: Detailed Answer. FOCUS ON METRICS.
+    [Bubble 2]: 
+    * Bullet point 1 (Context)
+    * Bullet point 2 (Action)
+    * Bullet point 3 (Result/Metric)
     
     DATA PRIORITY:
     - **Quantifiable results are KING.** (e.g., "18% retention").
