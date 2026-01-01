@@ -8,6 +8,19 @@ type Message = {
     content: string;
 };
 
+// Helper function to parse basic markdown to HTML
+const parseMarkdown = (text: string): string => {
+    return text
+        // Bold: **text** or __text__
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/__(.+?)__/g, '<strong>$1</strong>')
+        // Italics: *text* or _text_ (but not inside words)
+        .replace(/(?<!\w)\*([^*]+?)\*(?!\w)/g, '<em>$1</em>')
+        .replace(/(?<!\w)_([^_]+?)_(?!\w)/g, '<em>$1</em>')
+        // Bullet points: * at start of line
+        .replace(/^\* /gm, '• ');
+};
+
 export default function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
     const [showNudge, setShowNudge] = useState(false);
@@ -193,7 +206,10 @@ export default function ChatWidget() {
                                                                     : 'bg-stone-50 border border-stone-100 text-stone-800 rounded-bl-none'
                                                                     }`}
                                                             >
-                                                                <p className="whitespace-pre-wrap leading-relaxed">{cleanText}</p>
+                                                                <p
+                                                                    className="whitespace-pre-wrap leading-relaxed [&>em]:italic [&>strong]:font-semibold"
+                                                                    dangerouslySetInnerHTML={{ __html: parseMarkdown(cleanText) }}
+                                                                />
                                                             </div>
                                                         )}
 
