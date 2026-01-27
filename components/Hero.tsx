@@ -57,7 +57,7 @@ export default function Hero() {
                             Let's Talk <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </a>
                         {/* Secondary Button: White/Outline */}
-                        <a href="https://drive.google.com/file/d/1Ga_cKxQoXSYBG85ZAYnXUPwcUu9YhDaE/view?usp=sharing" target="_blank" className="px-7 py-3 bg-white text-stone-900 border border-stone-200 rounded-lg font-medium hover:bg-stone-50 transition-all flex items-center gap-2 shadow-sm">
+                        <a href="https://drive.google.com/file/d/1th668sdyB2v7FSxbilI4CIue1TfVEVWJ/view?usp=sharing" target="_blank" className="px-7 py-3 bg-white text-stone-900 border border-stone-200 rounded-lg font-medium hover:bg-stone-50 transition-all flex items-center gap-2 shadow-sm">
                             <Download size={18} /> Resume
                         </a>
                     </motion.div>
