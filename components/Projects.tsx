@@ -1,24 +1,54 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Code2, Zap, Bot, Workflow } from 'lucide-react';
+import { Code2, Zap, Bot, Workflow, QrCode, FileText, Mail } from 'lucide-react';
 import { Spotlight } from './ui/Spotlight';
 
 const projects = [
     {
-        title: "Portfolio RAG AI",
+        title: "VC Outreach Automation",
+        description: "B2B Research & Personalization Engine using n8n and Serper.dev. Automates lead research reducing manual time by 90% and drafts personalized hooks with Groq.",
+        tags: ["n8n", "Serper.dev", "Groq"],
+        icon: <Mail size={13} />,
+        color: "text-purple-500",
+        bgHover: "hover:shadow-[0_4px_20px_-5px_rgba(168,85,247,0.3)]",
+        borderHover: "hover:border-purple-200",
+        iconBg: "bg-purple-50",
+    },
+    {
+        title: "Resume Optimization Engine",
+        description: "A RAG-based resume improver enabling real-time rewriting. Features a hybrid multi-LLM pipeline (Gemini + Llama 3) for <200ms latency.",
+        tags: ["Python", "LangChain", "Gemini"],
+        icon: <FileText size={13} />,
+        color: "text-blue-500",
+        bgHover: "hover:shadow-[0_4px_20px_-5px_rgba(59,130,246,0.3)]",
+        borderHover: "hover:border-blue-200",
+        iconBg: "bg-blue-50",
+    },
+    {
+        title: "Dynamic QR Code Generator",
+        description: "A custom QR solution enabling real-time URL updates without re-printing. Features an interactive analytics dashboard and on-the-fly hex-color customization.",
+        tags: ["Python (Flask)", "Chart.js", "Pillow"],
+        icon: <QrCode size={13} />,
+        color: "text-emerald-500",
+        bgHover: "hover:shadow-[0_4px_20px_-5px_rgba(16,185,129,0.3)]",
+        borderHover: "hover:border-emerald-200",
+        iconBg: "bg-emerald-50",
+    },
+    {
+        title: "AI Portfolio Interactive Chatbot",
         description: "An intelligent portfolio assistant powered by Llama 3 and Vector Embeddings. It reads my technical resume and answers recruiter questions in real-time.",
         tags: ["Next.js", "Pinecone", "AI SDK"],
-        icon: <Zap size={24} />,
+        icon: <Zap size={13} />,
         color: "text-rose-500",
         bgHover: "hover:shadow-[0_4px_20px_-5px_rgba(251,113,133,0.3)]",
         borderHover: "hover:border-rose-200",
         iconBg: "bg-rose-50",
     },
     {
-        title: "PM Coach AI",
+        title: "Fine-tuned PM Mentor/Interviewer",
         description: "A Senior PM mentor bot. Fine-tuned Llama 7B on 3,000+ FAANG questions and built a RAG pipeline with ChromaDB to index curated product strategy literature.",
         tags: ["Llama 7B", "Unsloth", "ChromaDB"],
-        icon: <Bot size={24} />,
+        icon: <Bot size={13} />,
         color: "text-orange-500",
         bgHover: "hover:shadow-[0_4px_20px_-5px_rgba(249,115,22,0.3)]",
         borderHover: "hover:border-orange-200",
@@ -28,11 +58,21 @@ const projects = [
         title: "Sentiment Auto-Router",
         description: "Engineered an autonomous workflow to process anonymous letters. Integrated NLP sentiment analysis to filter toxicity and route positive messages, boosting efficiency by 200%.",
         tags: ["n8n", "NLP", "Webhooks"],
-        icon: <Workflow size={24} />,
+        icon: <Workflow size={13} />,
         color: "text-amber-500",
         bgHover: "hover:shadow-[0_4px_20px_-5px_rgba(245,158,11,0.3)]",
         borderHover: "hover:border-amber-200",
         iconBg: "bg-amber-50",
+    },
+    {
+        title: "Shywarma Enterprise Grade Chatbot",
+        description: "A high-performance travel chatbot using specialized RAG to dynamically reduce hotel prices by 30-40%. Features multi-layer Redis caching for 90% latency reduction.",
+        tags: ["Redis", "RAG", "TypeScript"],
+        icon: <Zap size={13} />, // Reusing Zap or similar, or I should import a new one. Let's check imports.
+        color: "text-indigo-500",
+        bgHover: "hover:shadow-[0_4px_20px_-5px_rgba(99,102,241,0.3)]",
+        borderHover: "hover:border-indigo-200",
+        iconBg: "bg-indigo-50",
     },
 ];
 

@@ -2,7 +2,7 @@
 * **Name:** Vrishab Nair
 * **Email:** vrishabnair44@gmail.com
 * **Phone:** +91-9963894342
-* **Links:** LinkedIn | Portfolio
+* **Links:** LinkedIn | GitHub | Portfolio
 
 # Education
 ## BITS Pilani, Hyderabad Campus
@@ -43,6 +43,28 @@
 * Fine-tuned **Llama 7B** using **Unsloth** on a dataset of 3,000+ FAANG product management interview questions.
 * Built a RAG pipeline with **ChromaDB** to index curated product strategy literature, reducing hallucinations by 40%.
 * Deployed the model to provide actionable feedback on user responses, mimicking a Senior PM's coaching style.
+
+**Shywarma AI** | *Redis, TypeScript, Vercel, RAG*
+* Engineered a custom multi-layer caching system using **Redis** to reduce repeat query response times by **90%** and significantly lower LLM token usage.
+* Developed a high-context **RAG pipeline** that retrieves hotel data and dynamically applies business logic to reduce travel package prices by **30-40%**.
+* Built robust rate-limiting middleware and a centralized content filtering system to prevent API abuse and ensure brand safety.
+* Refactored frontend state management to enable a seamless "streaming-like" user experience for complex itinerary generation.
+
+**Dynamic QR Code Generator** | *Python (Flask), Chart.js, Pillow, CSV/JSON*
+* Developed a custom **Dynamic QR Code Generator** enabling real-time URL updates without changing the physical QR code.
+* Engineered an interactive **analytics dashboard** with Chart.js to visualize traffic patterns and categorize scans by device type (iOS, Android, Desktop).
+* Implemented a "Design Studio" feature using **qrcode** and **Pillow** libraries to generate custom-branded, hex-color customizable QR codes.
+* Designed a lightweight, file-based persistence layer using JSON and CSV for relational mapping and high-throughput logging.
+
+**Resume Optimization Engine** | *Python, LangChain, Pinecone, Gemini, Groq*
+* Architected a **RAG-based resume optimization engine** reducing hallucination rates by providing LLMs with retrieved high-quality semantic examples.
+* Implemented a **hybrid multi-LLM pipeline** leveraging Google Gemini for embeddings and Groq (Llama 3) for sub-second inference (<200ms).
+* Developed a **semantic search system** with cosine similarity to match user experience against top-tier resume bullets, improving recommendation relevance.
+
+**VC Outreach Automation** | *n8n, Serper.dev, Groq*
+* Architected **n8n workflow** to automate lead research on VCs, reducing manual research time by **90%** via **Serper.dev**.
+* Implemented personalized hook generation using **Groq LLMs** to draft context-rich outreach emails for Seed to Series A founders.
+* Built a B2B Research & Personalization Engine capable of scalable, automated outreach with high relevance.
 
 **Sentiment Auto-Router** | *n8n, NLP, Webhooks, Automation*
 * Engineered an autonomous workflow to process anonymous student letters for a campus support group.

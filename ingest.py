@@ -4,8 +4,8 @@ from pinecone import Pinecone
 import cohere
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# 1. Load keys from your .env.local file
-load_dotenv(".env.local")
+# 1. Load keys from your .env file
+load_dotenv(".env")
 
 # 2. Setup Clients
 co = cohere.Client(os.getenv("COHERE_API_KEY"))

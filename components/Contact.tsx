@@ -45,6 +45,17 @@ export default function Contact() {
                     <Linkedin size={24} />
                 </a>
 
+                {/* GITHUB BUTTON */}
+                <a
+                    href="https://github.com/Dweeb1578"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center p-4 bg-stone-900 rounded-full hover:bg-stone-700 hover:text-white transition-all text-stone-50 cursor-pointer shadow-lg hover:shadow-stone-500/20 active:scale-95 border border-transparent"
+                    aria-label="GitHub"
+                >
+                    <Github size={24} />
+                </a>
+
 
             </div>
         </div>
