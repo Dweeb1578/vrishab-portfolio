@@ -4,3 +4,5 @@ Allow: /
 # Answer Engine Optimization
 Allow: /llms.txt
 Allow: /llms-full.txt
+
+Sitemap: https://vrishab-portfolio.vercel.app/sitemap.xml
