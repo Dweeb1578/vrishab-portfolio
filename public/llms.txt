@@ -1,0 +1,7 @@
+# Vrishab Nair - Product & Engineering Portfolio
+
+> Product Manager and Engineer specializing in AI, RAG pipelines, and Growth. Dual Degree student at BITS Pilani.
+
+## Core Documents
+
+- [Resume & Experience](resume.md)

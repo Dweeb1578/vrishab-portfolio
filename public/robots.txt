@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Answer Engine Optimization
+Allow: /llms.txt
+Allow: /llms-full.txt
