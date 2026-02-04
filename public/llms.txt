@@ -5,3 +5,7 @@
 ## Core Documents
 
 - [Resume & Experience](resume.md)
+
+## Full Context
+
+- [Consolidated Portfolio](llms-full.txt)
