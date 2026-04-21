@@ -1,5 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { ArrowRight, Download } from 'lucide-react';
 
 export default function Hero() {
@@ -74,10 +75,13 @@ export default function Hero() {
                             rel="noopener noreferrer"
                             className="block relative rounded-full w-full h-full overflow-hidden border-[8px] border-white dark:border-stone-900 shadow-2xl z-10 hover:scale-[1.02] transition-transform duration-500 ring-1 ring-stone-900/5 dark:ring-white/10"
                         >
-                            <img
-                                src="/image_0.png"
+                            <Image
+                                src="/profile.png"
                                 alt="Vrishab Nair"
-                                className="w-full h-full object-cover"
+                                fill
+                                priority
+                                sizes="(max-width: 640px) 288px, (max-width: 1024px) 384px, 500px"
+                                className="object-cover"
                             />
                         </a>
                     </div>
