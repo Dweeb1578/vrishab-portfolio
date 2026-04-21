@@ -8,27 +8,28 @@ type Thought = {
 
 const thoughts: Thought[] = [
     {
-        lede: "I'm not bullish on AI because the models are smart. I'm bullish because most internal tools are stupid.",
+        lede: "Most internal tools are stupid, and that is why I'm bullish on AI.",
         body: (
             <>
-                A shared inbox, a Notion doc, a 12-step SOP &mdash; throw a model at any of them and they
-                finally become usable. The MCP server I built at Zenskar isn&apos;t magic; it means our
-                marketing analyst can ask <em>&ldquo;how did our pricing page do last week?&rdquo;</em> in
-                English instead of juggling five tabs. Scale that kind of compression across a company
-                and a 10-person team starts doing work that used to take 30.
+                A shared inbox, a 12-step SOP, a Notion doc nobody reads. These are
+                the places where a language model quietly earns its keep. The MCP server I built at
+                Zenskar solves a boring problem: our marketing analyst used to have five dashboards
+                open to answer one question, and now she asks in English. If you can compress enough
+                of that kind of work inside a company, a ten-person team starts getting through what
+                used to need thirty.
             </>
         ),
     },
     {
-        lede: 'Ship the version that is embarrassing. Then fix it.',
+        lede: 'Ship the version that is embarrassing, then fix it in public.',
         body: (
             <>
-                The Streaks feature I launched at Pinch had a hardcoded list of streak types for three
-                weeks before we generalised it. The RAG chatbot at Zenskar went live with worse recall
-                than I wanted &mdash; because putting it in front of real users surfaced failure modes no
-                offline eval would have flagged. Every tool I&apos;ve built has been worse on day one
-                than day thirty. That&apos;s not a bug; it&apos;s the only way I&apos;ve seen learning
-                actually happen.
+                The Streaks feature I shipped at Pinch had a hardcoded list of streak types for three
+                weeks before we generalised it. Zenskar&apos;s support chatbot went live with worse recall
+                than I wanted, because putting it in front of real users surfaced failure modes that
+                no offline eval would have flagged. Every tool I have built has been worse on day one
+                than it is on day thirty, and I have stopped treating that gap as a problem I can
+                engineer away before launch.
             </>
         ),
     },
@@ -36,10 +37,10 @@ const thoughts: Thought[] = [
         lede: 'The interesting part of product work is the argument about what to cut.',
         body: (
             <>
-                The interesting part of engineering is deciding which abstraction earns its keep. I
-                like being in the seat where those two meet &mdash; someone who can argue a feature is
-                worth shipping <em>and</em> write the code that ships it. Most of my best work has come
-                from refusing to hand off between those two roles.
+                In engineering, it is the argument about which abstraction earns its keep. I like
+                sitting where those two conversations meet, as the person who can argue a feature is
+                worth shipping and then write the code that ships it. Most of my best work has come
+                from refusing to hand off between the two roles.
             </>
         ),
     },

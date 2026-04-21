@@ -91,7 +91,7 @@ export const projects: Project[] = [
     {
         slug: 'zenskar-outreach',
         title: 'Zenskar Outreach',
-        hook: 'B2B outreach dashboard — tracks companies, contacts, and campaigns end-to-end.',
+        hook: 'B2B outreach dashboard that tracks companies, contacts, and campaigns end-to-end.',
         description:
             'Streamlit app backed by Supabase and a local SQLite cache. Manages outreach lists, groups contacts, and visualises engagement in a clean dark-mode UI. Connects to LinkedIn sequences and email providers.',
         tags: ['Streamlit', 'Supabase', 'SQLite'],

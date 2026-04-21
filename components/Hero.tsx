@@ -49,7 +49,7 @@ export default function Hero() {
                         transition={{ duration: 0.6, delay: 0.5 }}
                         className="text-base text-stone-500 dark:text-stone-400 mb-8 max-w-xl leading-relaxed"
                     >
-                        Right now at <strong className="text-stone-800 dark:text-stone-200">Zenskar</strong>, shipping MCP servers, RAG chatbots, and multi-agent pipelines for the marketing team &mdash; work that used to take a week of analyst time now happens in a Claude prompt. Before: Founder&apos;s Office at Pinch, growth at Nam Nam, president of 180 Degrees Consulting, BITS Hyderabad.
+                        Right now at <strong className="text-stone-800 dark:text-stone-200">Zenskar</strong>, shipping MCP servers, RAG chatbots, and multi-agent pipelines for the marketing team. Work that used to take a week of analyst time now happens inside a Claude prompt. Before: Founder&apos;s Office at Pinch, growth at Nam Nam Foods, president of 180 Degrees Consulting at BITS Hyderabad.
                     </motion.p>
 
                     <motion.div

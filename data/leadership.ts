@@ -62,7 +62,7 @@ export const leadership: Leadership[] = [
                 text: 'Automated "The Appreciation Project": built an n8n workflow with Sentiment Analysis to filter and route messages from Google Forms to recipients.',
             },
             {
-                text: 'Eliminated manual verification "grunt work," boosting operational efficiency by 200%.',
+                text: 'Eliminated the manual verification "grunt work." Operational efficiency jumped 200%.',
                 highlight: '200%',
             },
             {
@@ -80,13 +80,13 @@ export const leadership: Leadership[] = [
         org: 'Dept. of Publicity and Public Relations',
         icon: Flag,
         summary:
-            'Owned ATMOS 2024 social presence end-to-end — strategy, content, and paid growth.',
+            'Owned ATMOS 2024 social presence end-to-end: strategy, content, and paid growth.',
         bullets: [
             {
                 text: 'Managed ATMOS 2024 Instagram (8k+ followers) and developed the content strategy.',
             },
             {
-                text: 'Executed paid ads driving 3M+ reach and ₹19L in ticket sales (78% YoY increase).',
+                text: 'Ran paid ads that drove 3M+ reach and ₹19L in ticket sales (78% YoY).',
                 highlight: '₹19L',
             },
         ],
