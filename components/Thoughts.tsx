@@ -21,15 +21,14 @@ const thoughts: Thought[] = [
         ),
     },
     {
-        lede: 'Ship the version that is embarrassing, then fix it in public.',
+        lede: 'Real users grade a tool better than any eval.',
         body: (
             <>
                 The Streaks feature I shipped at Pinch had a hardcoded list of streak types for three
                 weeks before we generalised it. Zenskar&apos;s support chatbot went live with worse recall
-                than I wanted, because putting it in front of real users surfaced failure modes that
-                no offline eval would have flagged. Every tool I have built has been worse on day one
-                than it is on day thirty, and I have stopped treating that gap as a problem I can
-                engineer away before launch.
+                than I wanted, because putting it in front of users surfaced failure modes we had not
+                thought to write tests for. Every tool I have built got sharper between day one and
+                day thirty, and that gap has become the signal I design around.
             </>
         ),
     },

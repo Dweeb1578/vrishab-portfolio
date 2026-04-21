@@ -36,6 +36,18 @@ export interface Project {
 
 export const projects: Project[] = [
     {
+        slug: 'zenskar-mcp-server',
+        title: 'Zenskar MCP Server',
+        hook: '19-tool Marketing Analytics MCP server used in Claude-native workflows.',
+        description:
+            'A Model Context Protocol server exposing read-only tools across Google Search Console, GA4, Google Ads, HubSpot CRM, and Bing Webmaster. Deployed on Render, accessible from Claude Desktop, Claude Code, and claude.ai.',
+        tags: ['Python', 'MCP', 'Google APIs', 'Render'],
+        color: 'purple',
+        icon: Server,
+        githubUrl: 'https://github.com/vrishab-rgb/zenskar-mcp-server',
+        featured: true,
+    },
+    {
         slug: 'canyoucrackthecase',
         title: 'CanYouCrackTheCase',
         hook: 'Voice-driven McKinsey-style case practice with AI judging and ELO ratings.',
@@ -44,7 +56,6 @@ export const projects: Project[] = [
         tags: ['Next.js 15', 'Supabase', 'Groq', 'Web Speech API'],
         color: 'rose',
         icon: Mic,
-        featured: true,
     },
     {
         slug: 'zenskar-chatbot',
@@ -55,17 +66,6 @@ export const projects: Project[] = [
         tags: ['FastAPI', 'LangChain', 'Pinecone', 'Redis'],
         color: 'indigo',
         icon: MessageCircle,
-    },
-    {
-        slug: 'zenskar-mcp-server',
-        title: 'Zenskar MCP Server',
-        hook: '19-tool Marketing Analytics MCP server used in Claude-native workflows.',
-        description:
-            'A Model Context Protocol server exposing read-only tools across Google Search Console, GA4, Google Ads, HubSpot CRM, and Bing Webmaster. Deployed on Render, accessible from Claude Desktop, Claude Code, and claude.ai.',
-        tags: ['Python', 'MCP', 'Google APIs', 'Render'],
-        color: 'purple',
-        icon: Server,
-        githubUrl: 'https://github.com/vrishab-rgb/zenskar-mcp-server',
     },
     {
         slug: 'zenskar-events',
@@ -80,9 +80,9 @@ export const projects: Project[] = [
     {
         slug: 'zenskar-icp-classification',
         title: 'Zenskar ICP Classifier',
-        hook: 'LLM-based lead qualification with Apollo + LinkedIn enrichment and Telegram alerts.',
+        hook: 'LLM-based lead qualification with Apollo + LinkedIn enrichment and Slack alerts.',
         description:
-            'Enriches raw company lists via Apollo.io and LinkedIn, then scores each prospect against Zenskar\'s ICP (B2B SaaS, custom billing, >$40K ACV) using Groq\'s 120B model. A Telegram bot pings the sales team when a high-fit lead lands.',
+            'Enriches raw company lists via Apollo.io and LinkedIn, then scores each prospect against Zenskar\'s ICP (B2B SaaS, custom billing, >$40K ACV) using Groq\'s 120B model. A Slack bot pings the sales team when a high-fit lead lands.',
         tags: ['Python', 'Groq 120B', 'Apollo API'],
         color: 'blue',
         icon: Target,
