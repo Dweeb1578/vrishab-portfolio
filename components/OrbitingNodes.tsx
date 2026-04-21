@@ -4,6 +4,7 @@ import {
     motion,
     useMotionValue,
     useTransform,
+    useReducedMotion,
     animate,
     type MotionValue,
 } from 'framer-motion';
@@ -68,15 +69,17 @@ export default function OrbitingNodes({
     duration = 40,
     className = '',
 }: OrbitingNodesProps) {
+    const reduced = useReducedMotion();
     const angle = useMotionValue(0);
     useEffect(() => {
+        if (reduced) return;
         const controls = animate(angle, 360, {
             duration,
             ease: 'linear',
             repeat: Infinity,
         });
         return () => controls.stop();
-    }, [angle, duration]);
+    }, [angle, duration, reduced]);
 
     return (
         <div

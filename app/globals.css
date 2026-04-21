@@ -106,6 +106,14 @@ body {
   cursor: text !important;
 }
 
+/* Keyboard-focus outline for any interactive element that doesn't already style its own.
+   `:where` keeps specificity at 0 so component-level focus styles still win. */
+:where(a, button, [role="button"], input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid rgb(249 115 22);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 /* Kill animation for users who prefer reduced motion — overrides everything. */
 @media (prefers-reduced-motion: reduce) {
   *,
