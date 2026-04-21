@@ -1,13 +1,14 @@
 'use client';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { ArrowRight, Download } from 'lucide-react';
+import { ArrowRight, ChevronDown, Download } from 'lucide-react';
+import MetricCounter from './MetricCounter';
+import OrbitingNodes from './OrbitingNodes';
+import { heroMetrics } from '../data/metrics';
 
 export default function Hero() {
     return (
         <section id="about" className="min-h-screen flex flex-col justify-center pt-24 pb-12 relative overflow-hidden">
-
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-orange-200/40 dark:bg-orange-500/10 blur-[120px] rounded-full -z-10 animate-pulse-slow"></div>
 
             <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
 
@@ -48,6 +49,27 @@ export default function Hero() {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.45 }}
+                        className="flex flex-wrap gap-3 mb-8"
+                    >
+                        {heroMetrics.map((m) => (
+                            <div
+                                key={m.label}
+                                className="flex items-baseline gap-2 px-3 py-1.5 rounded-full bg-white/60 dark:bg-stone-900/60 backdrop-blur-sm border border-stone-200 dark:border-stone-800 shadow-sm"
+                            >
+                                <span className="text-base font-bold text-stone-900 dark:text-stone-100">
+                                    <MetricCounter value={m.value} prefix={m.prefix} suffix={m.suffix} />
+                                </span>
+                                <span className="text-xs text-stone-500 dark:text-stone-400">
+                                    {m.label}
+                                </span>
+                            </div>
+                        ))}
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.5 }}
                         className="flex flex-wrap gap-4"
                     >
@@ -68,6 +90,8 @@ export default function Hero() {
                 >
                     <div className="relative w-72 h-72 sm:w-96 sm:h-96 lg:w-[500px] lg:h-[500px]">
                         <div className="absolute inset-0 bg-linear-to-tr from-orange-500 to-rose-500 rounded-full blur-3xl opacity-20 dark:opacity-30 animate-spin-slow"></div>
+
+                        <OrbitingNodes radius={290} className="hidden lg:block" />
 
                         <a
                             href="https://www.linkedin.com/in/vrishab-nair-212769290/"
@@ -96,7 +120,14 @@ export default function Hero() {
                 className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-stone-400 dark:text-stone-600"
             >
                 <span className="text-xs uppercase tracking-widest">Scroll</span>
-                <div className="w-[1px] h-12 bg-linear-to-b from-stone-400 dark:from-stone-600 to-transparent"></div>
+                <motion.div
+                    animate={{ y: [0, 6, 0] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                    className="flex flex-col items-center"
+                >
+                    <div className="w-[1px] h-8 bg-linear-to-b from-stone-400 dark:from-stone-600 to-transparent"></div>
+                    <ChevronDown size={14} className="-mt-1" />
+                </motion.div>
             </motion.div>
 
         </section>
