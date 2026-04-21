@@ -99,6 +99,13 @@ body {
   cursor: none !important;
 }
 
+/* Keep the text caret visible inside inputs so typing still feels grounded. */
+.cursor-none input,
+.cursor-none textarea,
+.cursor-none [contenteditable="true"] {
+  cursor: text !important;
+}
+
 /* Kill animation for users who prefer reduced motion — overrides everything. */
 @media (prefers-reduced-motion: reduce) {
   *,

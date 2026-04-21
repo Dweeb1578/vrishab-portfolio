@@ -7,6 +7,7 @@ import Experience from '../components/Experience';
 import Projects from '../components/Projects';
 import Leadership from '../components/Leadership';
 import FloatingNav from '../components/FloatingNav';
+import CustomCursor from '../components/CustomCursor';
 
 export default function Home() {
   return (
@@ -39,6 +40,7 @@ export default function Home() {
       </div>
 
       <ChatWidget />
+      <CustomCursor />
     </main>
   );
 }
