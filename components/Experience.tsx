@@ -16,6 +16,16 @@ type Accent = {
 };
 
 const accent: Record<ExperienceColor, Accent> = {
+    emerald: {
+        dot: 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]',
+        text: 'text-emerald-600 dark:text-emerald-400',
+        borderHover: 'hover:border-emerald-300 dark:hover:border-emerald-500/50',
+        marker: 'marker:text-emerald-500',
+        tag: 'bg-emerald-50/80 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/30 hover:bg-emerald-100 dark:hover:bg-emerald-500/20',
+        quoteBg: 'bg-emerald-50/60 dark:bg-emerald-500/5',
+        quoteBorderL: 'border-l-emerald-400 dark:border-l-emerald-500/60',
+        quoteIcon: 'text-emerald-500',
+    },
     orange: {
         dot: 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]',
         text: 'text-orange-600 dark:text-orange-400',

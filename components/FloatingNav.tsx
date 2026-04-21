@@ -1,10 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Briefcase, FolderGit2, Send, Sun, Moon } from 'lucide-react';
+import { User, Brain, Briefcase, FolderGit2, Send, Sun, Moon } from 'lucide-react';
 
 const navItems = [
     { name: 'About', link: '#about', icon: <User size={18} /> },
+    { name: 'Thoughts', link: '#thoughts', icon: <Brain size={18} /> },
     { name: 'Experience', link: '#experience', icon: <Briefcase size={18} /> },
     { name: 'Work', link: '#work', icon: <FolderGit2 size={18} /> },
     { name: 'Contact', link: '#contact', icon: <Send size={18} /> },

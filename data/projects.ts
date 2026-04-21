@@ -65,6 +65,7 @@ export const projects: Project[] = [
         tags: ['Python', 'MCP', 'Google APIs', 'Render'],
         color: 'purple',
         icon: Server,
+        githubUrl: 'https://github.com/vrishab-rgb/zenskar-mcp-server',
     },
     {
         slug: 'zenskar-events',
@@ -85,6 +86,7 @@ export const projects: Project[] = [
         tags: ['Python', 'Groq 120B', 'Apollo API'],
         color: 'blue',
         icon: Target,
+        githubUrl: 'https://github.com/vrishab-rgb/Zenskar-ICP-Classification',
     },
     {
         slug: 'zenskar-outreach',
@@ -95,6 +97,7 @@ export const projects: Project[] = [
         tags: ['Streamlit', 'Supabase', 'SQLite'],
         color: 'emerald',
         icon: Send,
+        githubUrl: 'https://github.com/vrishab-rgb/zenskar-outreach',
     },
     {
         slug: 'tldv-downloader',
@@ -105,6 +108,7 @@ export const projects: Project[] = [
         tags: ['Python', 'ffmpeg', 'JWT'],
         color: 'orange',
         icon: Download,
+        githubUrl: 'https://github.com/vrishab-rgb/tldv-downloader',
     },
     {
         slug: 'resume-optimizer',
@@ -115,6 +119,8 @@ export const projects: Project[] = [
         tags: ['Python', 'LangChain', 'Gemini', 'Llama 3'],
         color: 'blue',
         icon: FileText,
+        githubUrl: 'https://github.com/Dweeb1578/Resume-PerfecterUPD',
+        liveUrl: 'https://resume-perfecter-upd.vercel.app',
     },
     {
         slug: 'shywarma-chatbot',
@@ -125,6 +131,8 @@ export const projects: Project[] = [
         tags: ['Next.js 15', 'Pinecone', 'Vercel KV'],
         color: 'rose',
         icon: Hotel,
+        githubUrl: 'https://github.com/Dweeb1578/Shywarma-Chain-of-Hotels',
+        liveUrl: 'https://shywarma-chain-of-hotels.vercel.app',
     },
 ];
 

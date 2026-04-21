@@ -1,4 +1,4 @@
-export type ExperienceColor = 'orange' | 'rose' | 'amber';
+export type ExperienceColor = 'emerald' | 'orange' | 'rose' | 'amber';
 
 export interface ExperienceDetail {
     text: string;
@@ -22,11 +22,39 @@ export interface Experience {
 
 export const experiences: Experience[] = [
     {
+        company: 'Zenskar',
+        role: 'AI Engineer — Marketing Team',
+        period: 'Sept 2025 — Present',
+        description:
+            'Building the marketing team\'s internal AI stack — MCP servers, RAG chatbots, and multi-agent pipelines. Work that used to need a team now runs on a prompt.',
+        details: [
+            {
+                text: 'Shipped a 19-tool MCP server wired to Google Search Console, GA4, Google Ads, HubSpot CRM, and Bing — lets the team query marketing data from Claude Desktop instead of jumping between dashboards.',
+                metric: { value: 19, prefix: '', suffix: '-tool' },
+            },
+            {
+                text: 'Designed the public-facing support chatbot — hybrid BM25 + dense retrieval on Pinecone, Redis-cached, embeddable as a one-line script. Answers land in under 400ms on the hot path.',
+                metric: { value: 400, suffix: 'ms' },
+            },
+            {
+                text: 'Built an ICP classifier that enriches cold company lists with Apollo + LinkedIn data, scores them against Zenskar\'s $40K ACV B2B XaaS profile with a 120B Groq model, and pings sales on Telegram the moment a high-fit lead lands.',
+            },
+            {
+                text: 'Prototyped a multi-agent competitor-events scraper (Playwright + Apify + Groq/Gemini) that monitors 8 competitor sites and surfaces industry events weekly — replaced ~4 hours of manual research.',
+            },
+            {
+                text: 'Shipped the outreach tracker — a Streamlit-over-Supabase dashboard the SDR team now runs their entire weekly pipeline on.',
+            },
+        ],
+        skills: ['Python', 'MCP', 'LangChain', 'Pinecone', 'RAG', 'Multi-agent LLM', 'Groq', 'Gemini'],
+        color: 'emerald',
+    },
+    {
         company: 'Pinch',
         role: 'Founders Office Intern',
         period: 'May 2025 — August 2025',
         description:
-            'Working directly with founders on product strategy, fundraising, and operations.',
+            'Worked directly with the founders on product strategy, fundraising, and the boring ops work that actually moves things.',
         details: [
             {
                 text: 'Identified product gaps through competitive analysis of 7 networking apps and designed 3 Figma prototypes, leading to the prioritization of 2 high-impact roadmap features.',
@@ -43,13 +71,11 @@ export const experiences: Experience[] = [
                 metric: { value: 34, prefix: '', suffix: '+' },
             },
             {
-                text: "Executed end-to-end hiring for 2 Marketing Executives via LinkedIn and the Founder's Network.",
+                text: 'Ran end-to-end hiring for 2 Marketing Executives via LinkedIn and the Founder\'s Network.',
             },
         ],
         skills: ['Product Strategy', 'Figma', 'Growth', 'Fundraising', 'SEO'],
         color: 'orange',
-        pullQuote:
-            'Led the Streaks launch end-to-end — from gap analysis to shipped feature — and watched 7-day retention tick up 18% in three months.',
     },
     {
         company: 'Stamp My Visa',

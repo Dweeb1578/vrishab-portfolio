@@ -2,9 +2,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ArrowRight, ChevronDown, Download } from 'lucide-react';
-import MetricCounter from './MetricCounter';
 import OrbitingNodes from './OrbitingNodes';
-import { heroMetrics } from '../data/metrics';
 
 export default function Hero() {
     return (
@@ -18,13 +16,13 @@ export default function Hero() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-mono mb-6"
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-mono mb-6"
                     >
                         <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                         </span>
-                        Open to Product & Founder&apos;s Office Roles
+                        Currently at Zenskar · open to Product &amp; Founder&apos;s Office roles
                     </motion.div>
 
                     <motion.h1
@@ -33,44 +31,31 @@ export default function Hero() {
                         transition={{ duration: 0.6, delay: 0.3 }}
                         className="text-5xl md:text-7xl font-extrabold tracking-tight text-stone-900 dark:text-stone-50 mb-6 leading-[1.1]"
                     >
-                        Building <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-rose-500 to-amber-500 animate-gradient-x">Intelligent</span> <br />
-                        Digital Products.
+                        Making small teams <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-rose-500 to-amber-500 animate-gradient-x">dangerous</span> with AI tooling.
                     </motion.h1>
 
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.4 }}
-                        className="text-lg text-stone-600 dark:text-stone-400 mb-8 max-w-xl leading-relaxed"
+                        className="text-lg text-stone-600 dark:text-stone-300 mb-4 max-w-xl leading-relaxed"
                     >
-                        Hi, I&apos;m <strong className="text-stone-900 dark:text-stone-100">Vrishab Nair</strong>. I bridge the gap between engineering execution and user-centric product strategy. Currently building at the intersection of Hardware, AI, and Operations.
+                        I&apos;m <strong className="text-stone-900 dark:text-stone-100">Vrishab</strong>. I build internal tools that collapse the gap between what one person can do and what a team of five used to.
+                    </motion.p>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.5 }}
+                        className="text-base text-stone-500 dark:text-stone-400 mb-8 max-w-xl leading-relaxed"
+                    >
+                        Right now at <strong className="text-stone-800 dark:text-stone-200">Zenskar</strong>, shipping MCP servers, RAG chatbots, and multi-agent pipelines for the marketing team &mdash; work that used to take a week of analyst time now happens in a Claude prompt. Before: Founder&apos;s Office at Pinch, growth at Nam Nam, president of 180 Degrees Consulting, BITS Hyderabad.
                     </motion.p>
 
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.45 }}
-                        className="flex flex-wrap gap-3 mb-8"
-                    >
-                        {heroMetrics.map((m) => (
-                            <div
-                                key={m.label}
-                                className="flex items-baseline gap-2 px-3 py-1.5 rounded-full bg-white/60 dark:bg-stone-900/60 backdrop-blur-sm border border-stone-200 dark:border-stone-800 shadow-sm"
-                            >
-                                <span className="text-base font-bold text-stone-900 dark:text-stone-100">
-                                    <MetricCounter value={m.value} prefix={m.prefix} suffix={m.suffix} />
-                                </span>
-                                <span className="text-xs text-stone-500 dark:text-stone-400">
-                                    {m.label}
-                                </span>
-                            </div>
-                        ))}
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.5 }}
+                        transition={{ duration: 0.6, delay: 0.6 }}
                         className="flex flex-wrap gap-4"
                     >
                         <a href="#contact" className="group px-7 py-3 bg-stone-900 dark:bg-stone-100 text-stone-50 dark:text-stone-900 rounded-lg font-bold hover:bg-black dark:hover:bg-white transition-all flex items-center gap-2 shadow-lg shadow-stone-500/20 hover:shadow-xl">
