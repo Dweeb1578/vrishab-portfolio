@@ -4,9 +4,9 @@ import { Briefcase } from 'lucide-react';
 import { experiences } from '../data/experience';
 
 const dotColor: Record<string, string> = {
-    orange: 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.4)]',
-    rose: 'bg-rose-500 shadow-[0_0_10px_rgba(251,113,133,0.4)]',
-    amber: 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]',
+    orange: 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]',
+    rose: 'bg-rose-500 shadow-[0_0_10px_rgba(251,113,133,0.5)]',
+    amber: 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]',
 };
 
 export default function Experience() {
@@ -18,12 +18,12 @@ export default function Experience() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="text-3xl font-bold text-stone-900 mb-16 flex items-center gap-3"
+                    className="text-3xl font-bold text-stone-900 dark:text-stone-50 mb-16 flex items-center gap-3"
                 >
                     <span className="h-px w-8 bg-orange-500"></span> Internships
                 </motion.h2>
 
-                <div className="relative border-l border-stone-200 ml-3 md:ml-6 space-y-12">
+                <div className="relative border-l border-stone-200 dark:border-stone-800 ml-3 md:ml-6 space-y-12">
                     {experiences.map((exp, index) => (
                         <motion.div
                             key={exp.company}
@@ -34,24 +34,24 @@ export default function Experience() {
                             className="relative pl-8 md:pl-12 group"
                         >
                             <div
-                                className={`absolute -left-[5px] top-6 h-2.5 w-2.5 rounded-full ring-4 ring-stone-100 transition-all duration-300 ${dotColor[exp.color]}`}
+                                className={`absolute -left-[5px] top-6 h-2.5 w-2.5 rounded-full ring-4 ring-stone-100 dark:ring-stone-900 transition-all duration-300 ${dotColor[exp.color]}`}
                             ></div>
 
-                            <div className="p-6 rounded-2xl bg-white border border-stone-200 hover:border-orange-300 transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1">
+                            <div className="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-orange-300 dark:hover:border-orange-500/50 transition-all duration-300 shadow-sm hover:shadow-lg dark:shadow-black/20 hover:-translate-y-1">
                                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-2">
                                     <div>
-                                        <h3 className="text-xl font-bold text-stone-900">{exp.role}</h3>
-                                        <div className="text-orange-600 font-medium flex items-center gap-2 mt-1">
+                                        <h3 className="text-xl font-bold text-stone-900 dark:text-stone-50">{exp.role}</h3>
+                                        <div className="text-orange-600 dark:text-orange-400 font-medium flex items-center gap-2 mt-1">
                                             <Briefcase size={16} /> {exp.company}
                                         </div>
                                     </div>
-                                    <span className="text-xs font-mono text-stone-500 bg-stone-100 px-2 py-1 rounded border border-stone-200">
+                                    <span className="text-xs font-mono text-stone-500 dark:text-stone-400 bg-stone-100 dark:bg-stone-800 px-2 py-1 rounded border border-stone-200 dark:border-stone-700">
                                         {exp.period}
                                     </span>
                                 </div>
 
-                                <div className="text-stone-600 leading-relaxed">
-                                    <p className="mb-3 italic text-stone-500">{exp.description}</p>
+                                <div className="text-stone-600 dark:text-stone-400 leading-relaxed">
+                                    <p className="mb-3 italic text-stone-500 dark:text-stone-500">{exp.description}</p>
                                     <ul className="list-disc list-outside ml-4 space-y-2 marker:text-orange-500 mb-6">
                                         {exp.details.map((detail, i) => (
                                             <li key={i}>{detail.text}</li>
@@ -62,7 +62,7 @@ export default function Experience() {
                                         {exp.skills.map((tag) => (
                                             <span
                                                 key={tag}
-                                                className="px-2 py-1 rounded text-xs font-medium bg-orange-50/80 text-orange-600 border border-orange-100 hover:bg-orange-100 transition-colors"
+                                                className="px-2 py-1 rounded text-xs font-medium bg-orange-50/80 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-100 dark:border-orange-500/30 hover:bg-orange-100 dark:hover:bg-orange-500/20 transition-colors"
                                             >
                                                 {tag}
                                             </span>

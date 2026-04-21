@@ -14,9 +14,9 @@ export default function Contact() {
 
     return (
         <div className="text-center max-w-2xl mx-auto relative z-50">
-            <h2 className="text-4xl font-bold text-stone-900 mb-6">Ready to collaborate?</h2>
-            <p className="text-stone-600 mb-8">
-                I'm always open to discussing Product Management roles, Engineering challenges, or just nerding out over new tech.
+            <h2 className="text-4xl font-bold text-stone-900 dark:text-stone-50 mb-6">Ready to collaborate?</h2>
+            <p className="text-stone-600 dark:text-stone-400 mb-8">
+                I&apos;m always open to discussing Product Management roles, Engineering challenges, or just nerding out over new tech.
             </p>
 
             <div className="flex justify-center gap-4">
@@ -25,8 +25,8 @@ export default function Contact() {
                 <button
                     onClick={handleCopyEmail}
                     className={`flex items-center justify-center gap-2 px-6 py-4 rounded-full transition-all cursor-pointer shadow-lg active:scale-95 border ${copied
-                        ? 'bg-emerald-100 border-emerald-500 text-emerald-700'
-                        : 'bg-stone-900 border-transparent hover:bg-orange-600 hover:text-white text-stone-50'
+                        ? 'bg-emerald-100 dark:bg-emerald-500/20 border-emerald-500 text-emerald-700 dark:text-emerald-300'
+                        : 'bg-stone-900 dark:bg-stone-100 border-transparent hover:bg-orange-600 dark:hover:bg-orange-500 hover:text-white dark:hover:text-white text-stone-50 dark:text-stone-900'
                         }`}
                     aria-label="Copy Email"
                 >
@@ -39,7 +39,7 @@ export default function Contact() {
                     href="https://linkedin.com/in/vrishab-nair-212769290/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center p-4 bg-stone-900 rounded-full hover:bg-blue-600 hover:text-white transition-all text-stone-50 cursor-pointer shadow-lg hover:shadow-blue-500/20 active:scale-95 border border-transparent"
+                    className="flex items-center justify-center p-4 bg-stone-900 dark:bg-stone-100 rounded-full hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-white transition-all text-stone-50 dark:text-stone-900 cursor-pointer shadow-lg hover:shadow-blue-500/20 active:scale-95 border border-transparent"
                     aria-label="LinkedIn"
                 >
                     <Linkedin size={24} />
@@ -50,7 +50,7 @@ export default function Contact() {
                     href="https://github.com/Dweeb1578"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center p-4 bg-stone-900 rounded-full hover:bg-stone-700 hover:text-white transition-all text-stone-50 cursor-pointer shadow-lg hover:shadow-stone-500/20 active:scale-95 border border-transparent"
+                    className="flex items-center justify-center p-4 bg-stone-900 dark:bg-stone-100 rounded-full hover:bg-stone-700 dark:hover:bg-stone-300 hover:text-white dark:hover:text-stone-900 transition-all text-stone-50 dark:text-stone-900 cursor-pointer shadow-lg hover:shadow-stone-500/20 active:scale-95 border border-transparent"
                     aria-label="GitHub"
                 >
                     <Github size={24} />

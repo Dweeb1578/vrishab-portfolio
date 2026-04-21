@@ -73,6 +73,8 @@ const jsonLd = {
   description: "Product Manager and Engineer specializing in AI, RAG pipelines, and Growth metrics."
 };
 
+const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');var s=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&s)){document.documentElement.classList.add('dark');}}catch(e){}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -80,10 +82,15 @@ export default function RootLayout({
 }>) {
   return (
 
-    <html lang="en">
-      <meta name="google-site-verification" content="TJsxKoosBc9gO5kT6fXTjcursYtQFtSWAD2Qfl9ZNgs" />
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="google-site-verification" content="TJsxKoosBc9gO5kT6fXTjcursYtQFtSWAD2Qfl9ZNgs" />
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100 transition-colors`}
       >
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-E81HYB5075"
