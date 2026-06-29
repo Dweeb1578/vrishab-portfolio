@@ -4,7 +4,7 @@ from pinecone import Pinecone
 import cohere
 
 # 1. Setup
-load_dotenv(".env.local")
+load_dotenv(".env")
 pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 co = cohere.Client(os.getenv("COHERE_API_KEY"))
 index = pc.Index("portfolio-rag")

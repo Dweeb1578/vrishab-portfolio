@@ -9,6 +9,10 @@ import {
     Download,
     FileText,
     Hotel,
+    Disc3,
+    Search,
+    ScanSearch,
+    Briefcase,
 } from 'lucide-react';
 
 export type ProjectColor =
@@ -36,15 +40,15 @@ export interface Project {
 
 export const projects: Project[] = [
     {
-        slug: 'zenskar-mcp-server',
-        title: 'Zenskar MCP Server',
+        slug: 'marketing-mcp-server',
+        title: 'Marketing Analytics MCP Server',
         hook: '19-tool Marketing Analytics MCP server used in Claude-native workflows.',
         description:
             'A Model Context Protocol server exposing read-only tools across Google Search Console, GA4, Google Ads, HubSpot CRM, and Bing Webmaster. Deployed on Render, accessible from Claude Desktop, Claude Code, and claude.ai.',
         tags: ['Python', 'MCP', 'Google APIs', 'Render'],
         color: 'purple',
         icon: Server,
-        githubUrl: 'https://github.com/vrishab-rgb/zenskar-mcp-server',
+        githubUrl: 'https://github.com/Dweeb1578/marketing-analytics-mcp',
         featured: true,
     },
     {
@@ -56,48 +60,51 @@ export const projects: Project[] = [
         tags: ['Next.js 15', 'Supabase', 'Groq', 'Web Speech API'],
         color: 'rose',
         icon: Mic,
+        githubUrl: 'https://github.com/Dweeb1578/CanYouCrackTheCase',
     },
     {
-        slug: 'zenskar-chatbot',
-        title: 'Zenskar Chatbot',
-        hook: 'Hybrid RAG (BM25 + embeddings) with an embeddable widget for Zenskar\'s help surface.',
+        slug: 'hybrid-rag-chatbot',
+        title: 'Hybrid RAG Support Chatbot',
+        hook: 'Hybrid RAG (BM25 + embeddings) with an embeddable widget for a SaaS help surface.',
         description:
             'FastAPI backend with LangChain orchestration, Pinecone for vector search, and BM25 sparse retrieval fused for hybrid ranking. Redis caches hot queries. Ships as a drop-in JavaScript widget.',
         tags: ['FastAPI', 'LangChain', 'Pinecone', 'Redis'],
         color: 'indigo',
         icon: MessageCircle,
+        githubUrl: 'https://github.com/Dweeb1578/hybrid-rag-chatbot',
     },
     {
-        slug: 'zenskar-events',
-        title: 'Zenskar Events',
+        slug: 'competitor-event-radar',
+        title: 'Competitor Event Radar',
         hook: 'Multi-agent LLM pipeline monitoring competitors for industry events.',
         description:
             'Combines Playwright browsing, Apify LinkedIn scraping, and Groq + Gemini LLM agents to detect event announcements on competitor sites. Scores relevance, dedupes, and exports weekly intelligence to Excel.',
         tags: ['Python', 'Groq', 'Gemini', 'Playwright'],
         color: 'amber',
         icon: Radar,
+        githubUrl: 'https://github.com/Dweeb1578/Events-Tracker',
     },
     {
-        slug: 'zenskar-icp-classification',
-        title: 'Zenskar ICP Classifier',
+        slug: 'icp-lead-classifier',
+        title: 'ICP Lead Classifier',
         hook: 'LLM-based lead qualification with Apollo + LinkedIn enrichment and Slack alerts.',
         description:
-            'Enriches raw company lists via Apollo.io and LinkedIn, then scores each prospect against Zenskar\'s ICP (B2B SaaS, custom billing, >$40K ACV) using Groq\'s 120B model. A Slack bot pings the sales team when a high-fit lead lands.',
+            'Enriches raw company lists via Apollo.io and LinkedIn, then scores each prospect against an ICP (B2B SaaS, custom billing, >$40K ACV) using Groq\'s 120B model. A Slack bot pings the sales team when a high-fit lead lands.',
         tags: ['Python', 'Groq 120B', 'Apollo API'],
         color: 'blue',
         icon: Target,
-        githubUrl: 'https://github.com/vrishab-rgb/Zenskar-ICP-Classification',
+        githubUrl: 'https://github.com/Dweeb1578/icp-lead-classifier',
     },
     {
-        slug: 'zenskar-outreach',
-        title: 'Zenskar Outreach',
+        slug: 'b2b-outreach-dashboard',
+        title: 'B2B Outreach Dashboard',
         hook: 'B2B outreach dashboard that tracks companies, contacts, and campaigns end-to-end.',
         description:
             'Streamlit app backed by Supabase and a local SQLite cache. Manages outreach lists, groups contacts, and visualises engagement in a clean dark-mode UI. Connects to LinkedIn sequences and email providers.',
         tags: ['Streamlit', 'Supabase', 'SQLite'],
         color: 'emerald',
         icon: Send,
-        githubUrl: 'https://github.com/vrishab-rgb/zenskar-outreach',
+        githubUrl: 'https://github.com/Dweeb1578/b2b-outreach-dashboard',
     },
     {
         slug: 'tldv-downloader',
@@ -108,7 +115,7 @@ export const projects: Project[] = [
         tags: ['Python', 'ffmpeg', 'JWT'],
         color: 'orange',
         icon: Download,
-        githubUrl: 'https://github.com/vrishab-rgb/tldv-downloader',
+        githubUrl: 'https://github.com/Dweeb1578/tldv-downloader',
     },
     {
         slug: 'resume-optimizer',
@@ -123,8 +130,8 @@ export const projects: Project[] = [
         liveUrl: 'https://resume-perfecter-upd.vercel.app',
     },
     {
-        slug: 'shywarma-chatbot',
-        title: 'Shywarma Chatbot',
+        slug: 'hotel-booking-chatbot',
+        title: 'Hotel Booking RAG Chatbot',
         hook: 'Hotel-booking RAG chatbot with dynamic 30–40% price negotiation.',
         description:
             'Next.js full-stack travel chatbot. LangChain orchestrates Pinecone-backed RAG over hotel inventory, Vercel KV provides multi-layer Redis caching for a 90% latency cut, and a negotiation agent dynamically drops prices within constraints.',
@@ -133,6 +140,49 @@ export const projects: Project[] = [
         icon: Hotel,
         githubUrl: 'https://github.com/Dweeb1578/Shywarma-Chain-of-Hotels',
         liveUrl: 'https://shywarma-chain-of-hotels.vercel.app',
+    },
+    {
+        slug: 'ai-dj',
+        title: 'AI DJ',
+        hook: 'Turns any playlist into one continuous, structure-aware DJ mix.',
+        description:
+            'A CLI that pulls a Spotify playlist or local folder, analyses each track\'s structure with a neural model, and stitches them into a seamless set — choosing transition points and styles (bass swaps, filter sweeps, echo-outs, slam cuts) per song. Caches analysis and exports an MP3 plus a cue sheet.',
+        tags: ['Python', 'allin1 ML', 'ffmpeg', 'Spotify API'],
+        color: 'rose',
+        icon: Disc3,
+        githubUrl: 'https://github.com/Dweeb1578/ai-dj',
+    },
+    {
+        slug: 'reddit-intent-engine',
+        title: 'Reddit Intent Engine',
+        hook: 'Multi-stage pipeline that surfaces high-intent buying signals on Reddit.',
+        description:
+            'Watches Reddit, Hacker News, and Stack Overflow for posts discussing a target pain, then runs a two-stage Groq LLM classifier under strict rate-limit budgets to score relevance and bucket each hit by intent. Dedupes through Supabase and posts the high-signal ones to Slack with daily digests.',
+        tags: ['Python', 'Groq', 'Supabase', 'Serper'],
+        color: 'orange',
+        icon: Search,
+        githubUrl: 'https://github.com/Dweeb1578/reddit-intent-engine',
+    },
+    {
+        slug: 'aeo-audit-engine',
+        title: 'AEO Audit Engine',
+        hook: 'Audits how AI answer engines perceive and cite a website.',
+        description:
+            'An Answer Engine Optimization framework that measures a site\'s "share of model" across ChatGPT, Perplexity, and Google AI Overviews, audits schema and extractability via browser and raw-HTML checks, and outputs a prioritised 30/60/90 plan to win AI citations.',
+        tags: ['AEO', 'LLM analysis', 'Browser automation'],
+        color: 'emerald',
+        icon: ScanSearch,
+    },
+    {
+        slug: 'hiring-signal-tracker',
+        title: 'Hiring-Signal Tracker',
+        hook: 'Finds enterprise accounts whose job posts reveal a product pain.',
+        description:
+            'Scrapes Indeed and LinkedIn for role signals, tracks 30-day hiring velocity per company, enriches each account with industry vertical and telephony stack detected from the listings, scores buyer-fit, and exports a ranked list to Google Sheets.',
+        tags: ['Python', 'jobspy', 'Scrapling', 'Google Sheets'],
+        color: 'amber',
+        icon: Briefcase,
+        githubUrl: 'https://github.com/Dweeb1578/hiring-signal-tracker',
     },
 ];
 

@@ -2,11 +2,64 @@ import { Groq } from 'groq-sdk';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { CohereClient } from 'cohere-ai';
 import { createClient } from '@supabase/supabase-js';
+import ragChunks from '@/data/rag-chunks.json';
 
 // 1. Initialize Clients
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
 const cohere = new CohereClient({ token: process.env.COHERE_API_KEY! });
+
+// ---------------------------------------------------------------------------
+// Hybrid retrieval helpers. Dense vectors (Pinecone) miss exact tokens like
+// "ProdX", "allin1", "n8n", "ReTHINK" — a sparse BM25 pass catches those. The
+// corpus is tiny (~30 chunks) so BM25 runs client-side over a JSON mirror of
+// the index; no second vector store needed. The two rankings are fused with
+// Reciprocal Rank Fusion before the existing Cohere rerank.
+// ---------------------------------------------------------------------------
+type Chunk = { id: string; section: string; text: string };
+const CHUNKS = ragChunks as Chunk[];
+const CHUNK_TEXT = new Map(CHUNKS.map((c) => [c.id, c.text]));
+const DOC_TOKENS = CHUNKS.map((c) => tokenize(c.text));
+const AVG_DL = DOC_TOKENS.reduce((s, d) => s + d.length, 0) / Math.max(CHUNKS.length, 1);
+const DF = (() => {
+    const df = new Map<string, number>();
+    for (const toks of DOC_TOKENS) for (const t of new Set(toks)) df.set(t, (df.get(t) ?? 0) + 1);
+    return df;
+})();
+
+function tokenize(s: string): string[] {
+    return s.toLowerCase().match(/[a-z0-9]+/g) ?? [];
+}
+
+function bm25Ranking(query: string, k1 = 1.5, b = 0.75): string[] {
+    const N = CHUNKS.length;
+    const qTerms = [...new Set(tokenize(query))];
+    const scored = CHUNKS.map((c, i) => {
+        const toks = DOC_TOKENS[i];
+        const tf = new Map<string, number>();
+        for (const t of toks) tf.set(t, (tf.get(t) ?? 0) + 1);
+        let score = 0;
+        for (const term of qTerms) {
+            const f = tf.get(term);
+            if (!f) continue;
+            const n = DF.get(term) ?? 0;
+            const idf = Math.log(1 + (N - n + 0.5) / (n + 0.5));
+            score += idf * ((f * (k1 + 1)) / (f + k1 * (1 - b + b * (toks.length / AVG_DL))));
+        }
+        return { id: c.id, score };
+    });
+    return scored.filter((s) => s.score > 0).sort((a, b) => b.score - a.score).map((s) => s.id);
+}
+
+// Reciprocal Rank Fusion — rank-based, so the dense (cosine) and sparse (BM25)
+// scores never need to be put on the same scale.
+function rrf(lists: string[][], k = 60, topN = 12): string[] {
+    const score = new Map<string, number>();
+    for (const list of lists) {
+        list.forEach((id, rank) => score.set(id, (score.get(id) ?? 0) + 1 / (k + rank + 1)));
+    }
+    return [...score.entries()].sort((a, b) => b[1] - a[1]).slice(0, topN).map(([id]) => id);
+}
 
 export async function POST(req: Request) {
     try {
@@ -69,20 +122,55 @@ export async function POST(req: Request) {
         }
         const queryVector = embeddingsArray[0];
 
-        // 3. Search Pinecone
+        // 3. Dense search (Pinecone) — wide candidate set by semantic similarity.
         const index = pinecone.index('portfolio-rag');
         const searchResults = await index.query({
             vector: queryVector,
-            topK: 4, // Slightly increased to catch missed context
+            topK: 12,
             includeMetadata: true,
         });
+        const denseRanking = searchResults.matches.map((m) => m.id);
 
-        // 4. Filter & Format Context
-        const validMatches = searchResults.matches.filter(match => (match.score || 0) > 0.35); // Lowered threshold to prevent "forgetting"
-        const contextText = validMatches
-            .map((match) => match.metadata?.text as string)
-            .filter(text => text)
-            .join('\n\n---\n\n');
+        // 3b. Sparse search (client-side BM25) for exact-term recall, then fuse
+        // dense + sparse with RRF — hybrid retrieval. Prefer the JSON chunk store,
+        // but fall back to Pinecone metadata so a transient json/index drift
+        // (e.g. mismatched ids) still returns an answer instead of nothing. The
+        // fallback is per-request so the module-level store stays immutable.
+        const denseFallback = new Map<string, string>();
+        for (const m of searchResults.matches) {
+            const metaText = m.metadata?.text;
+            if (typeof metaText === 'string') denseFallback.set(m.id, metaText);
+        }
+        const textById = (id: string) => CHUNK_TEXT.get(id) ?? denseFallback.get(id);
+
+        const sparseRanking = bm25Ranking(lastMessage);
+        const fusedIds = rrf([denseRanking, sparseRanking]);
+
+        const candidates = fusedIds
+            .map(textById)
+            .filter((text): text is string => typeof text === 'string' && text.length > 0);
+
+        // 4. Rerank candidates against the question (Cohere rerank is far more
+        // precise than raw cosine similarity), keep the most relevant few.
+        let contextText = '';
+        if (candidates.length > 0) {
+            try {
+                const reranked = await cohere.rerank({
+                    model: 'rerank-english-v3.0',
+                    query: lastMessage,
+                    documents: candidates,
+                    topN: Math.min(5, candidates.length),
+                });
+                contextText = reranked.results
+                    .filter((r) => (r.relevanceScore ?? 0) > 0.05)
+                    .map((r) => candidates[r.index])
+                    .join('\n\n---\n\n');
+            } catch (rerankErr) {
+                // If rerank fails, fall back to the raw vector order.
+                console.error('⚠️ Rerank failed, using vector order:', rerankErr);
+                contextText = candidates.slice(0, 4).join('\n\n---\n\n');
+            }
+        }
 
         // 5. THE FULL, UNCOMPROMISED SYSTEM PROMPT( Paste here)
         const SYSTEM_PROMPT = `
@@ -96,7 +184,7 @@ export async function POST(req: Request) {
        - **NO HALLUCINATIONS:** parsing text strictly. Do not mention tools (Trello, Jira) unless expliclty listed.
        - If context is missing, admit you don't remember.
     2. **First Person:** Always use "I", "Me", "My".
-    3. **Tone:** Enthusiastic, Humble, and Warm. (NOT robotic).
+    3. **Tone:** Direct, specific, and warm. Lead with the actual answer. NEVER open with filler like "I'm excited to share", "Great question", or "Let me tell you" — get straight to the substance.
     4. **Relevance:** Greetings get a generic pleasantry (1 bubble).
     
     Response Constraints:
@@ -108,9 +196,9 @@ export async function POST(req: Request) {
     - Greetings = 1 Bubble.
     
     Structure:
-    [Bubble 1]: Short reaction / Hook.
+    [Bubble 1]: The direct answer in one specific sentence (a real detail, not a hook).
     |||
-    [Bubble 2]: 
+    [Bubble 2]:
     * Bullet point 1 (Context)
     * Bullet point 2 (Action)
     * Bullet point 3 (Result/Metric)

@@ -1,0 +1,142 @@
+[
+  {
+    "id": "chunk_0",
+    "section": "Contact Information",
+    "text": "Contact Information\n\n[Contact Information]\n* **Name:** Vrishab Nair\n* **Email:** vrishabnair44@gmail.com\n* **Phone:** +91-9963894342\n* **Links:** LinkedIn | GitHub | Portfolio"
+  },
+  {
+    "id": "chunk_1",
+    "section": "Summary",
+    "text": "Summary\n\n[Summary]\nI'm Vrishab Nair, a builder focused on AI tooling and automation. Right now, my current job is **GTM Engineer Intern at Speechify** (2026–present), the B2B voice-AI company, where I build GTM-as-engineering tooling: an AEO audit engine, a hiring-signal tracker, and voice-agent experiments. Day to day I ship MCP servers, RAG chatbots, and multi-agent pipelines that collapse a week of analyst work into a prompt. Before Speechify I interned in the Founders Office at Pinch, in Product Operations at Stamp My Visa, in Marketing at Schmooze, and in Product Marketing at Nam Nam Foods. I study a dual degree in Physics and Electrical Engineering at BITS Pilani, Hyderabad, and I lead 180 Degrees Consulting on campus."
+  },
+  {
+    "id": "chunk_2",
+    "section": "BITS Pilani, Hyderabad Campus",
+    "text": "Education\n\n[BITS Pilani, Hyderabad Campus]\n* **Degree:** Dual Degree in M.Sc. Physics and B.E. Electronics and Electrical Engineering\n* **Timeline:** Aug 2023 – Present"
+  },
+  {
+    "id": "chunk_3",
+    "section": "GTM Engineer Intern at Speechify",
+    "text": "Professional Experience as GTM Engineer Intern at Speechify\n\n[GTM Engineer Intern at Speechify]\n* **Timeline:** 2026 – Present\n* Building GTM-as-engineering tooling for the B2B voice-AI vertical (TTS API and Voice Agents): shipping real tools in days, measuring pipeline impact, and killing what doesn't move it.\n* Built an Answer Engine Optimization (AEO) audit engine that measures a site's \"share of model\" across ChatGPT, Perplexity, and Google AI Overviews, audits schema and content extractability via browser + raw-HTML checks, and outputs a prioritized 30/60/90 plan to win AI citations.\n* Built a hiring-signal tracker that scrapes Indeed and LinkedIn for buyer-intent role signals, tracks 30-day hiring velocity per company, enriches accounts with industry vertical and telephony stack detected from job descriptions, scores buyer-fit, and exports a ranked list to Google Sheets.\n* Prototyped GTM experiments including a callback voice-agent that calls inbound leads within seconds (dogfooding the product) and high-intent lead-magnet calculators."
+  },
+  {
+    "id": "chunk_4",
+    "section": "GTM Engineer Intern at Zenskar",
+    "text": "Professional Experience as GTM Engineer Intern at Zenskar\n\n[GTM Engineer Intern at Zenskar]\n* **Timeline:** Feb 2026 – June 2026\n* Built marketing-as-engineering tooling for a B2B SaaS finance-automation company, automating weekly traffic and inbound-demo reporting end to end and saving the marketing team ~7 hours every week.\n* Built a marketing-analytics MCP server exposing 80+ read-only tools across Google Search Console, GA4, Google Ads, HubSpot, and Bing (deployed on Google Cloud Run), so the team could query SEO, traffic, ads, and CRM data conversationally instead of pulling CSVs by hand.\n* Optimized unbranded content for Answer Engine Optimization (AEO), winning Google AI Overview citations for high-intent queries like \"Chargebee alternatives,\" \"Zuora alternatives,\" and \"best complex usage-based billing software\" — work attributed to ~$50K in sourced pipeline.\n* Grew LLM / AI-assistant referral traffic from 220 to 546 monthly visits, climbing ~34% week over week."
+  },
+  {
+    "id": "chunk_5",
+    "section": "Portfolio RAG AI",
+    "text": "Portfolio RAG AI\n\n[Portfolio RAG AI]\n**Portfolio RAG AI** | *Next.js, Pinecone, AI SDK, Groq, Llama 3*\n* Built an intelligent portfolio assistant that answers recruiter questions in real-time by \"reading\" resume data.\n* Engineered a RAG (Retrieval-Augmented Generation) pipeline using **Pinecone** for vector storage and **Cohere** for semantic embeddings.\n* Implemented **Llama 3-70b** via Groq for ultra-low latency inference (<1s), ensuring a seamless chat experience.\n* Designed a responsive, dark-mode UI with **Next.js 14** and Tailwind CSS, featuring mobile-optimized chat widgets."
+  },
+  {
+    "id": "chunk_6",
+    "section": "PM Coach AI",
+    "text": "PM Coach AI\n\n[PM Coach AI]\n**PM Coach AI** | *Llama 7B, Unsloth, ChromaDB, Python*\n* Developed a specialized AI mentor for aspiring Product Managers, capable of conducting mock interviews.\n* Fine-tuned **Llama 7B** using **Unsloth** on a dataset of 3,000+ FAANG product management interview questions.\n* Built a RAG pipeline with **ChromaDB** to index curated product strategy literature, reducing hallucinations by 40%.\n* Deployed the model to provide actionable feedback on user responses, mimicking a Senior PM's coaching style."
+  },
+  {
+    "id": "chunk_7",
+    "section": "Hotel Booking RAG Chatbot",
+    "text": "Hotel Booking RAG Chatbot, Product Experience, BITS Pilani, Hyderabad Campus, 2023–Present\n\n[Hotel Booking RAG Chatbot]\n**Hotel Booking RAG Chatbot** | *Redis, TypeScript, Vercel, RAG*\n* Engineered a custom multi-layer caching system using **Redis** to reduce repeat query response times by **90%** and significantly lower LLM token usage.\n* Developed a high-context **RAG pipeline** that retrieves hotel data and dynamically applies business logic to reduce travel package prices by **30-40%**.\n* Built robust rate-limiting middleware and a centralized content filtering system to prevent API abuse and ensure brand safety.\n* Refactored frontend state management to enable a seamless \"streaming-like\" user experience for complex itinerary generation."
+  },
+  {
+    "id": "chunk_8",
+    "section": "Dynamic QR Code Generator",
+    "text": "Dynamic QR Code Generator, Personal Projects, BITS Pilani, Hyderabad Campus, 2023–Present\n\n[Dynamic QR Code Generator]\n**Dynamic QR Code Generator** | *Python (Flask), Chart.js, Pillow, CSV/JSON*\n* Developed a custom **Dynamic QR Code Generator** enabling real-time URL updates without changing the physical QR code.\n* Engineered an interactive **analytics dashboard** with Chart.js to visualize traffic patterns and categorize scans by device type (iOS, Android, Desktop).\n* Implemented a \"Design Studio\" feature using **qrcode** and **Pillow** libraries to generate custom-branded, hex-color customizable QR codes.\n* Designed a lightweight, file-based persistence layer using JSON and CSV for relational mapping and high-throughput logging."
+  },
+  {
+    "id": "chunk_9",
+    "section": "Resume Optimization Engine",
+    "text": "Resume Optimization Engine, Product Experience, BITS Pilani, Hyderabad Campus, 2023–Present\n\n[Resume Optimization Engine]\n**Resume Optimization Engine** | *Python, LangChain, Pinecone, Gemini, Groq*\n* Architected a **RAG-based resume optimization engine** reducing hallucination rates by providing LLMs with retrieved high-quality semantic examples.\n* Implemented a **hybrid multi-LLM pipeline** leveraging Google Gemini for embeddings and Groq (Llama 3) for sub-second inference (<200ms).\n* Developed a **semantic search system** with cosine similarity to match user experience against top-tier resume bullets, improving recommendation relevance."
+  },
+  {
+    "id": "chunk_10",
+    "section": "VC Outreach Automation",
+    "text": "VC Outreach Automation, Product Experience, BITS Pilani, Hyderabad Campus, 2023–Present\n\n[VC Outreach Automation]\n**VC Outreach Automation** | *n8n, Serper.dev, Groq*\n* Architected **n8n workflow** to automate lead research on VCs, reducing manual research time by **90%** via **Serper.dev**.\n* Implemented personalized hook generation using **Groq LLMs** to draft context-rich outreach emails for Seed to Series A founders.\n* Built a B2B Research & Personalization Engine capable of scalable, automated outreach with high relevance."
+  },
+  {
+    "id": "chunk_11",
+    "section": "Sentiment Auto-Router",
+    "text": "Sentiment Auto-Router, Product Experience, BITS Pilani, Hyderabad Campus, 2023–Present\n\n[Sentiment Auto-Router]\n**Sentiment Auto-Router** | *n8n, NLP, Webhooks, Automation*\n* Engineered an autonomous workflow to process anonymous student letters for a campus support group.\n* Integrated **NLP sentiment analysis** to automatically filter toxic content and flag critical messages for human review.\n* Routed positive messages to digital display boards via Webhooks, boosting operational efficiency by **200%** and eliminating manual moderation bottlenecks."
+  },
+  {
+    "id": "chunk_12",
+    "section": "AI DJ",
+    "text": "AI DJ, Personal Projects, BITS Pilani, Hyderabad Campus, 2023–Present\n\n[AI DJ]\n**AI DJ** | *Python, allin1 (neural structure analysis), ffmpeg, Spotify API*\n* Built a CLI that turns a Spotify playlist or local audio folder into one continuous, structure-aware DJ mix.\n* Analyzes each track's structure with a neural model to pick transition points, then applies varied transition styles (bass swaps, filter sweeps, echo-outs, slam cuts).\n* Caches per-track analysis and exports a final MP3 plus a cue sheet; runs a lighter classical-analysis path on weak machines."
+  },
+  {
+    "id": "chunk_13",
+    "section": "Reddit Intent Engine",
+    "text": "Reddit Intent Engine, Product Experience, BITS Pilani, Hyderabad Campus, 2023–Present\n\n[Reddit Intent Engine]\n**Reddit Intent Engine** | *Python, Groq, Supabase, Serper*\n* Built a multi-stage pipeline that watches Reddit, Hacker News, and Stack Overflow for posts discussing a target pain point.\n* Runs a two-stage Groq LLM classifier under strict rate-limit budgets to score relevance and bucket each hit by intent, deduping through Supabase.\n* Posts the highest-intent hits to Slack with daily digests."
+  },
+  {
+    "id": "chunk_14",
+    "section": "President at 180 Degrees Consulting (BITS Hyderabad)",
+    "text": "This snippet belongs to the \"Leadership & Volunteering\" section, specifically the role of President at 180 Degrees Consulting (BITS Hyderabad) from August 2025 to present.\n\n[President at 180 Degrees Consulting (BITS Hyderabad)]\n* **Timeline:** Aug 2025 – Present\n* Managing a team of 25+ consultants to deliver pro-bono consulting to 8+ non-profits, executing market research, GTM strategies, and pricing analysis projects.\n* Launched 'Consulting 101' training program covering Automations, Design, Lead Generation, and Data Analytics, up-skilling 130+ students across campus."
+  },
+  {
+    "id": "chunk_15",
+    "section": "Lead at Student's Anonymous (NSS BITS Hyderabad)",
+    "text": "This snippet belongs to the \"Leadership & Volunteering\" section, specifically the \"Lead at Student's Anonymous (NSS BITS Hyderabad)\" role, covering August 2025 to present.\n\n[Lead at Student's Anonymous (NSS BITS Hyderabad)]\n* **Timeline:** Aug 2025 – Present\n* Leading a 22-member peer support team providing confidential counseling for students facing loneliness, harassment, addiction, and depression.\n* Organized 6 mental health awareness events including human libraries and workshops, reaching 300+ students and establishing a campus-wide support network."
+  },
+  {
+    "id": "chunk_16",
+    "section": "Social Media Lead at Dept. of Publicity and Public Relations",
+    "text": "This snippet belongs to the \"Leadership & Volunteering\" section, specifically the \"Social Media Lead at Dept. of Publicity and Public Relations\" role, covering the period Sep 2023 – Feb 2025.\n\n[Social Media Lead at Dept. of Publicity and Public Relations]\n* **Timeline:** Sep 2023 – Feb 2025\n* Managed ATMOS 2024 Instagram account (8,000+ followers) as sole content creator, developing social media strategy and content calendar.\n* Executed influencer partnerships and paid ad campaigns that drove 3M+ reach and generated Rs. 19 Lakhs in ticket sales (78% increase YoY)."
+  },
+  {
+    "id": "chunk_17",
+    "section": "Achievements & Certifications",
+    "text": "This snippet belongs to the \"Achievements & Certifications\" section of Vrishab Nair's resume, covering his 2025 achievements and certifications.\n\n[Achievements & Certifications]\n* **3rd Place:** ReTHINK IDEATHON, IIIT Hyderabad [2025]\n* **4th Place:** ProdX, IIT Hyderabad [2025]\n* **Certification:** 30-Hour Product Management Course, Doremon Den [Feb 2025]\n* **Certification:** Building Wireframes and Low-Fidelity Prototypes, Google [Jan 2025]"
+  },
+  {
+    "id": "chunk_18",
+    "section": "Technical Skills",
+    "text": "This snippet belongs to the \"Technical Skills\" section of Vrishab Nair's resume, listing his proficiency in various design, data, and creative tools.\n\n[Technical Skills]\n* **Product & Design:** Figma, Canva, Wireframing, Low-Fi Prototyping.\n* **Data & Automation:** Python, n8n (Workflow Automation), Excel.\n* **Creative Tools:** Photoshop, Premiere Pro."
+  },
+  {
+    "id": "chunk_19",
+    "section": "ECOX LABS (Agri-Waste Supply Chain)",
+    "text": "This snippet belongs to the \"Featured Product Decks\" section of Vrishab Nair's resume, covering the ECOX LABS (Agri-Waste Supply Chain) project.\n\n[ECOX LABS (Agri-Waste Supply Chain)]\n* **Problem:** India faces a dual crisis: 1.6 million deaths annually from air pollution due to crop burning, and a lack of scalable supply chains for industries needing biomass. Startups fail because they cannot reliably source agri-waste.\n* **Solution:** Built a tech-enabled, decentralized supply chain to aggregate, process, and deliver agri-waste to industries.\n    * **KhetSe App:** Designed a mobile app for farmers to geo-tag locations and schedule waste pickups, digitizing the \"first mile\" of logistics.\n    * **IoT Warehousing:** Implemented smart inventory systems to monitor moisture levels and stock in real-time, ensuring raw material quality.\n    * **Blockchain Traceability:** Created an immutable ledger to track waste movement from farm to factory, ensuring transparency for ESG investors.\n* **Commercial Viability:** Modeled positive unit economics with a processing cost of ₹1,800-3,000/ton vs. a market selling price of ₹5,000-7,000/ton for biomass briquettes."
+  },
+  {
+    "id": "chunk_20",
+    "section": "ECOX LABS (Agri-Waste Supply Chain)",
+    "text": "This snippet belongs to the Featured Product Decks section of Vrishab Nair's resume, specifically covering ECOX LABS (Agri-Waste Supply Chain) and its launch strategy.\n\n[ECOX LABS (Agri-Waste Supply Chain)]\n* **Launch Strategy:** Focused initial rollout in Ludhiana due to high paddy generation and proximity to bioenergy plants."
+  },
+  {
+    "id": "chunk_21",
+    "section": "FinEase (Fintech for Gig Economy)",
+    "text": "FinEase (Fintech for Gig Economy) - Problem Statement and Solution\n\n[FinEase (Fintech for Gig Economy)]\n* **Problem:** India's 23.5M gig workers struggle with income variability, lack of financial literacy, and debt traps. Existing fintech apps are too complex, English-centric, and require manual data entry, making them unusable for this demographic.\n* **Solution:** Designed a \"Save-Track-Learn\" ecosystem tailored specifically for gig workers.\n    * **Automated Tracking:** Built logic to parse SMS/UPI alerts from gig platforms (Zomato/Swiggy) to auto-log income without manual input.\n    * **Gamified Education:** Created a \"TikTok for Finance\" module delivering short, regional-language video lessons on taxes and savings, incentivized with in-app coins.\n    * **Inclusive UX:** Designed an \"Offline-First\" architecture and voice-assisted interface to support users with low-end devices and limited literacy.\n* **Business Model:** B2B2C strategy partnering with platforms like Swiggy/Uber for distribution, monetized via ethical ad revenue, micro-course sales, and anonymized credit scoring data for lenders."
+  },
+  {
+    "id": "chunk_22",
+    "section": "FinEase (Fintech for Gig Economy)",
+    "text": "FinEase (Fintech for Gig Economy) - North Star Metric\n\n[FinEase (Fintech for Gig Economy)]\n* **North Star Metric:** \"Financial Confidence Score\" — a composite metric tracking active budgeting, savings goal adherence, and educational module completion."
+  },
+  {
+    "id": "chunk_23",
+    "section": "Blinkit (Churn Prediction & Flexi-Delivery)",
+    "text": "Blinkit (Churn Prediction & Flexi-Delivery) - Problem Analysis and Solution\n\n[Blinkit (Churn Prediction & Flexi-Delivery)]\n* **Problem:** Identified high customer churn rates driven by \"Billing Delays\" (44% weightage) and \"Support Calls\" (16% weightage). Root cause analysis revealed 65% of support calls stemmed from poor product quality (damaged/missing items).\n* **Analysis:** Trained a Random Forest ML model on customer datasets to quantify churn factors, identifying that users valued quality reliability over speed in specific segments.\n* **Solution:** Proposed \"Flexi-Delivery,\" a dual-mode checkout interface:\n    * **Lightning Lane:** Standard 10-minute delivery optimized for proximity.\n    * **Careful Cart:** Quality-prioritized delivery sourced from the highest-rated vendors (ignoring distance), ensuring freshness for sensitive items.\n* **Vendor Incentive:** Designed a dynamic commission model where vendors with high quality ratings pay lower commissions, gamifying inventory standards.\n* **Projected Impact:** Targeted a 40% reduction in quality-related support tickets and refund-based billing delays."
+  },
+  {
+    "id": "chunk_24",
+    "section": "WinZO (Growth & Localization Case Study)",
+    "text": "WinZO (Growth & Localization Case Study) - User Insight and Solution\n\n[WinZO (Growth & Localization Case Study)]\n* **Problem:** WinZO, India's #1 casual gaming platform, faced a 70.32% bounce rate and an 18% drop in traffic because users from Tier 2-5 cities were forced to navigate an English-first interface.\n* **User Insight:** The core persona, \"Raj\" (a junior clerk), felt alienated by the English onboarding and lack of accessible customer support, leading to trust issues and drop-offs before downloading the APK.\n* **Solution:** Redesigned the onboarding flow to be \"Vernacular First.\"\n    * **Auto-Language Detection:** Proposed a feature to detect browser language settings and auto-switch the UI to one of 12 regional languages (Hindi, Gujarati, etc.).\n    * **Trust Signals:** Added a visible \"Customer Support\" widget and a larger \"20 Crore Active Users\" banner to the home page to build credibility immediately.\n* **Outcome:** Designed to increase the \"Visit-to-Download\" conversion rate by reducing linguistic friction for the target demographic."
+  },
+  {
+    "id": "chunk_25",
+    "section": "Style-Pronto (Fashion Q-Commerce Venture)",
+    "text": "Style-Pronto (Fashion Q-Commerce Venture) - Market Opportunity and Strategy\n\n[Style-Pronto (Fashion Q-Commerce Venture)]\n* **Market Opportunity:** Identified a $14 billion gap in the Indian fashion market for \"Quick Commerce.\" While grocery Q-commerce (Blinkit/Zepto) is booming, fashion delivery still takes 24+ hours.\n* **Strategy:** Proposed \"Style-Pronto,\" a 60-minute fashion delivery service targeting the impulse-buy behavior of Gen Z and millennials.\n* **Analysis:** Leveraged market data showing the Indian fashion e-commerce sector is growing at 24% CAGR, with a projected user base of 60.6 million for Q-commerce by 2029.\n* **Competitive Landscape:** Positioned the product against incumbents like Myntra (slow delivery) and Blinkit (limited fashion SKU depth) by focusing purely on high-frequency fashion essentials."
+  },
+  {
+    "id": "chunk_26",
+    "section": "Purple Pandit (B2B Lead Generation Strategy)",
+    "text": "Purple Pandit (B2B Lead Generation Strategy) - Objective and Methodology\n\n[Purple Pandit (B2B Lead Generation Strategy)]\n* **Objective:** Developed a scalable lead generation framework for a Branding & Packaging Design Agency.\n* **Methodology:** Built a targeted outreach strategy by identifying key \"Buying Signals\" such as recent funding rounds, new product launches, or hiring sprees, which indicate a need for rebranding services.\n* **Execution:** Created a \"Decision-Maker Matrix\" to identify and contact the right stakeholders (CMOs, Brand Managers) rather than generic contacts.\n* **Deliverable:** A comprehensive playbook covering market research, competitive analysis, and KPI definitions to streamline the agency's sales pipeline."
+  },
+  {
+    "id": "chunk_27",
+    "section": "Instagram (Onboarding UX Audit)",
+    "text": "Instagram (Onboarding UX Audit) - Research Focus and Key Findings\n\n[Instagram (Onboarding UX Audit)]\n* **Research Focus:** Conducted a granular \"User Journey Mapping\" of the Instagram signup process to identify friction points causing drop-offs.\n* **User Sentiment Analysis:** Mapped user emotions at every step (e.g., \"Why do they need my date of birth?\" -> *Anxiety/Hesitation*) versus the \"Aha Moment\" of finding friends.\n* **Key Findings:** Identified that the request for personal information (DOB, Phone Number) early in the flow creates a \"Privacy Barrier\" before the user perceives any value from the app.\n* **Recommendation:** Proposed deferring non-essential data collection until after the user has engaged with their first piece of content to improve activation rates."
+  }
+]

@@ -36,6 +36,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# python / tooling scratch
+__pycache__/
+*.pyc
+.playwright-mcp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

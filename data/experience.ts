@@ -22,7 +22,7 @@ export interface Experience {
 
 export const experiences: Experience[] = [
     {
-        company: 'Zenskar',
+        company: 'B2B SaaS Startup',
         role: 'GTM Engineering Intern',
         period: 'Feb 2026 - Present',
         description:
@@ -37,7 +37,7 @@ export const experiences: Experience[] = [
                 metric: { value: 400, suffix: 'ms' },
             },
             {
-                text: "Built an ICP classifier that enriches cold company lists with Apollo and LinkedIn data, scores each prospect against Zenskar's $40K ACV B2B XaaS profile using a 120B Groq model, and pings sales on Slack when a high-fit lead lands.",
+                text: "Built an ICP classifier that enriches cold company lists with Apollo and LinkedIn data, scores each prospect against an ideal-customer profile (B2B XaaS, >$40K ACV) using a 120B Groq model, and pings sales on Slack when a high-fit lead lands.",
             },
             {
                 text: "Prototyped a multi-agent competitor events scraper (Playwright, Apify, Groq, Gemini) that monitors 8 competitor sites and surfaces industry events every week. Cut about 4 hours of manual research from the team's schedule.",
