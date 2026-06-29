@@ -14,6 +14,8 @@ Improvements over the original:
 import os
 import re
 import json
+import time
+from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 from pinecone import Pinecone
 import cohere
@@ -34,11 +36,12 @@ SOURCE = "resume.md"
 EMBED_MODEL = "embed-english-v3.0"
 EMBED_BATCH = 96
 UPSERT_BATCH = 100
-# Cheap, fast model just for the situating sentences.
-CONTEXT_MODEL = "llama-3.1-8b-instant"
-# Chunks per contextualization call — batching keeps total tokens under Groq's
-# per-minute limit so the full re-ingest takes seconds, not minutes.
-CONTEXT_BATCH = 7
+# Fast current-gen model for the per-chunk situating sentence. Llama 4 Scout is
+# the free, modern successor to the (soon-deprecated) llama-3.1-8b-instant.
+CONTEXT_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
+# Per-chunk calls run concurrently; this caps simultaneous requests so we stay
+# polite to Groq's rate limits while still finishing in seconds.
+CONTEXT_WORKERS = 5
 # Mirror of the embedded chunks so the chat route can run client-side BM25
 # (hybrid retrieval) without a second vector store or extra infra.
 CHUNKS_JSON = os.path.join("data", "rag-chunks.json")
@@ -76,6 +79,22 @@ def split_into_sections(md: str):
     return [(h, b) for h, b in sections if b]
 
 
+def build_outline(md: str) -> str:
+    """Compact table of contents — every heading and project title, one per line.
+    Sent to the contextualizer instead of the full resume: it gives the model
+    enough structure to place a snippet without spending ~3.7K tokens/call (which
+    blows the 30K TPM free-tier budget after ~8 calls). The snippet itself still
+    carries its own facts/dates."""
+    out = []
+    for line in md.splitlines():
+        s = line.strip()
+        if s.startswith("#"):
+            out.append(s.lstrip("#").strip())
+        elif PROJECT_RE.match(s):
+            out.append(s.split("|")[0].strip().strip("*").strip())
+    return "\n".join(out)
+
+
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=1100,
     chunk_overlap=150,
@@ -89,67 +108,38 @@ _SITUATE_INSTRUCTION = (
 )
 
 
-def contextualize_one(chunk: str, full_doc: str) -> str:
-    """Single-chunk situating sentence. Slower per chunk, but exact — used as the
-    fallback when a batch call miscounts."""
+def contextualize_one(chunk: str, outline: str, retries: int = 3) -> str:
+    """Anthropic-style Contextual Retrieval: one situating sentence (role/project/
+    section + key entities and dates) so the chunk stays retrievable on its own.
+
+    Deterministic per-chunk call, so there's no fragile "return exactly N JSON
+    items" contract to miscount. Sends a compact outline (not the full resume) to
+    stay well under the TPM budget. Retries with backoff on rate limits; returns
+    '' on persistent failure so the caller falls back to the bare heading prefix."""
     prompt = (
         "You are situating a snippet from Vrishab Nair's resume so it can be "
-        "retrieved on its own.\n\n"
-        f"<resume>\n{full_doc}\n</resume>\n\n"
+        "retrieved on its own. Here is the resume's outline for context:\n\n"
+        f"<outline>\n{outline}\n</outline>\n\n"
         f"<snippet>\n{chunk}\n</snippet>\n\n"
         f"Write ONE short sentence (max 25 words) that {_SITUATE_INSTRUCTION} "
         "Output only the sentence."
     )
-    try:
-        resp = groq_client.chat.completions.create(
-            model=CONTEXT_MODEL,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0,
-            max_tokens=80,
-        )
-        return (resp.choices[0].message.content or "").strip()
-    except Exception as e:
-        print(f"   (single context failed, using heading only: {e})")
-        return ""
-
-
-def contextualize_batch(chunks: list[str], full_doc: str) -> list[str] | None:
-    """Anthropic-style Contextual Retrieval: generate a one-sentence situating
-    prefix for each chunk (role/project/section + key entities and dates) so it
-    stays retrievable on its own. Prepending this before embedding lifts recall
-    on a small, entity-dense corpus.
-
-    Batched several chunks per call: re-sending the full resume once per chunk
-    blows past Groq's per-minute token limit and throttles hard (~28 calls ->
-    minutes). One call per batch sends the doc a handful of times instead.
-    Returns None when the model returns the wrong number of contexts or errors,
-    so the caller can fall back to exact per-chunk calls for that batch."""
-    numbered = "\n\n".join(f"[{i}]\n{c}" for i, c in enumerate(chunks))
-    prompt = (
-        "You situate snippets from Vrishab Nair's resume so each can be retrieved "
-        "on its own.\n\n"
-        f"<resume>\n{full_doc}\n</resume>\n\n"
-        f"<snippets>\n{numbered}\n</snippets>\n\n"
-        f"For EACH numbered snippet, write ONE short sentence (max 25 words) that "
-        f"{_SITUATE_INSTRUCTION} Respond with strict JSON "
-        '{"contexts": ["...", ...]} — exactly one string per snippet, in the same '
-        "order."
-    )
-    try:
-        resp = groq_client.chat.completions.create(
-            model=CONTEXT_MODEL,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0,
-            max_tokens=800,
-            response_format={"type": "json_object"},
-        )
-        out = json.loads(resp.choices[0].message.content or "{}").get("contexts", [])
-        if len(out) == len(chunks):
-            return [str(s).strip() for s in out]
-        print(f"   (batch returned {len(out)} != {len(chunks)} contexts; retrying per-chunk)")
-    except Exception as e:
-        print(f"   (batch context failed, retrying per-chunk: {e})")
-    return None
+    for attempt in range(retries):
+        try:
+            resp = groq_client.chat.completions.create(
+                model=CONTEXT_MODEL,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0,
+                max_tokens=80,
+            )
+            return (resp.choices[0].message.content or "").strip()
+        except Exception as e:
+            if attempt < retries - 1:
+                time.sleep(2 * (attempt + 1))  # backoff on rate limit / transient
+                continue
+            print(f"   (context failed after {retries} tries, heading only: {e})")
+            return ""
+    return ""
 
 
 # Build heading-prefixed chunks, then give each a contextual situating sentence.
@@ -159,16 +149,16 @@ for heading, body in split_into_sections(text):
         content = f"[{heading}]\n{piece}".strip()
         records.append({"section": heading, "content": content})
 
-print(f"🧩 Built {len(records)} chunks. Generating contextual prefixes...")
-for start in range(0, len(records), CONTEXT_BATCH):
-    batch = records[start:start + CONTEXT_BATCH]
-    contents = [r["content"] for r in batch]
-    ctxs = contextualize_batch(contents, text)
-    if ctxs is None:
-        ctxs = [contextualize_one(c, text) for c in contents]
-    for r, ctx in zip(batch, ctxs):
-        r["text"] = f"{ctx}\n\n{r['content']}".strip() if ctx else r["content"]
-    print(f"   [{min(start + CONTEXT_BATCH, len(records))}/{len(records)}] contextualized")
+print(f"🧩 Built {len(records)} chunks. Generating contextual prefixes ({CONTEXT_MODEL})...")
+outline = build_outline(text)
+# Run the per-chunk calls concurrently — deterministic and fast. executor.map
+# preserves input order, so contexts[i] lines up with records[i].
+with ThreadPoolExecutor(max_workers=CONTEXT_WORKERS) as pool:
+    contexts = list(pool.map(lambda r: contextualize_one(r["content"], outline), records))
+for r, ctx in zip(records, contexts):
+    r["text"] = f"{ctx}\n\n{r['content']}".strip() if ctx else r["content"]
+done = sum(1 for c in contexts if c)
+print(f"   contextualized {done}/{len(records)} (rest fall back to heading prefix)")
 
 # Batch-embed.
 print("🚀 Generating embeddings...")

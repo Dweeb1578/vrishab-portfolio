@@ -1,10 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { useMemo, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Sparkles } from '@react-three/drei';
-import { FogExp2, Color } from 'three';
-import { buildLayout, SCENE_BG } from './layout';
+import { FogExp2, Color, type LineBasicMaterial } from 'three';
+import { buildLayout, SCENE_BG, type NodeLayout } from './layout';
 import ProjectNode from './ProjectNode';
 import CenterCore from './CenterCore';
 import Rig from './Rig';
@@ -15,6 +15,46 @@ interface Props {
     reducedMotion: boolean;
     thinking: boolean;
     onSelect: (slug: string | null) => void;
+}
+
+// Faint amber filaments from the center core out to every orb — a constellation
+// that reads as one connected mind. They sit dim at rest and surge brighter on
+// the same pulse that ripples the orbs while a question is being answered, so
+// the whole network visibly "lights up" when you ask something. One draw call.
+function ConstellationLines({
+    layout,
+    thinking,
+    reducedMotion,
+}: {
+    layout: NodeLayout[];
+    thinking: boolean;
+    reducedMotion: boolean;
+}) {
+    const matRef = useRef<LineBasicMaterial>(null);
+    const positions = useMemo(() => {
+        const arr: number[] = [];
+        for (const n of layout) arr.push(0, 0, 0, ...n.position);
+        return new Float32Array(arr);
+    }, [layout]);
+
+    useFrame((state) => {
+        if (!matRef.current) return;
+        const pulse =
+            thinking && !reducedMotion
+                ? (Math.sin(state.clock.elapsedTime * 3) * 0.5 + 0.5) * 0.24
+                : 0;
+        // ease toward target so toggling `thinking` doesn't snap
+        matRef.current.opacity += (0.09 + pulse - matRef.current.opacity) * 0.1;
+    });
+
+    return (
+        <lineSegments>
+            <bufferGeometry>
+                <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+            </bufferGeometry>
+            <lineBasicMaterial ref={matRef} color="#e9a23b" transparent opacity={0.09} />
+        </lineSegments>
+    );
 }
 
 export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thinking, onSelect }: Props) {
@@ -52,6 +92,8 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
             {/* warm floating dust */}
             <Sparkles count={120} scale={[40, 16, 40]} size={3} speed={reducedMotion ? 0 : 0.3} color="#a8a06a" opacity={0.5} />
 
+            <ConstellationLines layout={layout} thinking={thinking} reducedMotion={reducedMotion} />
+
             <CenterCore reducedMotion={reducedMotion} thinking={thinking} />
 
             {layout.map((node) => (
@@ -60,6 +102,7 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
                     node={node}
                     focused={focusSlug === node.project.slug}
                     reducedMotion={reducedMotion}
+                    thinking={thinking}
                     onSelect={onSelect}
                 />
             ))}

@@ -5,7 +5,7 @@
 * **Links:** LinkedIn | GitHub | Portfolio
 
 # Summary
-I'm Vrishab Nair, a builder focused on AI tooling and automation. Right now, my current job is **GTM Engineer Intern at Speechify** (2026–present), the B2B voice-AI company, where I build GTM-as-engineering tooling: an AEO audit engine, a hiring-signal tracker, and voice-agent experiments. Day to day I ship MCP servers, RAG chatbots, and multi-agent pipelines that collapse a week of analyst work into a prompt. Before Speechify I interned in the Founders Office at Pinch, in Product Operations at Stamp My Visa, in Marketing at Schmooze, and in Product Marketing at Nam Nam Foods. I study a dual degree in Physics and Electrical Engineering at BITS Pilani, Hyderabad, and I lead 180 Degrees Consulting on campus.
+I'm Vrishab Nair, a builder focused on AI tooling and automation. Right now, my current job is **GTM Engineer Intern at Speechify** (2026–present), the B2B voice-AI company, where I build GTM-as-engineering tooling: an AEO audit engine, a hiring-signal tracker, and voice-agent experiments. Day to day I ship MCP servers, RAG chatbots, and multi-agent pipelines that collapse a week of analyst work into a prompt. Before Speechify I did GTM engineering at Zenskar, a B2B billing-automation startup, where I grew AI-assistant referral traffic and won AI Overview citations for competitive billing queries. I study a dual degree in Physics and Electrical Engineering at BITS Pilani, Hyderabad, and I lead 180 Degrees Consulting on campus.
 
 # Education
 ## BITS Pilani, Hyderabad Campus

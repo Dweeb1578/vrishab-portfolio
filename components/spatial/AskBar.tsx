@@ -11,10 +11,10 @@ interface Props {
 }
 
 const CHIPS = [
-    'What did you build with AI?',
-    'Tell me about your RAG work',
-    'How do you automate reporting?',
-    'What are your top skills?',
+    'What do you do at Speechify?',
+    'How did you source $50K in pipeline?',
+    'Tell me about the AI DJ',
+    'What have you built with RAG?',
 ];
 
 // strip the hidden protocol tokens the API streams (bubble splits + suggestion)
@@ -155,18 +155,21 @@ export default function AskBar({ layout, onFocus, onThinking }: Props) {
                 </button>
             </form>
 
-            <div className="pointer-events-auto mt-3 flex flex-wrap justify-center gap-2">
-                {CHIPS.map((c) => (
-                    <button
-                        key={c}
-                        onClick={() => ask(c)}
-                        disabled={streaming}
-                        className="rounded-full border border-[#a8a06a]/30 bg-[#a8a06a]/10 px-3 py-1.5 font-mono text-[11px] text-[#f3ead7]/80 transition-colors hover:border-[#e9a23b] hover:text-[#e9a23b] disabled:opacity-40"
-                    >
-                        {c}
-                    </button>
-                ))}
-            </div>
+            {/* Blank-state primer: the chips invite a first question, then get
+                out of the way once a conversation is underway. */}
+            {!answer && !streaming && (
+                <div className="pointer-events-auto mt-3 flex flex-wrap justify-center gap-2">
+                    {CHIPS.map((c) => (
+                        <button
+                            key={c}
+                            onClick={() => ask(c)}
+                            className="rounded-full border border-[#a8a06a]/30 bg-[#a8a06a]/10 px-3 py-1.5 font-mono text-[11px] text-[#f3ead7]/80 transition-colors hover:border-[#e9a23b] hover:text-[#e9a23b]"
+                        >
+                            {c}
+                        </button>
+                    ))}
+                </div>
+            )}
             </div>
         </>
     );
