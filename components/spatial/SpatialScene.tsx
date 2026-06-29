@@ -59,6 +59,23 @@ function ConstellationLines({
 
 export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thinking, onSelect }: Props) {
     const layout = useMemo(() => buildLayout(), []);
+
+    // Which orbs share a theme with the focused one. A question (or click) picks
+    // a hero; every other orb that shares a meaningful keyword (tech, topic) with
+    // it is "related" — these stay lit and sprout a satellite instead of receding,
+    // surfacing the real overlap across the work (lots of Python / RAG / Groq).
+    const relatedSlugs = useMemo(() => {
+        const set = new Set<string>();
+        if (!focusSlug) return set;
+        const hero = layout.find((n) => n.project.slug === focusSlug);
+        if (!hero) return set;
+        const heroKw = new Set(hero.keywords.filter((k) => k.length > 2));
+        for (const n of layout) {
+            if (n.project.slug === focusSlug) continue;
+            if (n.keywords.some((k) => k.length > 2 && heroKw.has(k))) set.add(n.project.slug);
+        }
+        return set;
+    }, [focusSlug, layout]);
     // Adaptive resolution: start at a retina-friendly 1.5x and let the
     // PerformanceMonitor below drop to 1x if the frame rate sags, so the bloom
     // pass doesn't cook weaker GPUs. (Capped at 1.5 rather than 2 — bloom at
@@ -115,6 +132,7 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
                     node={node}
                     focused={focusSlug === node.project.slug}
                     focusActive={focusSlug !== null}
+                    related={relatedSlugs.has(node.project.slug)}
                     reducedMotion={reducedMotion}
                     thinking={thinking}
                     onSelect={onSelect}
