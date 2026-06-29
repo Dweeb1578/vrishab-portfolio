@@ -3,6 +3,7 @@
 import { useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Sparkles } from '@react-three/drei';
+import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import { FogExp2, Color, type LineBasicMaterial } from 'three';
 import { buildLayout, SCENE_BG, type NodeLayout } from './layout';
 import ProjectNode from './ProjectNode';
@@ -108,6 +109,20 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
             ))}
 
             <Rig layout={layout} focusSlug={focusSlug} />
+
+            {/* Glow pass: the emissive orbs, core, and filaments bloom into the
+                warm dark, and a soft vignette pulls focus to the center. This is
+                the difference between "flat glow" and a scene that feels lit. */}
+            <EffectComposer enableNormalPass={false}>
+                <Bloom
+                    intensity={0.85}
+                    luminanceThreshold={0.2}
+                    luminanceSmoothing={0.9}
+                    mipmapBlur
+                    radius={0.7}
+                />
+                <Vignette eskil={false} offset={0.3} darkness={0.55} />
+            </EffectComposer>
 
             <OrbitControls
                 makeDefault

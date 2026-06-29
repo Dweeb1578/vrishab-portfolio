@@ -17,17 +17,17 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Vrishab Nair | Product Manager & Engineer",
+    default: "Vrishab Nair | GTM Engineer & AI Builder",
     template: "%s | Vrishab Nair"
   },
-  description: "Portfolio of Vrishab Nair, a Product Manager and Engineer specializing in AI, RAG pipelines, and Growth from BITS Pilani.",
-  keywords: ["Vrishab Nair", "Product Manager", "AI Engineer", "RAG", "BITS Pilani", "Portfolio", "Next.js", "React"],
+  description: "Vrishab Nair builds AI tooling and automation: MCP servers, RAG pipelines, and agents that collapse a week of analyst work into a prompt. Navigate an interactive spatial portfolio and ask its AI anything.",
+  keywords: ["Vrishab Nair", "GTM Engineer", "AI tooling", "RAG", "MCP server", "automation", "AI Builder", "Portfolio", "BITS Pilani"],
   authors: [{ name: "Vrishab Nair" }],
   creator: "Vrishab Nair",
   metadataBase: new URL("https://vrishab-portfolio.vercel.app"),
   openGraph: {
-    title: "Vrishab Nair | Product Manager & Engineer",
-    description: "Building intelligent products at the intersection of AI, Design, and Growth.",
+    title: "Vrishab Nair | GTM Engineer & AI Builder",
+    description: "An interactive spatial portfolio you navigate by asking. Built around the AI tooling, RAG systems, and automation I ship.",
     url: "https://vrishab-portfolio.vercel.app",
     siteName: "Vrishab Nair Portfolio",
     locale: "en_US",
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vrishab Nair | Product Manager & Engineer",
-    description: "Building intelligent products at the intersection of AI, Design, and Growth.",
+    title: "Vrishab Nair | GTM Engineer & AI Builder",
+    description: "An interactive spatial portfolio you navigate by asking. Built around the AI tooling, RAG systems, and automation I ship.",
     creator: "@vrishabnair",
   },
   robots: {
@@ -57,7 +57,7 @@ const jsonLd = {
   "@type": "Person",
   name: "Vrishab Nair",
   url: "https://vrishab-portfolio.vercel.app",
-  jobTitle: "Product Manager & Engineer",
+  jobTitle: "GTM Engineer",
   alumniOf: {
     "@type": "CollegeOrUniversity",
     name: "BITS Pilani, Hyderabad Campus"
@@ -66,11 +66,7 @@ const jsonLd = {
     "https://www.linkedin.com/in/vrishab-nair-212769290/",
     "https://github.com/Dweeb1578"
   ],
-  worksFor: {
-    "@type": "Organization",
-    name: "Pinch"
-  },
-  description: "Product Manager and Engineer specializing in AI, RAG pipelines, and Growth metrics."
+  description: "GTM Engineer building AI tooling and automation: MCP servers, RAG pipelines, and agents that automate go-to-market work."
 };
 
 const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');var s=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&s)){document.documentElement.classList.add('dark');}}catch(e){}})();`;
