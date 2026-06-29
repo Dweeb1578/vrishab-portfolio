@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sparkles } from '@react-three/drei';
+import { OrbitControls, Sparkles, PerformanceMonitor } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import { FogExp2, Color, type LineBasicMaterial } from 'three';
 import { buildLayout, SCENE_BG, type NodeLayout } from './layout';
@@ -60,12 +60,17 @@ function ConstellationLines({
 
 export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thinking, onSelect }: Props) {
     const layout = useMemo(() => buildLayout(), []);
+    // Adaptive resolution: start at a retina-friendly 1.5x and let the
+    // PerformanceMonitor below drop to 1x if the frame rate sags, so the bloom
+    // pass doesn't cook weaker GPUs. (Capped at 1.5 rather than 2 — bloom at
+    // native 2x retina is the single biggest cost here.)
+    const [dpr, setDpr] = useState(1.5);
 
     return (
         <Canvas
             camera={{ position: [0, 6, 28], fov: 50, near: 0.1, far: 200 }}
-            dpr={[1, 2]}
-            gl={{ antialias: true }}
+            dpr={dpr}
+            gl={{ antialias: true, powerPreference: 'default' }}
             style={{ background: SCENE_BG }}
             onPointerMissed={() => onSelect(null)}
             onCreated={({ scene, gl }) => {
@@ -81,6 +86,14 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
                 );
             }}
         >
+            {/* Drop to 1x DPI on sustained frame-rate decline, step back up when
+                it recovers — keeps the experience smooth on weak GPUs without
+                permanently degrading strong ones. */}
+            <PerformanceMonitor
+                onDecline={() => setDpr(1)}
+                onIncline={() => setDpr(1.5)}
+            />
+
             {/* warm lighting */}
             <ambientLight color="#fff0e0" intensity={0.35} />
             <directionalLight color="#ffd9a0" intensity={1.6} position={[6, 12, 8]} />
@@ -91,7 +104,7 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
             <gridHelper args={[80, 60, '#8a3b1f', '#2a241c']} position={[0, -4, 0]} />
 
             {/* warm floating dust */}
-            <Sparkles count={120} scale={[40, 16, 40]} size={3} speed={reducedMotion ? 0 : 0.3} color="#a8a06a" opacity={0.5} />
+            <Sparkles count={70} scale={[40, 16, 40]} size={3} speed={reducedMotion ? 0 : 0.3} color="#a8a06a" opacity={0.5} />
 
             <ConstellationLines layout={layout} thinking={thinking} reducedMotion={reducedMotion} />
 
@@ -102,6 +115,7 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
                     key={node.project.slug}
                     node={node}
                     focused={focusSlug === node.project.slug}
+                    focusActive={focusSlug !== null}
                     reducedMotion={reducedMotion}
                     thinking={thinking}
                     onSelect={onSelect}
@@ -113,13 +127,13 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
             {/* Glow pass: the emissive orbs, core, and filaments bloom into the
                 warm dark, and a soft vignette pulls focus to the center. This is
                 the difference between "flat glow" and a scene that feels lit. */}
-            <EffectComposer enableNormalPass={false}>
+            <EffectComposer enableNormalPass={false} multisampling={0}>
                 <Bloom
-                    intensity={0.85}
-                    luminanceThreshold={0.2}
+                    intensity={0.7}
+                    luminanceThreshold={0.25}
                     luminanceSmoothing={0.9}
                     mipmapBlur
-                    radius={0.7}
+                    radius={0.6}
                 />
                 <Vignette eskil={false} offset={0.3} darkness={0.55} />
             </EffectComposer>

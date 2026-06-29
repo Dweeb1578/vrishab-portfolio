@@ -9,51 +9,71 @@ import type { NodeLayout } from './layout';
 interface Props {
     node: NodeLayout;
     focused: boolean;
+    /** true when SOME orb is focused — the non-focused ones part to make way */
+    focusActive: boolean;
     reducedMotion: boolean;
     /** true while a question is being answered — drives the radial pulse */
     thinking: boolean;
     onSelect: (slug: string) => void;
 }
 
-export default function ProjectNode({ node, focused, reducedMotion, thinking, onSelect }: Props) {
+export default function ProjectNode({ node, focused, focusActive, reducedMotion, thinking, onSelect }: Props) {
     const groupRef = useRef<Group>(null);
     const crystalRef = useRef<Mesh>(null);
     const [hovered, setHovered] = useState(false);
-    const active = hovered || focused;
 
     // Distance from the center core, used to phase-shift the pulse so it reads
     // as a wave travelling outward from the core rather than every orb blinking
     // in unison.
     const dist = useMemo(() => Math.hypot(...node.position), [node.position]);
+    // Unit vector pointing from the core out through this orb — the direction it
+    // drifts when another orb takes the stage.
+    const outward = useMemo(() => {
+        const [x, y, z] = node.position;
+        const len = Math.hypot(x, y, z) || 1;
+        return [x / len, y / len, z / len] as const;
+    }, [node.position]);
 
     useFrame((state, delta) => {
         const g = groupRef.current;
         const c = crystalRef.current;
         if (!g || !c) return;
 
+        const isHero = focused;
+        const isReceding = focusActive && !focused;
+
         // Radial "listening" wave: while a question is being answered, a pulse
-        // ripples out from the center core through the constellation. 0→1 each
-        // crest; phase offset by distance so the wave visibly travels.
-        const wave = thinking && !reducedMotion
+        // ripples out from the center core. Receding orbs sit it out so the
+        // stage stays calm around the hero.
+        const wave = thinking && !reducedMotion && !isReceding
             ? Math.sin(state.clock.elapsedTime * 3 - dist * 0.55) * 0.5 + 0.5
             : 0;
 
-        // ease scale toward active state, plus the pulse swell
-        const targetScale = (active ? 1.18 : 1) + wave * 0.14;
-        g.scale.x += (targetScale - g.scale.x) * Math.min(delta * 8, 1);
+        // Restructure: the hero holds its ring slot (so the camera still frames
+        // it) and swells; everyone else drifts outward and shrinks to clear the
+        // view, then eases home when focus releases.
+        const push = isReceding && !reducedMotion ? 3.8 : 0;
+        const ease = (cur: number, target: number, k: number) => cur + (target - cur) * Math.min(delta * k, 1);
+        g.position.x = ease(g.position.x, outward[0] * push, 3);
+        g.position.y = ease(g.position.y, outward[1] * push, 3);
+        g.position.z = ease(g.position.z, outward[2] * push, 3);
+
+        const baseScale = isHero ? 1.4 : hovered ? 1.18 : isReceding ? 0.55 : 1;
+        const targetScale = baseScale + wave * 0.14;
+        g.scale.x = ease(g.scale.x, targetScale, 6);
         g.scale.y = g.scale.z = g.scale.x;
 
         if (!reducedMotion) {
-            // orbs spin up on the crest of the wave
-            const spin = 1 + wave * 1.6;
+            // orbs spin up on the crest of the wave; the hero keeps a lively spin
+            const spin = (isHero ? 1.6 : 1) + wave * 1.6;
             c.rotation.x += delta * 0.25 * spin;
             c.rotation.y += delta * 0.35 * spin;
         }
 
-        // ease emissive glow, brightened by the pulse
+        // ease emissive glow: hero burns bright, receding orbs dim down
         const mat = c.material as unknown as { emissiveIntensity: number };
-        const targetGlow = (active ? 1.0 : 0.35) + wave * 0.7;
-        mat.emissiveIntensity += (targetGlow - mat.emissiveIntensity) * Math.min(delta * 6, 1);
+        const baseGlow = isHero ? 1.2 : hovered ? 1.0 : isReceding ? 0.1 : 0.35;
+        mat.emissiveIntensity = ease(mat.emissiveIntensity, baseGlow + wave * 0.7, 6);
     });
 
     return (
