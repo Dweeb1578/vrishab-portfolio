@@ -8,7 +8,6 @@ import { FogExp2, Color, type LineBasicMaterial } from 'three';
 import { buildLayout, SCENE_BG, type NodeLayout } from './layout';
 import ProjectNode from './ProjectNode';
 import CenterCore from './CenterCore';
-import Rig from './Rig';
 
 interface Props {
     focusSlug: string | null;
@@ -121,8 +120,6 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
                     onSelect={onSelect}
                 />
             ))}
-
-            <Rig layout={layout} focusSlug={focusSlug} />
 
             {/* Glow pass: the emissive orbs, core, and filaments bloom into the
                 warm dark, and a soft vignette pulls focus to the center. This is

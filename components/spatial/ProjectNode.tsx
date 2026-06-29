@@ -41,6 +41,7 @@ export default function ProjectNode({ node, focused, focusActive, reducedMotion,
 
         const isHero = focused;
         const isReceding = focusActive && !focused;
+        const ease = (cur: number, target: number, k: number) => cur + (target - cur) * Math.min(delta * k, 1);
 
         // Radial "listening" wave: while a question is being answered, a pulse
         // ripples out from the center core. Receding orbs sit it out so the
@@ -49,16 +50,31 @@ export default function ProjectNode({ node, focused, focusActive, reducedMotion,
             ? Math.sin(state.clock.elapsedTime * 3 - dist * 0.55) * 0.5 + 0.5
             : 0;
 
-        // Restructure: the hero holds its ring slot (so the camera still frames
-        // it) and swells; everyone else drifts outward and shrinks to clear the
-        // view, then eases home when focus releases.
-        const push = isReceding && !reducedMotion ? 3.8 : 0;
-        const ease = (cur: number, target: number, k: number) => cur + (target - cur) * Math.min(delta * k, 1);
-        g.position.x = ease(g.position.x, outward[0] * push, 3);
-        g.position.y = ease(g.position.y, outward[1] * push, 3);
-        g.position.z = ease(g.position.z, outward[2] * push, 3);
+        // Restructure with a FIXED camera: the orbs move, not the camera.
+        // - hero flies to a point in front of the camera (on the camera→center
+        //   axis, so it lands dead-center in view at any orbit angle) and grows;
+        // - everyone else drifts radially outward and shrinks to clear the view.
+        // Positions are local offsets within each orb's Float frame (anchored at
+        // node.position); Float is switched off for the hero so its large offset
+        // isn't swung around by the float rotation.
+        let tx = 0, ty = 0, tz = 0;
+        if (isHero) {
+            const cam = state.camera.position;
+            // 60% of the way from the center out toward the camera.
+            tx = cam.x * 0.6 - node.position[0];
+            ty = cam.y * 0.6 - node.position[1];
+            tz = cam.z * 0.6 - node.position[2];
+        } else if (isReceding && !reducedMotion) {
+            tx = outward[0] * 4.4;
+            ty = outward[1] * 4.4;
+            tz = outward[2] * 4.4;
+        }
+        const posK = isHero ? 4 : 3;
+        g.position.x = ease(g.position.x, tx, posK);
+        g.position.y = ease(g.position.y, ty, posK);
+        g.position.z = ease(g.position.z, tz, posK);
 
-        const baseScale = isHero ? 1.4 : hovered ? 1.18 : isReceding ? 0.55 : 1;
+        const baseScale = isHero ? 1.7 : hovered ? 1.18 : isReceding ? 0.5 : 1;
         const targetScale = baseScale + wave * 0.14;
         g.scale.x = ease(g.scale.x, targetScale, 6);
         g.scale.y = g.scale.z = g.scale.x;
@@ -78,9 +94,9 @@ export default function ProjectNode({ node, focused, focusActive, reducedMotion,
 
     return (
         <Float
-            speed={reducedMotion ? 0 : 1.1}
-            rotationIntensity={reducedMotion ? 0 : 0.3}
-            floatIntensity={reducedMotion ? 0 : 0.8}
+            speed={reducedMotion || focused ? 0 : 1.1}
+            rotationIntensity={reducedMotion || focused ? 0 : 0.3}
+            floatIntensity={reducedMotion || focused ? 0 : 0.8}
             position={node.position}
         >
             <group
