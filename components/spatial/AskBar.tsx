@@ -53,6 +53,13 @@ export default function AskBar({ layout, onFocus, onThinking }: Props) {
         setFocusTitle(slug ? layout.find((n) => n.project.slug === slug)?.project.title ?? null : null);
     }
 
+    // Dismiss the answer card and release the camera back to its idle orbit, so
+    // the visitor gets a clean slate for the next question.
+    function clearAnswer() {
+        setAnswer('');
+        focusOn(null);
+    }
+
     // Find the first project the answer text names (so the camera follows what
     // the assistant is actually talking about, not just the question keywords).
     function projectMentionedIn(text: string): string | null {
@@ -116,13 +123,28 @@ export default function AskBar({ layout, onFocus, onThinking }: Props) {
             {/* answer — a slim card docked to the side so the flying orb stays visible */}
             {(answer || streaming) && (
                 <div className="pointer-events-auto fixed bottom-28 left-6 z-20 w-[min(340px,82vw)] max-h-[44vh] overflow-y-auto rounded-2xl border border-[#d8623a]/30 bg-[#16130f]/80 px-5 py-4 text-[#f3ead7] shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-md">
-                    {focusTitle && (
-                        <span className="mb-2 block font-mono text-[11px] uppercase tracking-wider text-[#e9a23b]">
-                            ✦ {focusTitle}
-                        </span>
-                    )}
+                    <div className="flex items-start justify-between gap-3">
+                        {focusTitle ? (
+                            <span className="font-mono text-[11px] uppercase tracking-wider text-[#e9a23b]">
+                                ✦ {focusTitle}
+                            </span>
+                        ) : (
+                            <span />
+                        )}
+                        {/* Dismiss once the answer lands — clears the card and
+                            releases the camera for a fresh question. */}
+                        {answer && !streaming && (
+                            <button
+                                onClick={clearAnswer}
+                                aria-label="Clear answer"
+                                className="-mr-1 -mt-1 font-mono text-[13px] leading-none text-[#f3ead7]/45 transition-colors hover:text-[#f3ead7]"
+                            >
+                                ✕
+                            </button>
+                        )}
+                    </div>
                     <p
-                        className="whitespace-pre-wrap text-[13px] leading-relaxed [&_strong]:font-semibold [&_strong]:text-[#e9a23b] [&_em]:italic"
+                        className="mt-2 whitespace-pre-wrap text-[13px] leading-relaxed [&_strong]:font-semibold [&_strong]:text-[#e9a23b] [&_em]:italic"
                         dangerouslySetInnerHTML={{ __html: renderMd(answer) }}
                     />
                     {streaming && <span className="mt-1 inline-block h-3.5 w-2 animate-pulse bg-[#e9a23b]" />}
@@ -155,21 +177,20 @@ export default function AskBar({ layout, onFocus, onThinking }: Props) {
                 </button>
             </form>
 
-            {/* Blank-state primer: the chips invite a first question, then get
-                out of the way once a conversation is underway. */}
-            {!answer && !streaming && (
-                <div className="pointer-events-auto mt-3 flex flex-wrap justify-center gap-2">
-                    {CHIPS.map((c) => (
-                        <button
-                            key={c}
-                            onClick={() => ask(c)}
-                            className="rounded-full border border-[#a8a06a]/30 bg-[#a8a06a]/10 px-3 py-1.5 font-mono text-[11px] text-[#f3ead7]/80 transition-colors hover:border-[#e9a23b] hover:text-[#e9a23b]"
-                        >
-                            {c}
-                        </button>
-                    ))}
-                </div>
-            )}
+            {/* Suggestion chips stay available the whole time so there's always a
+                next thing to ask — they just dim while an answer is streaming. */}
+            <div className="pointer-events-auto mt-3 flex flex-wrap justify-center gap-2">
+                {CHIPS.map((c) => (
+                    <button
+                        key={c}
+                        onClick={() => ask(c)}
+                        disabled={streaming}
+                        className="rounded-full border border-[#a8a06a]/30 bg-[#a8a06a]/10 px-3 py-1.5 font-mono text-[11px] text-[#f3ead7]/80 transition-colors hover:border-[#e9a23b] hover:text-[#e9a23b] disabled:opacity-40"
+                    >
+                        {c}
+                    </button>
+                ))}
+            </div>
             </div>
         </>
     );
