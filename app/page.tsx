@@ -75,8 +75,11 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="pointer-events-none fixed inset-x-0 top-8 z-10 text-center font-mono text-[11px] uppercase tracking-[0.15em] text-[#f3ead7]/50">
-                drag to orbit · scroll to zoom · <span className="text-[#e9a23b]">or just ask below</span>
+            {/* Interaction hint. Hidden on phones, where it would collide with
+                the top-left brand and "scroll to zoom" is the wrong gesture —
+                the chips already invite the first tap there. */}
+            <div className="pointer-events-none fixed inset-x-0 top-8 z-10 hidden text-center font-mono text-[11px] uppercase tracking-[0.15em] text-[#f3ead7]/50 sm:block">
+                drag to explore · <span className="text-[#e9a23b]">or just ask below</span>
             </div>
 
             <AskBar layout={layout} onFocus={handleAskFocus} onThinking={setThinking} />
