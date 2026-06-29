@@ -45,6 +45,17 @@ CONTEXT_WORKERS = 5
 # Mirror of the embedded chunks so the chat route can run client-side BM25
 # (hybrid retrieval) without a second vector store or extra infra.
 CHUNKS_JSON = os.path.join("data", "rag-chunks.json")
+# Public AEO/crawler files, regenerated from resume.md so they can't drift out
+# of sync with what the chatbot says (they previously went stale — still naming
+# old roles the resume no longer lists).
+PUBLIC_DIR = "public"
+LLMS_HEADER = (
+    "# Vrishab Nair — GTM Engineer & AI Builder\n\n"
+    "> GTM Engineer who builds AI tooling and automation: MCP servers, RAG "
+    "pipelines, and agents that collapse a week of analyst work into a prompt. "
+    "Dual-degree student (Physics + EEE) at BITS Pilani, Hyderabad.\n\n"
+    "## Resume & Experience\n\n"
+)
 
 print(f"📄 Loading {SOURCE}...")
 with open(SOURCE, "r", encoding="utf-8") as f:
@@ -209,3 +220,15 @@ with open(CHUNKS_JSON, "w", encoding="utf-8") as f:
 
 print(f"✅ Success! Ingested {len(vectors)} chunks into 'portfolio-rag'.")
 print(f"🗂️  Wrote {CHUNKS_JSON} ({len(records)} chunks) for hybrid BM25 retrieval.")
+
+# Regenerate the public crawler/AEO files straight from resume.md, so the
+# version recruiters' tools and LLMs read always matches the chatbot. One
+# command (this script) is now the single source of truth.
+os.makedirs(PUBLIC_DIR, exist_ok=True)
+with open(os.path.join(PUBLIC_DIR, "resume.md"), "w", encoding="utf-8") as f:
+    f.write(text)
+llms = LLMS_HEADER + text
+for name in ("llms.txt", "llms-full.txt"):
+    with open(os.path.join(PUBLIC_DIR, name), "w", encoding="utf-8") as f:
+        f.write(llms)
+print(f"📰 Refreshed public/resume.md, public/llms.txt, public/llms-full.txt from resume.md.")

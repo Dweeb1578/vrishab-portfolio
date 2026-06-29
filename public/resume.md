@@ -2,7 +2,10 @@
 * **Name:** Vrishab Nair
 * **Email:** vrishabnair44@gmail.com
 * **Phone:** +91-9963894342
-* **Links:** https://www.linkedin.com/in/vrishab-nair-212769290/ | https://github.com/Dweeb1578 | https://vrishab-portfolio.vercel.app/
+* **Links:** LinkedIn | GitHub | Portfolio
+
+# Summary
+I'm Vrishab Nair, a builder focused on AI tooling and automation. Right now, my current job is **GTM Engineer Intern at Speechify** (2026–present), the B2B voice-AI company, where I build GTM-as-engineering tooling: an AEO audit engine, a hiring-signal tracker, and voice-agent experiments. Day to day I ship MCP servers, RAG chatbots, and multi-agent pipelines that collapse a week of analyst work into a prompt. Before Speechify I did GTM engineering at Zenskar, a B2B billing-automation startup, where I grew AI-assistant referral traffic and won AI Overview citations for competitive billing queries. I study a dual degree in Physics and Electrical Engineering at BITS Pilani, Hyderabad, and I lead 180 Degrees Consulting on campus.
 
 # Education
 ## BITS Pilani, Hyderabad Campus
@@ -10,28 +13,20 @@
 * **Timeline:** Aug 2023 – Present
 
 # Professional Experience
-## Founders Office Intern at Pinch
-* **Timeline:** May 2025 – Aug 2025
-* Identified product gaps through competitive analysis of 7 networking apps and designed 3 Figma prototypes, leading to roadmap prioritization of 2 high-impact features.
-* Launched "streaks" gamification feature by coordinating with engineering and design teams, increasing 7-day user retention by 18%.
-* Revamped company website and implemented SEO strategy, improving organic search ranking.
-* Built investor pitch deck and sourced 34+ VCs, resulting in 2 investor meetings.
-* Recruited 2 Marketing Executives through end-to-end hiring process via LinkedIn and Founder's Network.
+## GTM Engineer Intern at Speechify
+* **Timeline:** 2026 – Present
+* Building GTM-as-engineering tooling for the B2B voice-AI vertical (TTS API and Voice Agents): shipping real tools in days, measuring pipeline impact, and killing what doesn't move it.
+* Built an Answer Engine Optimization (AEO) audit engine that measures a site's "share of model" across ChatGPT, Perplexity, and Google AI Overviews, audits schema and content extractability via browser + raw-HTML checks, and outputs a prioritized 30/60/90 plan to win AI citations.
+* Built a hiring-signal tracker that scrapes Indeed and LinkedIn for buyer-intent role signals, tracks 30-day hiring velocity per company, enriches accounts with industry vertical and telephony stack detected from job descriptions, scores buyer-fit, and exports a ranked list to Google Sheets.
+* Prototyped GTM experiments including a callback voice-agent that calls inbound leads within seconds (dogfooding the product) and high-intent lead-magnet calculators.
 
-## Product Operations Intern at Stamp My Visa
-* **Timeline:** May 2025 – July 2025
-* Redesigned website user flow and created UI mockups for main site and 'Automaton' product, reducing user drop-off by streamlining the process from 9 steps to 4 steps.
-* Produced 3 training videos and onboarding decks for new hires, reducing onboarding time from 2 weeks to 5 days.
+## GTM Engineer Intern at Zenskar
+* **Timeline:** Feb 2026 – June 2026
+* Built marketing-as-engineering tooling for a B2B SaaS finance-automation company, automating weekly traffic and inbound-demo reporting end to end and saving the marketing team ~7 hours every week.
+* Built a marketing-analytics MCP server exposing 80+ read-only tools across Google Search Console, GA4, Google Ads, HubSpot, and Bing (deployed on Google Cloud Run), so the team could query SEO, traffic, ads, and CRM data conversationally instead of pulling CSVs by hand.
+* Optimized unbranded content for Answer Engine Optimization (AEO), winning Google AI Overview citations for high-intent queries like "Chargebee alternatives," "Zuora alternatives," and "best complex usage-based billing software" — work attributed to ~$50K in sourced pipeline.
+* Grew LLM / AI-assistant referral traffic from 220 to 546 monthly visits, climbing ~34% week over week.
 
-## Marketing Intern at Schmooze
-* **Timeline:** March 2025 – April 2025
-* Led a content marketing campaign focused on meme-based user engagement strategies.
-* Collaborated with the product team to refine in-app engagement features, enhancing user retention during the campaign period.
-
-## Product Marketing Intern at Nam Nam Foods
-* **Timeline:** Jan 2025 – March 2025
-* Designed multi-channel campaign across Instagram, WhatsApp, and email to drive product awareness, increasing sales by 47% over a 2-month period (Valentine's Campaign).
-* Redesigned packaging based on customer feedback analysis and optimized Instagram content strategy using analytics, growing reach by 83% and followers by 15%.
 **Portfolio RAG AI** | *Next.js, Pinecone, AI SDK, Groq, Llama 3*
 * Built an intelligent portfolio assistant that answers recruiter questions in real-time by "reading" resume data.
 * Engineered a RAG (Retrieval-Augmented Generation) pipeline using **Pinecone** for vector storage and **Cohere** for semantic embeddings.
@@ -44,7 +39,7 @@
 * Built a RAG pipeline with **ChromaDB** to index curated product strategy literature, reducing hallucinations by 40%.
 * Deployed the model to provide actionable feedback on user responses, mimicking a Senior PM's coaching style.
 
-**Shywarma AI** | *Redis, TypeScript, Vercel, RAG*
+**Hotel Booking RAG Chatbot** | *Redis, TypeScript, Vercel, RAG*
 * Engineered a custom multi-layer caching system using **Redis** to reduce repeat query response times by **90%** and significantly lower LLM token usage.
 * Developed a high-context **RAG pipeline** that retrieves hotel data and dynamically applies business logic to reduce travel package prices by **30-40%**.
 * Built robust rate-limiting middleware and a centralized content filtering system to prevent API abuse and ensure brand safety.
@@ -70,6 +65,17 @@
 * Engineered an autonomous workflow to process anonymous student letters for a campus support group.
 * Integrated **NLP sentiment analysis** to automatically filter toxic content and flag critical messages for human review.
 * Routed positive messages to digital display boards via Webhooks, boosting operational efficiency by **200%** and eliminating manual moderation bottlenecks.
+
+**AI DJ** | *Python, allin1 (neural structure analysis), ffmpeg, Spotify API*
+* Built a CLI that turns a Spotify playlist or local audio folder into one continuous, structure-aware DJ mix.
+* Analyzes each track's structure with a neural model to pick transition points, then applies varied transition styles (bass swaps, filter sweeps, echo-outs, slam cuts).
+* Caches per-track analysis and exports a final MP3 plus a cue sheet; runs a lighter classical-analysis path on weak machines.
+
+**Reddit Intent Engine** | *Python, Groq, Supabase, Serper*
+* Built a multi-stage pipeline that watches Reddit, Hacker News, and Stack Overflow for posts discussing a target pain point.
+* Runs a two-stage Groq LLM classifier under strict rate-limit budgets to score relevance and bucket each hit by intent, deduping through Supabase.
+* Posts the highest-intent hits to Slack with daily digests.
+
 # Leadership & Volunteering
 ## President at 180 Degrees Consulting (BITS Hyderabad)
 * **Timeline:** Aug 2025 – Present
