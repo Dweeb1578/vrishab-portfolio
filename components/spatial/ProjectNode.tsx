@@ -11,18 +11,15 @@ interface Props {
     focused: boolean;
     /** true when SOME orb is focused — the non-focused ones part to make way */
     focusActive: boolean;
-    /** shares a theme with the focused orb — stays lit and sprouts a satellite */
-    related: boolean;
     reducedMotion: boolean;
     /** true while a question is being answered — drives the radial pulse */
     thinking: boolean;
     onSelect: (slug: string) => void;
 }
 
-export default function ProjectNode({ node, focused, focusActive, related, reducedMotion, thinking, onSelect }: Props) {
+export default function ProjectNode({ node, focused, focusActive, reducedMotion, thinking, onSelect }: Props) {
     const groupRef = useRef<Group>(null);
     const crystalRef = useRef<Mesh>(null);
-    const satRef = useRef<Group>(null);
     const [hovered, setHovered] = useState(false);
 
     // Distance from the center core, used to phase-shift the pulse so it reads
@@ -43,9 +40,7 @@ export default function ProjectNode({ node, focused, focusActive, related, reduc
         if (!g || !c) return;
 
         const isHero = focused;
-        // Related orbs hold their place and stay lit; only the truly-unrelated
-        // ones recede.
-        const isReceding = focusActive && !focused && !related;
+        const isReceding = focusActive && !focused;
         const ease = (cur: number, target: number, k: number) => cur + (target - cur) * Math.min(delta * k, 1);
 
         // Radial "listening" wave: while a question is being answered, a pulse
@@ -79,7 +74,7 @@ export default function ProjectNode({ node, focused, focusActive, related, reduc
         g.position.y = ease(g.position.y, ty, posK);
         g.position.z = ease(g.position.z, tz, posK);
 
-        const baseScale = isHero ? 1.7 : hovered ? 1.18 : isReceding ? 0.5 : related ? 1.1 : 1;
+        const baseScale = isHero ? 1.7 : hovered ? 1.18 : isReceding ? 0.5 : 1;
         const targetScale = baseScale + wave * 0.14;
         g.scale.x = ease(g.scale.x, targetScale, 6);
         g.scale.y = g.scale.z = g.scale.x;
@@ -91,18 +86,10 @@ export default function ProjectNode({ node, focused, focusActive, related, reduc
             c.rotation.y += delta * 0.35 * spin;
         }
 
-        // ease emissive glow: hero burns bright, related stays lit, receding dims
+        // ease emissive glow: hero burns bright, receding orbs dim down
         const mat = c.material as unknown as { emissiveIntensity: number };
-        const baseGlow = isHero ? 1.2 : hovered ? 1.0 : isReceding ? 0.1 : related ? 0.85 : 0.35;
+        const baseGlow = isHero ? 1.2 : hovered ? 1.0 : isReceding ? 0.1 : 0.35;
         mat.emissiveIntensity = ease(mat.emissiveIntensity, baseGlow + wave * 0.7, 6);
-
-        // Satellite "smaller orb": orbits a related orb to mark the shared theme.
-        // Scales in only when related, so unrelated/hero orbs never show one.
-        if (satRef.current) {
-            if (!reducedMotion) satRef.current.rotation.y += delta * 1.3;
-            const s = ease(satRef.current.scale.x, related ? 1 : 0, 7);
-            satRef.current.scale.setScalar(s);
-        }
     });
 
     return (
@@ -149,22 +136,6 @@ export default function ProjectNode({ node, focused, focusActive, related, reduc
                     <icosahedronGeometry args={[1.55, 0]} />
                     <meshBasicMaterial color={node.color} wireframe transparent opacity={0.22} />
                 </mesh>
-
-                {/* satellite — a small orb that orbits this node when it shares a
-                    theme with the focused one. Starts scaled to 0 (hidden). */}
-                <group ref={satRef} scale={0} rotation={[0.5, 0, 0]}>
-                    <mesh position={[2.1, 0, 0]}>
-                        <icosahedronGeometry args={[0.3, 0]} />
-                        <meshStandardMaterial
-                            color={node.color}
-                            emissive={node.color}
-                            emissiveIntensity={0.9}
-                            roughness={0.3}
-                            metalness={0.4}
-                            flatShading
-                        />
-                    </mesh>
-                </group>
 
                 <Billboard position={[0, 2.1, 0]}>
                     <Text
