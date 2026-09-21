@@ -20,8 +20,8 @@ export const metadata: Metadata = {
     default: "Vrishab Nair | GTM Engineer & AI Builder",
     template: "%s | Vrishab Nair"
   },
-  description: "Vrishab Nair builds AI tooling and automation: MCP servers, RAG pipelines, and agents that collapse a week of analyst work into a prompt. Navigate an interactive spatial portfolio and ask its AI anything.",
-  keywords: ["Vrishab Nair", "GTM Engineer", "AI tooling", "RAG", "MCP server", "automation", "AI Builder", "Portfolio", "BITS Pilani"],
+  description: "Vrishab Nair is a GTM engineer who builds revenue systems as software. Founding GTM engineer at SpeechifyAI, where he shipped six production agents, an approval-first inbound service and two open-source TTS integrations. Navigate an interactive spatial portfolio and ask its AI anything.",
+  keywords: ["Vrishab Nair", "GTM Engineer", "GTM engineering", "AI tooling", "RAG", "MCP server", "automation", "AI Builder", "Portfolio", "SpeechifyAI", "BITS Pilani"],
   authors: [{ name: "Vrishab Nair" }],
   creator: "Vrishab Nair",
   metadataBase: new URL("https://vrishab-portfolio.vercel.app"),
@@ -66,7 +66,7 @@ const jsonLd = {
     "https://www.linkedin.com/in/vrishab-nair-212769290/",
     "https://github.com/Dweeb1578"
   ],
-  description: "GTM Engineer building AI tooling and automation: MCP servers, RAG pipelines, and agents that automate go-to-market work."
+  description: "GTM engineer who builds revenue systems as software: agents, inbound services, and open-source integrations that automate go-to-market work."
 };
 
 const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');var s=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&s)){document.documentElement.classList.add('dark');}}catch(e){}})();`;
@@ -86,7 +86,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100 transition-colors`}
+        className={`${geistSans.variable} ${geistMono.variable} crt-scanlines antialiased bg-[#040a06] text-[#cdf6d6]`}
       >
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-E81HYB5075"

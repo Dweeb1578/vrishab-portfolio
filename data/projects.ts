@@ -13,6 +13,10 @@ import {
     Search,
     ScanSearch,
     Briefcase,
+    Bot,
+    Zap,
+    Package,
+    Activity,
 } from 'lucide-react';
 
 export type ProjectColor =
@@ -39,6 +43,48 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+    {
+        slug: 'gtm-agent-os',
+        title: 'GTM Agent OS',
+        hook: 'Six agents that absorb the research and CRM work around every sales call.',
+        description:
+            'Six scheduled agents on Google Cloud Run, sharing one Attio and Slack layer: pre-call briefings DMed to the deal owner, deal proposals raised from meetings that have no deal, call-transcript intelligence written back to CRM fields, transcript-to-task handoffs, a pre-standup task digest, and tiered signup alerts. Each one shipped to shadow mode first, DMing only me, before it was allowed to reach the team.',
+        tags: ['Python', 'Cloud Run', 'Attio', 'Slack'],
+        color: 'emerald',
+        icon: Bot,
+        featured: true,
+    },
+    {
+        slug: 'speed-to-lead',
+        title: 'Speed-to-Lead',
+        hook: 'Inbound form fill to an approved, personalised reply in about 30 seconds.',
+        description:
+            'An approval-first inbound service: an LLM screens each form fill for a real buyer, a free-first chain (Scrapling, then Serper, then Apify) enriches the account, a tiered model chain drafts the reply, and a Slack card offers live calendar slots. Nothing sends until a human taps approve, and Firestore keeps the whole path idempotent so a retried webhook cannot mail anyone twice.',
+        tags: ['FastAPI', 'Firestore', 'Slack', 'Gmail API'],
+        color: 'blue',
+        icon: Zap,
+        featured: true,
+    },
+    {
+        slug: 'speechify-tts-integrations',
+        title: 'Speechify TTS Integrations',
+        hook: 'Made Speechify a native voice provider in two open-source AI frameworks.',
+        description:
+            'A Vercel AI SDK speech provider published to npm as @speechify/vercel, built as a thin bridge over the official Fern SDK with automated releases and build provenance, plus a standalone Pipecat TTS service following that community\'s separate-repo convention. Also found and fixed the User-Agent bug that was making every AI-SDK request invisible to the API\'s own integration telemetry.',
+        tags: ['TypeScript', 'Python', 'Vercel AI SDK', 'Pipecat'],
+        color: 'indigo',
+        icon: Package,
+    },
+    {
+        slug: 'signup-funnel-autopsy',
+        title: 'Signup Funnel Autopsy',
+        hook: 'Audited 1,587 signups and found a fraud ring and 26 uncontacted buyers.',
+        description:
+            'A full reconciliation of PostHog product events against Attio CRM records to find where self-serve revenue was leaking. Three findings: checkout completed at 14.5%, 12.6% of all signups traced back to a single fraud operation running on 18 mail-only domains, and 26 companies had reached the checkout screen, never paid, and never been contacted by anyone.',
+        tags: ['PostHog', 'HogQL', 'Attio', 'Python'],
+        color: 'amber',
+        icon: Activity,
+    },
     {
         slug: 'marketing-mcp-server',
         title: 'Marketing Analytics MCP Server',

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { NodeLayout } from './layout';
 import { pickFocus } from './layout';
 
@@ -10,10 +10,12 @@ interface Props {
     onThinking: (thinking: boolean) => void;
 }
 
+// First two carry the strongest answers, and are the only two shown on a phone
+// where a four-chip block wraps into a wall that shoves the input off-screen.
 const CHIPS = [
-    'What do you do at Speechify?',
-    'How did you source $50K in pipeline?',
-    'Tell me about the AI DJ',
+    'What did you build at Speechify?',
+    'How did you source $105K in pipeline?',
+    'Tell me about speed-to-lead',
     'What have you built with RAG?',
 ];
 
@@ -39,12 +41,23 @@ function renderMd(raw: string): string {
 
 export default function AskBar({ layout, onFocus, onThinking }: Props) {
     const [input, setInput] = useState('');
+    // The full placeholder is clipped mid-word in a phone-width input.
+    const [placeholder, setPlaceholder] = useState('Ask me anything about Vrishab…');
     const [answer, setAnswer] = useState('');
     const [focusTitle, setFocusTitle] = useState<string | null>(null);
     const [streaming, setStreaming] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const focusedSlug = useRef<string | null>(null);
+
+    useEffect(() => {
+        const mq = window.matchMedia('(max-width: 640px)');
+        const apply = () =>
+            setPlaceholder(mq.matches ? 'Ask me anything…' : 'Ask me anything about Vrishab…');
+        apply();
+        mq.addEventListener('change', apply);
+        return () => mq.removeEventListener('change', apply);
+    }, []);
 
     function focusOn(slug: string | null) {
         if (slug === focusedSlug.current) return;
@@ -120,12 +133,14 @@ export default function AskBar({ layout, onFocus, onThinking }: Props) {
 
     return (
         <>
-            {/* answer — a slim card docked to the side so the flying orb stays visible */}
+            {/* The answer. On a phone it spans the width and sits directly above
+                the input stack; from sm up it becomes a slim card docked left so
+                the flying orb stays visible beside it. */}
             {(answer || streaming) && (
-                <div className="pointer-events-auto fixed bottom-28 left-6 z-20 w-[min(340px,82vw)] max-h-[44vh] overflow-y-auto rounded-2xl border border-[#d8623a]/30 bg-[#16130f]/80 px-5 py-4 text-[#f3ead7] shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-md">
+                <div className="pointer-events-auto fixed inset-x-4 bottom-[11.5rem] z-20 max-h-[34vh] overflow-y-auto rounded-2xl border border-[#00b341]/35 bg-[#040a06]/85 px-5 py-4 text-[#cdf6d6] shadow-[0_8px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:inset-x-auto sm:bottom-28 sm:left-6 sm:max-h-[44vh] sm:w-[min(340px,82vw)]">
                     <div className="flex items-start justify-between gap-3">
                         {focusTitle ? (
-                            <span className="font-mono text-[11px] uppercase tracking-wider text-[#e9a23b]">
+                            <span className="font-mono text-[11px] uppercase tracking-wider text-[#39ff6a]">
                                 ✦ {focusTitle}
                             </span>
                         ) : (
@@ -137,55 +152,59 @@ export default function AskBar({ layout, onFocus, onThinking }: Props) {
                             <button
                                 onClick={clearAnswer}
                                 aria-label="Clear answer"
-                                className="-mr-1 -mt-1 font-mono text-[13px] leading-none text-[#f3ead7]/45 transition-colors hover:text-[#f3ead7]"
+                                className="-mr-2 -mt-2 grid h-9 w-9 place-items-center font-mono text-[15px] leading-none text-[#cdf6d6]/45 transition-colors hover:text-[#cdf6d6]"
                             >
                                 ✕
                             </button>
                         )}
                     </div>
                     <p
-                        className="mt-2 whitespace-pre-wrap text-[13px] leading-relaxed [&_strong]:font-semibold [&_strong]:text-[#e9a23b] [&_em]:italic"
+                        className="mt-2 whitespace-pre-wrap text-[13px] leading-relaxed [&_strong]:font-semibold [&_strong]:text-[#39ff6a] [&_em]:italic"
                         dangerouslySetInnerHTML={{ __html: renderMd(answer) }}
                     />
-                    {streaming && <span className="mt-1 inline-block h-3.5 w-2 animate-pulse bg-[#e9a23b]" />}
+                    {streaming && <span className="mt-1 inline-block h-3.5 w-2 animate-pulse bg-[#39ff6a]" />}
                 </div>
             )}
 
-            <div className="pointer-events-none fixed inset-x-0 bottom-10 z-20 flex flex-col items-center px-4">
+            {/* `pb-[env(safe-area-inset-bottom)]` keeps the input clear of the
+                iOS home indicator, which otherwise sits on top of it. */}
+            <div className="pointer-events-none fixed inset-x-0 bottom-6 z-20 flex flex-col items-center px-4 pb-[env(safe-area-inset-bottom)] sm:bottom-10">
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
                     ask(input);
                 }}
-                className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-full border border-[#e9a23b]/35 bg-[#16130f]/75 py-2 pl-5 pr-2 backdrop-blur-md"
+                className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-full border border-[#39ff6a]/40 bg-[#040a06]/80 py-2 pl-5 pr-2 backdrop-blur-md"
             >
-                <span className="font-mono text-sm text-[#e9a23b]">✦</span>
+                <span className="font-mono text-sm text-[#39ff6a]">✦</span>
+                {/* 16px keeps iOS Safari from zooming the whole page on focus. */}
                 <input
                     ref={inputRef}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ask me anything about Vrishab…"
-                    className="flex-1 bg-transparent text-[15px] text-[#f3ead7] outline-none placeholder:text-[#f3ead7]/40"
+                    placeholder={placeholder}
+                    className="min-w-0 flex-1 bg-transparent font-mono text-[16px] text-[#cdf6d6] outline-none placeholder:text-[#cdf6d6]/40"
                 />
                 <button
                     type="submit"
                     disabled={streaming}
                     aria-label="Ask"
-                    className="grid h-9 w-9 place-items-center rounded-full bg-[#d8623a] font-bold text-[#16130f] transition-colors hover:bg-[#e9a23b] disabled:opacity-50"
+                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#00b341] font-bold text-[#040a06] transition-colors hover:bg-[#39ff6a] disabled:opacity-50"
                 >
                     →
                 </button>
             </form>
 
             {/* Suggestion chips stay available the whole time so there's always a
-                next thing to ask — they just dim while an answer is streaming. */}
+                next thing to ask — they just dim while an answer is streaming.
+                A phone shows the first two; four wrap into three rows there. */}
             <div className="pointer-events-auto mt-3 flex flex-wrap justify-center gap-2">
-                {CHIPS.map((c) => (
+                {CHIPS.map((c, i) => (
                     <button
                         key={c}
                         onClick={() => ask(c)}
                         disabled={streaming}
-                        className="rounded-full border border-[#a8a06a]/30 bg-[#a8a06a]/10 px-3 py-1.5 font-mono text-[11px] text-[#f3ead7]/80 transition-colors hover:border-[#e9a23b] hover:text-[#e9a23b] disabled:opacity-40"
+                        className={`rounded-full border border-[#4f9c63]/40 bg-[#4f9c63]/10 px-3 py-2 font-mono text-[11px] text-[#cdf6d6]/80 transition-colors hover:border-[#39ff6a] hover:text-[#39ff6a] disabled:opacity-40 ${i > 1 ? 'hidden sm:block' : ''}`}
                     >
                         {c}
                     </button>

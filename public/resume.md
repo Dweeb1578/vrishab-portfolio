@@ -5,7 +5,7 @@
 * **Links:** LinkedIn | GitHub | Portfolio
 
 # Summary
-I'm Vrishab Nair, a builder focused on AI tooling and automation. Right now, my current job is **GTM Engineer Intern at Speechify** (2026–present), the B2B voice-AI company, where I build GTM-as-engineering tooling: an AEO audit engine, a hiring-signal tracker, and voice-agent experiments. Day to day I ship MCP servers, RAG chatbots, and multi-agent pipelines that collapse a week of analyst work into a prompt. Before Speechify I did GTM engineering at Zenskar, a B2B billing-automation startup, where I grew AI-assistant referral traffic and won AI Overview citations for competitive billing queries. I study a dual degree in Physics and Electrical Engineering at BITS Pilani, Hyderabad, and I lead 180 Degrees Consulting on campus.
+I'm Vrishab Nair, a builder focused on AI tooling and automation. I was the **founding GTM engineer at SpeechifyAI** (Jun 2026 – Sep 2026), the B2B voice-AI platform, where I built the company's entire revenue system from zero: no CRM, no pipeline and no acquisition channel existed when I joined, and it ended up sourcing $40K in booked revenue and $105K in pipeline. Most of that work was code, not process: six production agents on Google Cloud Run, an approval-first inbound service, a funnel audit across PostHog and Attio, two open-source TTS integrations on npm and GitHub, and the speechify.ai marketing site. Before Speechify I did GTM engineering at Zenskar, a B2B billing-automation startup, where I grew AI-assistant referral traffic and won AI Overview citations for competitive billing queries. I study a dual degree in Physics and Electrical Engineering at BITS Pilani, Hyderabad, and I lead 180 Degrees Consulting on campus.
 
 # Education
 ## BITS Pilani, Hyderabad Campus
@@ -13,12 +13,15 @@ I'm Vrishab Nair, a builder focused on AI tooling and automation. Right now, my 
 * **Timeline:** Aug 2023 – Present
 
 # Professional Experience
-## GTM Engineer Intern at Speechify
-* **Timeline:** 2026 – Present
-* Building GTM-as-engineering tooling for the B2B voice-AI vertical (TTS API and Voice Agents): shipping real tools in days, measuring pipeline impact, and killing what doesn't move it.
-* Built an Answer Engine Optimization (AEO) audit engine that measures a site's "share of model" across ChatGPT, Perplexity, and Google AI Overviews, audits schema and content extractability via browser + raw-HTML checks, and outputs a prioritized 30/60/90 plan to win AI citations.
-* Built a hiring-signal tracker that scrapes Indeed and LinkedIn for buyer-intent role signals, tracks 30-day hiring velocity per company, enriches accounts with industry vertical and telephony stack detected from job descriptions, scores buyer-fit, and exports a ranked list to Google Sheets.
-* Prototyped GTM experiments including a callback voice-agent that calls inbound leads within seconds (dogfooding the product) and high-intent lead-magnet calculators.
+## Founding GTM Engineer at SpeechifyAI
+* **Timeline:** Jun 2026 – Sep 2026
+* Built the first revenue system for the B2B voice-AI vertical (TTS API and Voice Agents) end to end, starting with no CRM, no pipeline and no acquisition channel. Stood up 8 channels solo (Attio CRM, inbound, outbound, lifecycle email, newsletters, Google Ads, LinkedIn Ads), which sourced $40K in booked revenue and $105K in pipeline.
+* Built and deployed 6 production agents on Google Cloud Run that handle the research and CRM upkeep around every sales call: pre-call briefings, deal proposals from meetings, call-transcript intelligence written back to CRM fields, transcript-to-task handoffs, task digests, and tiered signup alerts. They run on schedulers daily for the whole SpeechifyAI team.
+* Built speed-to-lead, an approval-first inbound service (FastAPI, Firestore, Slack, Gmail API) that screens each inbound form fill with an LLM, enriches the account with a free-first chain (Scrapling, Serper, Apify), drafts outreach, and posts a Slack approval card with live calendar slots before anything sends. First touch dropped from a business day to roughly 30 seconds.
+* Audited 1,587 signups across PostHog and Attio and found the funnel leaking end to end: checkout completing at 14.5%, 12.6% of signups traced to a single fraud operation running on 18 mail-only domains, and 26 companies that reached checkout, never paid, and had never been contacted.
+* Opened a developer acquisition channel by publishing **@speechify/vercel** to npm and **pipecat-speechify** to GitHub, making Speechify TTS a native provider inside the Vercel AI SDK and Pipecat voice-agent framework, then fixed the User-Agent bug that was hiding all AI-SDK traffic from the API's own attribution.
+* Owned the speechify.ai marketing site after proving the company was absent from 4 of 4 buying-intent LLM answers despite ranking #1 on the Artificial Analysis TTS leaderboard. Rebuilt the comparison, alternatives, paid-landing and developer-hub clusters in Astro and Tailwind, wired to Google Search Console and GA4 funnels.
+* Built the outbound signal layer: LinkedIn post-engager mining, job-posting buyer-intent tracking, and competitor-affiliate harvesting, each suppressed against Firestore contact history so no prospect is contacted twice.
 
 ## GTM Engineer Intern at Zenskar
 * **Timeline:** Feb 2026 – June 2026
