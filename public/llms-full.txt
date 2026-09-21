@@ -77,22 +77,11 @@ Built independently, on my own time. These are not work for any employer.
 * Built a RAG pipeline with **ChromaDB** to index curated product strategy literature, reducing hallucinations by 40%.
 * Deployed the model to provide actionable feedback on user responses, mimicking a Senior PM's coaching style.
 
-**Hotel Booking RAG Chatbot** | *Redis, TypeScript, Vercel, RAG*
-* Engineered a custom multi-layer caching system using **Redis** to reduce repeat query response times by **90%** and significantly lower LLM token usage.
-* Developed a high-context **RAG pipeline** that retrieves hotel data and dynamically applies business logic to reduce travel package prices by **30-40%**.
-* Built robust rate-limiting middleware and a centralized content filtering system to prevent API abuse and ensure brand safety.
-* Refactored frontend state management to enable a seamless "streaming-like" user experience for complex itinerary generation.
-
 **Dynamic QR Code Generator** | *Python (Flask), Chart.js, Pillow, CSV/JSON*
 * Developed a custom **Dynamic QR Code Generator** enabling real-time URL updates without changing the physical QR code.
 * Engineered an interactive **analytics dashboard** with Chart.js to visualize traffic patterns and categorize scans by device type (iOS, Android, Desktop).
 * Implemented a "Design Studio" feature using **qrcode** and **Pillow** libraries to generate custom-branded, hex-color customizable QR codes.
 * Designed a lightweight, file-based persistence layer using JSON and CSV for relational mapping and high-throughput logging.
-
-**Resume Optimization Engine** | *Python, LangChain, Pinecone, Gemini, Groq*
-* Architected a **RAG-based resume optimization engine** reducing hallucination rates by providing LLMs with retrieved high-quality semantic examples.
-* Implemented a **hybrid multi-LLM pipeline** leveraging Google Gemini for embeddings and Groq (Llama 3) for sub-second inference (<200ms).
-* Developed a **semantic search system** with cosine similarity to match user experience against top-tier resume bullets, improving recommendation relevance.
 
 **VC Outreach Automation** | *n8n, Serper.dev, Groq*
 * Architected **n8n workflow** to automate lead research on VCs, reducing manual research time by **90%** via **Serper.dev**.
@@ -103,11 +92,6 @@ Built independently, on my own time. These are not work for any employer.
 * Engineered an autonomous workflow to process anonymous student letters for a campus support group.
 * Integrated **NLP sentiment analysis** to automatically filter toxic content and flag critical messages for human review.
 * Routed positive messages to digital display boards via Webhooks, boosting operational efficiency by **200%** and eliminating manual moderation bottlenecks.
-
-**AI DJ** | *Python, allin1 (neural structure analysis), ffmpeg, Spotify API*
-* Built a CLI that turns a Spotify playlist or local audio folder into one continuous, structure-aware DJ mix.
-* Analyzes each track's structure with a neural model to pick transition points, then applies varied transition styles (bass swaps, filter sweeps, echo-outs, slam cuts).
-* Caches per-track analysis and exports a final MP3 plus a cue sheet; runs a lighter classical-analysis path on weak machines.
 
 **Reddit Intent Engine** | *Python, Groq, Supabase, Serper*
 * Built a multi-stage pipeline that watches Reddit, Hacker News, and Stack Overflow for posts discussing a target pain point.

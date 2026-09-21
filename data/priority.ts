@@ -31,11 +31,8 @@ export const SECTION_WEIGHT: Record<string, number> = {
     // Real, but student-era or small in scope. Still answerable if asked
     // directly, just not what a broad question should surface first.
     'PM Coach AI': 2.5,
-    'Hotel Booking RAG Chatbot': 2,
-    'Resume Optimization Engine': 2,
     'VC Outreach Automation': 2,
     'Sentiment Auto-Router': 2,
-    'AI DJ': 2,
     'Dynamic QR Code Generator': 1.5,
 
     // Case-study decks from coursework and consulting. Correct to mention when
