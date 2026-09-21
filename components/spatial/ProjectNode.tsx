@@ -9,6 +9,9 @@ import { PHOSPHOR, SCENE_BG, type NodeLayout } from './layout';
 
 interface Props {
     node: NodeLayout;
+    /** hands this orb's scene object to the parent so the constellation
+        filaments can track it while it is dragged or coasting */
+    registerNode: (slug: string, obj: Group | null) => void;
     /** false on phones, where 19 labels at once is an unreadable pile-up —
         there the title only appears for the orb you focused. */
     labelAlways: boolean;
@@ -36,7 +39,7 @@ type Controls = { enabled: boolean } | null;
 const MIN_R = 6;
 const MAX_R = 24;
 
-export default function ProjectNode({ node, labelAlways, labelScale, heroFactor, focused, focusActive, reducedMotion, thinking, onSelect }: Props) {
+export default function ProjectNode({ node, registerNode, labelAlways, labelScale, heroFactor, focused, focusActive, reducedMotion, thinking, onSelect }: Props) {
     const groupRef = useRef<Group>(null);
     const crystalRef = useRef<Mesh>(null);
     const [hovered, setHovered] = useState(false);
@@ -92,6 +95,12 @@ export default function ProjectNode({ node, labelAlways, labelScale, heroFactor,
         listeners.current = null;
     }
     useEffect(() => detachListeners, []);
+
+    const slug = node.project.slug;
+    useEffect(() => {
+        registerNode(slug, groupRef.current);
+        return () => registerNode(slug, null);
+    }, [registerNode, slug]);
 
     function onPointerDown(e: ThreeEvent<PointerEvent>) {
         e.stopPropagation();

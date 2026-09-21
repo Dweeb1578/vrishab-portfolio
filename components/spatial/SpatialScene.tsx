@@ -1,10 +1,19 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Sparkles, PerformanceMonitor } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
-import { FogExp2, Color, PerspectiveCamera, type LineBasicMaterial } from 'three';
+import {
+    FogExp2,
+    Color,
+    PerspectiveCamera,
+    Vector3,
+    type BufferAttribute,
+    type BufferGeometry,
+    type LineBasicMaterial,
+    type Object3D,
+} from 'three';
 import { buildLayout, ringRadius, SCENE_BG, PHOSPHOR, type NodeLayout } from './layout';
 import ProjectNode from './ProjectNode';
 import CenterCore from './CenterCore';
@@ -67,14 +76,19 @@ function ResponsiveCamera({ narrow }: { narrow: boolean }) {
 // the whole network visibly "lights up" when you ask something. One draw call.
 function ConstellationLines({
     layout,
+    nodeObjects,
     thinking,
     reducedMotion,
 }: {
     layout: NodeLayout[];
+    /** live scene objects for each orb, registered by ProjectNode on mount */
+    nodeObjects: RefObject<Map<string, Object3D>>;
     thinking: boolean;
     reducedMotion: boolean;
 }) {
     const matRef = useRef<LineBasicMaterial>(null);
+    const geomRef = useRef<BufferGeometry>(null);
+    const probe = useRef(new Vector3());
     const positions = useMemo(() => {
         const arr: number[] = [];
         for (const n of layout) arr.push(0, 0, 0, ...n.position);
@@ -82,18 +96,40 @@ function ConstellationLines({
     }, [layout]);
 
     useFrame((state) => {
-        if (!matRef.current) return;
-        const pulse =
-            thinking && !reducedMotion
-                ? (Math.sin(state.clock.elapsedTime * 3) * 0.5 + 0.5) * 0.24
-                : 0;
-        // ease toward target so toggling `thinking` doesn't snap
-        matRef.current.opacity += (0.09 + pulse - matRef.current.opacity) * 0.1;
+        if (matRef.current) {
+            const pulse =
+                thinking && !reducedMotion
+                    ? (Math.sin(state.clock.elapsedTime * 3) * 0.5 + 0.5) * 0.24
+                    : 0;
+            // ease toward target so toggling `thinking` doesn't snap
+            matRef.current.opacity += (0.09 + pulse - matRef.current.opacity) * 0.1;
+        }
+
+        // Re-point each filament at where its orb ACTUALLY is this frame. The
+        // endpoints used to be baked in at build time, so dragging an orb tore
+        // it off its own line and left the line pointing at empty space.
+        const attr = geomRef.current?.attributes.position as BufferAttribute | undefined;
+        if (!attr) return;
+        const arr = attr.array as Float32Array;
+        let moved = false;
+        for (let i = 0; i < layout.length; i++) {
+            const obj = nodeObjects.current?.get(layout[i].project.slug);
+            if (!obj) continue;
+            obj.getWorldPosition(probe.current);
+            const o = i * 6 + 3; // skip the centre endpoint of this segment
+            if (arr[o] !== probe.current.x || arr[o + 1] !== probe.current.y || arr[o + 2] !== probe.current.z) {
+                arr[o] = probe.current.x;
+                arr[o + 1] = probe.current.y;
+                arr[o + 2] = probe.current.z;
+                moved = true;
+            }
+        }
+        if (moved) attr.needsUpdate = true;
     });
 
     return (
-        <lineSegments>
-            <bufferGeometry>
+        <lineSegments frustumCulled={false}>
+            <bufferGeometry ref={geomRef}>
                 <bufferAttribute attach="attributes-position" args={[positions, 3]} />
             </bufferGeometry>
             <lineBasicMaterial ref={matRef} color={PHOSPHOR.accent} transparent opacity={0.09} />
@@ -109,6 +145,13 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
     // pass doesn't cook weaker GPUs. (Capped at 1.5 rather than 2 — bloom at
     // native 2x retina is the single biggest cost here.)
     const [dpr, setDpr] = useState(1.5);
+    // Live handles on each orb's scene object, so the filaments can follow one
+    // that is being dragged or is still coasting after a throw.
+    const nodeObjects = useRef<Map<string, Object3D>>(new Map());
+    const registerNode = useCallback((slug: string, obj: Object3D | null) => {
+        if (obj) nodeObjects.current.set(slug, obj);
+        else nodeObjects.current.delete(slug);
+    }, []);
 
     return (
         <Canvas
@@ -167,7 +210,12 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
                 opacity={0.5}
             />
 
-            <ConstellationLines layout={layout} thinking={thinking} reducedMotion={reducedMotion} />
+            <ConstellationLines
+                layout={layout}
+                nodeObjects={nodeObjects}
+                thinking={thinking}
+                reducedMotion={reducedMotion}
+            />
 
             <CenterCore reducedMotion={reducedMotion} thinking={thinking} />
 
@@ -175,6 +223,7 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
                 <ProjectNode
                     key={node.project.slug}
                     node={node}
+                    registerNode={registerNode}
                     labelAlways={!narrow}
                     labelScale={narrow ? 0.5 : 1}
                     heroFactor={narrow ? 0.8 : 0.6}
