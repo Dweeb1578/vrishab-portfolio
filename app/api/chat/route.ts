@@ -3,7 +3,7 @@ import { Pinecone } from '@pinecone-database/pinecone';
 import { CohereClient } from 'cohere-ai';
 import { createClient } from '@supabase/supabase-js';
 import ragChunks from '@/data/rag-chunks.json';
-import { weightMultiplier, HEADLINE_WORK } from '@/data/priority';
+import { weightMultiplier, SECTION_WEIGHT, HEADLINE_WORK } from '@/data/priority';
 
 // 1. Initialize Clients
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -21,6 +21,19 @@ type Chunk = { id: string; section: string; text: string };
 const CHUNKS = ragChunks as Chunk[];
 const CHUNK_TEXT = new Map(CHUNKS.map((c) => [c.id, c.text]));
 const CHUNK_SECTION = new Map(CHUNKS.map((c) => [c.id, c.section]));
+
+// The chunks for the strongest work, used when a question is too broad for
+// retrieval to mean anything. Ordered heaviest first, and resolved lazily so a
+// renamed section shows up as a missing key rather than a crash at import.
+function headlineChunks(): string[] {
+    return Object.entries(SECTION_WEIGHT)
+        .filter(([, w]) => w >= 4.5)
+        .sort((a, b) => b[1] - a[1])
+        // ONE chunk per section: the Speechify role is split across three, and
+        // taking them all crowded the research paper out of its own answer.
+        .map(([section]) => CHUNKS.find((c) => c.section === section)?.text)
+        .filter((t): t is string => typeof t === 'string');
+}
 const DOC_TOKENS = CHUNKS.map((c) => tokenize(c.text));
 const AVG_DL = DOC_TOKENS.reduce((s, d) => s + d.length, 0) / Math.max(CHUNKS.length, 1);
 const DF = (() => {
@@ -166,7 +179,7 @@ export async function POST(req: Request) {
                     model: 'rerank-english-v3.0',
                     query: lastMessage,
                     documents: candidates,
-                    topN: Math.min(5, candidates.length),
+                    topN: Math.min(8, candidates.length),
                 });
                 // Cohere's relevance scores are RELATIVE, not calibrated. A
                 // confident hit scores ~0.99, but a perfectly good answer to a
@@ -187,25 +200,58 @@ export async function POST(req: Request) {
                 // it and names Docker and Cloud Run instead, rather than
                 // claiming the retrieved chunk.
                 //
-                // Then weight by how much the underlying work actually matters.
-                // The reranker only measures overlap with the wording of the
-                // question, so on a broad one ("what's your best project?") it
-                // picks more or less arbitrarily among loosely-matching chunks,
-                // and a QR code generator can outrank the funnel audit. The
-                // multiplier is gentle on purpose: a direct question scores
-                // ~0.99 on the right chunk and must still win, so weight
-                // settles ties rather than overruling relevance.
-                const scored = reranked.results
-                    .map((r) => ({
-                        text: candidates[r.index],
-                        score: (r.relevanceScore ?? 0) * weightMultiplier(candidateSections[r.index]),
-                    }))
-                    .sort((a, b) => b.score - a.score);
-                const top = scored[0]?.score ?? 0;
-                contextText = scored
-                    .filter((r) => r.score >= top * 0.3)
-                    .map((r) => r.text)
-                    .join('\n\n---\n\n');
+                // The magnitude of the top score is also the best available
+                // signal for whether the question was SPECIFIC at all. Measured
+                // on this corpus: naming a project scores 0.95 to 0.99, while
+                // "what's your best project?" or "tell me about your research"
+                // top out around 0.001 to 0.02. Below BROAD_QUERY_SCORE the
+                // ranking carries almost no information, which is why a gentle
+                // weight multiplier could not fix it: a 10x noise gap between
+                // two irrelevant chunks swamps a 1.16x nudge, and the bot
+                // answered "my best project is the AI DJ".
+                const BROAD_QUERY_SCORE = 0.05;
+                const rawTop = reranked.results[0]?.relevanceScore ?? 0;
+                const broad = rawTop < BROAD_QUERY_SCORE;
+
+                const scored = reranked.results.map((r) => ({
+                    text: candidates[r.index],
+                    section: candidateSections[r.index],
+                    score: (r.relevanceScore ?? 0) * weightMultiplier(candidateSections[r.index]),
+                }));
+
+                if (!broad) {
+                    // Relevance decides; weight only settles ties.
+                    scored.sort((a, b) => b.score - a.score);
+                    const top = scored[0]?.score ?? 0;
+                    contextText = scored
+                        .filter((r) => r.score >= top * 0.3)
+                        .map((r) => r.text)
+                        .join('\n\n---\n\n');
+                } else {
+                    // Relevance has nothing to say, so importance decides. The
+                    // headline chunks are added outright rather than reordered
+                    // in, because retrieval may not have surfaced them at all:
+                    // "best project" does not lexically resemble the Speechify
+                    // role section that is the honest answer to it.
+                    const seen = new Set<string>();
+                    const picked: string[] = [];
+                    for (const text of headlineChunks()) {
+                        if (picked.length >= 4 || seen.has(text)) continue;
+                        seen.add(text);
+                        picked.push(text);
+                    }
+                    scored.sort(
+                        (a, b) =>
+                            weightMultiplier(b.section) - weightMultiplier(a.section) ||
+                            b.score - a.score,
+                    );
+                    for (const r of scored) {
+                        if (picked.length >= 6 || seen.has(r.text)) continue;
+                        seen.add(r.text);
+                        picked.push(r.text);
+                    }
+                    contextText = picked.join('\n\n---\n\n');
+                }
             } catch (rerankErr) {
                 // If rerank fails, fall back to the raw vector order.
                 console.error('⚠️ Rerank failed, using vector order:', rerankErr);
@@ -235,6 +281,7 @@ export async function POST(req: Request) {
     - If the MEMORIES do not answer the question, say so plainly in first person — e.g. "That's not something I've worked on" or "I don't have that in my background." Then optionally point to what you HAVE done.
     - NEVER invent or guess a company, role, project, date, or number. If you're unsure whether something is in the MEMORIES, treat it as not there.
     - Do NOT pull example values from these instructions into your answer.
+    - NEVER attribute a project to a company unless THAT project's own memory says so. Several memories are shown at once and they are separate: a personal project sitting next to an employer's memory is still a personal project. If a memory says "Personal project", never say you built it at a company.
 
     CRITICAL RULES:
     1. **First Person:** Always use "I", "Me", "My".
@@ -273,7 +320,7 @@ export async function POST(req: Request) {
     DATA PRIORITY:
     - When a MEMORY states a quantifiable result, lead with it. When it doesn't, describe the work without inventing figures.
     - Explain HOW.
-    - Cite the source role/project by name, e.g. "At [the company in the MEMORY], I...".
+    - Name the project itself. Only add a company if THAT project's own memory names one: say "At SpeechifyAI I built X" when the X memory says SpeechifyAI, and plain "I built X" when it does not. Do not open a sentence with a company name just because another memory mentioned it.
 
     SUGGESTION PROTOCOL (Hidden):
     - End with a **TINY** follow-up question in '[SUGGESTION: ...]'.
