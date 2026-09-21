@@ -17,7 +17,7 @@ export default function ProjectDetail({ node, onClose }: Props) {
     const repo = project.githubUrl ?? project.liveUrl;
 
     return (
-        <div className="pointer-events-auto fixed right-6 top-1/2 z-20 w-[min(340px,82vw)] max-h-[70vh] -translate-y-1/2 overflow-y-auto rounded-2xl border bg-[#16130f]/85 px-6 py-5 text-[#f3ead7] shadow-[0_8px_40px_rgba(0,0,0,0.45)] backdrop-blur-md"
+        <div className="pointer-events-auto fixed inset-x-4 top-28 z-20 max-h-[44vh] overflow-y-auto rounded-2xl border bg-[#040a06]/90 px-6 py-5 text-[#cdf6d6] shadow-[0_8px_40px_rgba(0,0,0,0.45)] backdrop-blur-md sm:inset-x-auto sm:right-6 sm:top-1/2 sm:max-h-[70vh] sm:w-[min(340px,82vw)] sm:-translate-y-1/2"
             style={{ borderColor: `${color}55` }}
         >
             <div className="flex items-start justify-between gap-3">
@@ -27,15 +27,15 @@ export default function ProjectDetail({ node, onClose }: Props) {
                 <button
                     onClick={onClose}
                     aria-label="Close"
-                    className="font-mono text-[12px] text-[#f3ead7]/50 transition-colors hover:text-[#f3ead7]"
+                    className="-mr-2 -mt-2 grid h-9 w-9 shrink-0 place-items-center font-mono text-[14px] text-[#cdf6d6]/50 transition-colors hover:text-[#cdf6d6]"
                 >
                     ✕
                 </button>
             </div>
 
             <h2 className="mt-2 text-[22px] font-semibold leading-tight">{project.title}</h2>
-            <p className="mt-2 text-[13px] leading-relaxed text-[#f3ead7]/70">{project.hook}</p>
-            <p className="mt-3 text-[13px] leading-relaxed text-[#f3ead7]/85">{project.description}</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-[#cdf6d6]/70">{project.hook}</p>
+            <p className="mt-3 text-[13px] leading-relaxed text-[#cdf6d6]/85">{project.description}</p>
 
             <div className="mt-4 flex flex-wrap gap-2">
                 {project.tags.map((t) => (
@@ -54,18 +54,19 @@ export default function ProjectDetail({ node, onClose }: Props) {
                     href={repo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-semibold text-[#16130f] transition-opacity hover:opacity-90"
+                    className="mt-5 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-semibold text-[#040a06] transition-opacity hover:opacity-90"
                     style={{ backgroundColor: color }}
                 >
                     {project.githubUrl ? 'View repo' : 'View live'} ↗
                 </a>
             ) : (
-                <p className="mt-5 font-mono text-[10px] uppercase tracking-wider text-[#f3ead7]/35">
+                <p className="mt-5 font-mono text-[10px] uppercase tracking-wider text-[#cdf6d6]/35">
                     private / no public repo
                 </p>
             )}
 
-            <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-[#f3ead7]/35">
+            {/* Pointer-only affordance: there is no double-click on touch. */}
+            <p className="mt-3 hidden font-mono text-[10px] uppercase tracking-wider text-[#cdf6d6]/35 sm:block">
                 tip: double-click the orb to open it
             </p>
         </div>

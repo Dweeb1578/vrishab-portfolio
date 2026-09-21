@@ -7,8 +7,8 @@ export const size = {
 }
 export const contentType = 'image/png'
 
-// Favicon — a warm amber orb with a charcoal monogram, echoing the spatial
-// scene's palette instead of a generic black box.
+// Favicon: a phosphor orb with a near-black monogram, echoing the scene's
+// palette instead of a generic black box.
 export default function Icon() {
     return new ImageResponse(
         (
@@ -20,9 +20,9 @@ export default function Icon() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#16130f',
+                    color: '#040a06',
                     borderRadius: '50%',
-                    backgroundImage: 'radial-gradient(circle at 35% 30%, #e9a23b, #c4703a)',
+                    backgroundImage: 'radial-gradient(circle at 35% 30%, #39ff6a, #0f7a2e)',
                     fontFamily: 'sans-serif',
                     fontWeight: 900,
                     letterSpacing: '-1px',

@@ -4,6 +4,7 @@ import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
 import { Group, Mesh, Points } from 'three';
+import { PHOSPHOR } from './layout';
 
 interface Props {
     reducedMotion: boolean;
@@ -73,8 +74,8 @@ export default function CenterCore({ reducedMotion, thinking }: Props) {
                 <mesh ref={coreRef}>
                     <icosahedronGeometry args={[1.25, 1]} />
                     <meshStandardMaterial
-                        color="#f3ead7"
-                        emissive="#e9a23b"
+                        color="#e8ffee"
+                        emissive={PHOSPHOR.accent}
                         emissiveIntensity={0.7}
                         roughness={0.15}
                         metalness={0.6}
@@ -85,7 +86,7 @@ export default function CenterCore({ reducedMotion, thinking }: Props) {
                 {/* counter-rotating wireframe shell */}
                 <mesh ref={shellRef}>
                     <icosahedronGeometry args={[2.2, 1]} />
-                    <meshBasicMaterial color="#d8623a" wireframe transparent opacity={0.28} />
+                    <meshBasicMaterial color={PHOSPHOR.deep} wireframe transparent opacity={0.28} />
                 </mesh>
 
                 {/* drifting particle sphere */}
@@ -93,7 +94,7 @@ export default function CenterCore({ reducedMotion, thinking }: Props) {
                     <bufferGeometry>
                         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
                     </bufferGeometry>
-                    <pointsMaterial color="#caa05a" size={0.045} transparent opacity={0.7} sizeAttenuation />
+                    <pointsMaterial color={PHOSPHOR.muted} size={0.045} transparent opacity={0.7} sizeAttenuation />
                 </points>
             </group>
         </Float>

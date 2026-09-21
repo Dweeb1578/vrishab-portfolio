@@ -5,10 +5,17 @@ import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { Float, Text, Billboard } from '@react-three/drei';
 import { Vector3, Vector2, Plane, Raycaster } from 'three';
 import type { Mesh, Group, Camera, WebGLRenderer } from 'three';
-import type { NodeLayout } from './layout';
+import { PHOSPHOR, SCENE_BG, type NodeLayout } from './layout';
 
 interface Props {
     node: NodeLayout;
+    /** false on phones, where 19 labels at once is an unreadable pile-up —
+        there the title only appears for the orb you focused. */
+    labelAlways: boolean;
+    /** <1 on phones. A focused orb flies to 40% of the camera distance and
+        scales 1.7x, which scales its label too: at desktop sizing the title
+        then renders wider than a 390px screen and clips on both edges. */
+    labelScale: number;
     focused: boolean;
     /** true when SOME orb is focused — the non-focused ones part to make way */
     focusActive: boolean;
@@ -25,10 +32,14 @@ type Controls = { enabled: boolean } | null;
 const MIN_R = 6;
 const MAX_R = 24;
 
-export default function ProjectNode({ node, focused, focusActive, reducedMotion, thinking, onSelect }: Props) {
+export default function ProjectNode({ node, labelAlways, labelScale, focused, focusActive, reducedMotion, thinking, onSelect }: Props) {
     const groupRef = useRef<Group>(null);
     const crystalRef = useRef<Mesh>(null);
     const [hovered, setHovered] = useState(false);
+    // Labels on the far side of the ring project into the middle of the screen
+    // and collide with the near side's, which is what made 19 orbs unreadable.
+    // Only the front half is labelled; this flips as the ring rotates.
+    const [labelNear, setLabelNear] = useState(true);
     // `grabbed` = under manual physics (being dragged or coasting after a throw).
     // State, not a ref, because it gates <Float> off so the offset isn't swung
     // around by the float wobble.
@@ -54,6 +65,7 @@ export default function ProjectNode({ node, focused, focusActive, reducedMotion,
     const plane = useRef(new Plane());
     const raycaster = useRef(new Raycaster());
     const ndc = useRef(new Vector2());
+    const worldProbe = useRef(new Vector3());
     const listeners = useRef<{ move: (e: PointerEvent) => void; up: (e: PointerEvent) => void } | null>(null);
 
     // Screen pointer → world point on the drag plane (a plane facing the camera
@@ -206,6 +218,13 @@ export default function ProjectNode({ node, focused, focusActive, reducedMotion,
         const mat = c.material as unknown as { emissiveIntensity: number };
         const baseGlow = isHero ? 1.2 : hovered ? 1.0 : isReceding ? 0.1 : 0.35;
         mat.emissiveIntensity = ease(mat.emissiveIntensity, baseGlow + wave * 0.7, 6);
+
+        // Anything further from the camera than the camera is from the centre is
+        // on the back half. setState only on a crossing, so this is not a
+        // per-frame re-render.
+        const camDist = state.camera.position.length();
+        const near = g.getWorldPosition(worldProbe.current).distanceTo(state.camera.position) < camDist * 1.02;
+        if (near !== labelNear) setLabelNear(near);
     });
 
     // Float bobs the orb at rest; switch it off while focused or grabbed so a
@@ -254,20 +273,22 @@ export default function ProjectNode({ node, focused, focusActive, reducedMotion,
                     <meshBasicMaterial color={node.color} wireframe transparent opacity={0.22} />
                 </mesh>
 
+                {((labelAlways && labelNear) || focused || hovered) && (
                 <Billboard position={[0, 2.1, 0]}>
                     <Text
-                        fontSize={0.5}
-                        color="#f3ead7"
+                        fontSize={0.44 * labelScale}
+                        color={PHOSPHOR.text}
                         anchorX="center"
                         anchorY="middle"
-                        maxWidth={6}
+                        maxWidth={5.2 * labelScale}
                         textAlign="center"
                         outlineWidth={0.012}
-                        outlineColor="#16130f"
+                        outlineColor={SCENE_BG}
                     >
                         {node.project.title}
                     </Text>
                 </Billboard>
+                )}
             </group>
         </Float>
     );

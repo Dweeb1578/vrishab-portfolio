@@ -3,14 +3,17 @@
 /* Enable class-based dark mode: any element under `html.dark` activates the dark: variant. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* The scene is a single always-dark surface, so there is no light variant to
+   switch to: one set of tokens, phosphor on near-black. */
 :root {
-  --background: #fafaf9;
-  --foreground: #1c1917;
+  --background: #040a06;
+  --foreground: #cdf6d6;
+  --phosphor: #39ff6a;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #f5f5f4;
+  --background: #040a06;
+  --foreground: #cdf6d6;
 }
 
 @theme inline {
@@ -23,7 +26,26 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* CRT scanlines. A fixed overlay rather than a body background so it sits above
+   the WebGL canvas, which paints its own background. Kept faint: at higher
+   opacity the 1px lines alias into moiré bands on a phone's DPR. */
+.crt-scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.22) 0px,
+    rgba(0, 0, 0, 0.22) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
 }
 
 @keyframes popIn {
@@ -109,7 +131,7 @@ body {
 /* Keyboard-focus outline for any interactive element that doesn't already style its own.
    `:where` keeps specificity at 0 so component-level focus styles still win. */
 :where(a, button, [role="button"], input, textarea, select, [tabindex]):focus-visible {
-  outline: 2px solid rgb(249 115 22);
+  outline: 2px solid var(--phosphor);
   outline-offset: 2px;
   border-radius: 6px;
 }

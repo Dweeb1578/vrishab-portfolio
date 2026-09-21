@@ -10,7 +10,7 @@ import ProjectDetail from '../components/spatial/ProjectDetail';
 const SpatialScene = dynamic(() => import('../components/spatial/SpatialScene'), {
     ssr: false,
     loading: () => (
-        <div className="grid h-full place-items-center font-mono text-xs uppercase tracking-[0.2em] text-[#f3ead7]/60">
+        <div className="grid h-full place-items-center font-mono text-xs uppercase tracking-[0.2em] text-[#cdf6d6]/60">
             loading scene…
         </div>
     ),
@@ -46,7 +46,7 @@ export default function Home() {
     }, []);
 
     return (
-        <main className="fixed inset-0 overflow-hidden bg-[#16130f]">
+        <main className="fixed inset-0 overflow-hidden bg-[#040a06]">
             <SpatialScene
                 focusSlug={focusSlug}
                 autoRotate={focusSlug === null}
@@ -58,8 +58,8 @@ export default function Home() {
             <ProjectDetail node={detailNode} onClose={() => { setDetailSlug(null); setFocusSlug(null); }} />
 
             {/* brand */}
-            <div className="pointer-events-none fixed left-9 top-8 z-20 text-[#f3ead7]">
-                <h1 className="text-[22px] font-semibold tracking-wide">Vrishab Nair</h1>
+            <div className="pointer-events-none fixed left-5 top-5 z-20 text-[#cdf6d6] sm:left-9 sm:top-8">
+                <h1 className="font-mono text-[19px] font-semibold tracking-wide sm:text-[22px]">Vrishab Nair</h1>
                 <p className="mt-1 font-mono text-[12px] uppercase tracking-[0.15em] opacity-60">
                     Spatial Portfolio
                 </p>
@@ -68,7 +68,7 @@ export default function Home() {
                         href="https://www.linkedin.com/in/vrishab-nair-212769290/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[#f3ead7] opacity-50 transition-opacity hover:opacity-100"
+                        className="text-[#cdf6d6] opacity-60 transition-opacity hover:opacity-100"
                     >
                         linkedin ↗
                     </a>
@@ -78,8 +78,8 @@ export default function Home() {
             {/* Interaction hint. Hidden on phones, where it would collide with
                 the top-left brand and "scroll to zoom" is the wrong gesture —
                 the chips already invite the first tap there. */}
-            <div className="pointer-events-none fixed inset-x-0 top-8 z-10 hidden text-center font-mono text-[11px] uppercase tracking-[0.15em] text-[#f3ead7]/50 sm:block">
-                drag to explore · <span className="text-[#e9a23b]">or just ask below</span>
+            <div className="pointer-events-none fixed inset-x-0 top-8 z-10 hidden text-center font-mono text-[11px] uppercase tracking-[0.15em] text-[#cdf6d6]/50 sm:block">
+                drag to explore · <span className="text-[#39ff6a]">or just ask below</span>
             </div>
 
             <AskBar layout={layout} onFocus={handleAskFocus} onThinking={setThinking} />

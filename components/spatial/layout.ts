@@ -1,20 +1,37 @@
 import { projects, type Project } from '../../data/projects';
 
-// Warm, anti-"AI-slop" palette. Every project is remapped to this family
-// regardless of its 2D `color`, so the 3D scene never reads as cyan/indigo.
-export const WARM_HEXES = [
-    '#e9a23b', // amber
-    '#d8623a', // terracotta
-    '#a8a06a', // olive
-    '#c4703a', // clay
-    '#8a9a5b', // warm moss
-    '#e07a3f', // ember
-    '#d9a441', // gold
-    '#b8501f', // rust
-    '#caa05a', // sand
+// Phosphor palette. Every project is remapped to this family regardless of its
+// 2D `color`, so the scene reads as one CRT rather than a box of highlighters.
+// Lightness varies far more than hue on purpose: on a near-black background
+// that is what separates one orb from the next.
+export const NODE_HEXES = [
+    '#39ff6a', // phosphor
+    '#00d94f', // signal
+    '#8cff9e', // pale phosphor
+    '#17a83f', // deep
+    '#5ff77d', // mint
+    '#00b341', // crt
+    '#b6ffbf', // washed
+    '#2ee05f', // bright
+    '#0f7a2e', // forest
 ];
 
-export const SCENE_BG = '#16130f'; // warm charcoal
+export const SCENE_BG = '#040a06'; // near-black, faint green cast
+
+// Single source for every non-orb colour in the scene and its overlay UI.
+export const PHOSPHOR = {
+    /** body copy: pale green, not pure white, so nothing reads as "not themed" */
+    text: '#cdf6d6',
+    /** the bright accent. Used sparingly — at scale it vibrates. */
+    accent: '#39ff6a',
+    /** secondary accent for borders and the deeper end of the scene */
+    deep: '#00b341',
+    /** dust, particles, muted chrome */
+    muted: '#4f9c63',
+    /** floor grid: centre lines and the rest */
+    gridCenter: '#1c6b33',
+    grid: '#0f3d1e',
+} as const;
 
 export interface NodeLayout {
     project: Project;
@@ -26,21 +43,33 @@ export interface NodeLayout {
 
 // Arrange the projects in a gently staggered ring so the camera has room to
 // fly between them. Radius scales a touch with count to avoid crowding.
-export function buildLayout(): NodeLayout[] {
+// `radiusScale` tightens the ring on portrait phones: the camera's field of
+// view is vertical, so a narrow viewport sees far less width than a laptop and
+// a full-size ring hangs off both edges of the screen.
+//
+// `vertical` does the more important half of the phone fix. The default ring is
+// a horizontal circle, which needs width — the one dimension a portrait screen
+// has least of. Standing the ring up maps its long axis onto the tall screen
+// instead, and squashing it horizontally keeps it inside 390px. Without this,
+// no camera distance works: pulling back far enough to fit the ring's width
+// makes every orb a speck.
+export function buildLayout(radiusScale = 1, vertical = false): NodeLayout[] {
     const n = projects.length;
-    const radius = 8 + n * 0.35;
+    const radius = (8 + n * 0.35) * radiusScale;
     return projects.map((project, i) => {
         const a = (i / n) * Math.PI * 2;
-        const y = Math.sin(i * 1.7) * 2.6;
         const keywords = [
             ...project.slug.split('-'),
             ...project.title.toLowerCase().split(/\s+/),
             ...project.tags.map((t) => t.toLowerCase()),
         ];
+        const position: [number, number, number] = vertical
+            ? [Math.cos(a) * radius * 0.5, Math.sin(a) * radius * 0.95, Math.sin(i * 2.1) * 2]
+            : [Math.cos(a) * radius, Math.sin(i * 1.7) * 2.6 * radiusScale, Math.sin(a) * radius];
         return {
             project,
-            position: [Math.cos(a) * radius, y, Math.sin(a) * radius],
-            color: WARM_HEXES[i % WARM_HEXES.length],
+            position,
+            color: NODE_HEXES[i % NODE_HEXES.length],
             keywords,
         };
     });

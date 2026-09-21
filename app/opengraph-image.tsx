@@ -43,11 +43,11 @@ export default async function Image() {
                     justifyContent: 'center',
                     position: 'relative',
                     overflow: 'hidden',
-                    background: '#16130f',
+                    background: '#040a06',
                     fontFamily: 'sans-serif',
                 }}
             >
-                {/* warm center glow */}
+                {/* phosphor center glow */}
                 <div
                     style={{
                         position: 'absolute',
@@ -55,23 +55,21 @@ export default async function Image() {
                         height: 900,
                         borderRadius: '50%',
                         backgroundImage:
-                            'radial-gradient(circle, rgba(233,162,59,0.20), rgba(22,19,15,0) 60%)',
+                            'radial-gradient(circle, rgba(57,255,106,0.18), rgba(4,10,6,0) 60%)',
                     }}
                 />
 
                 {/* scattered orbs */}
-                <div style={orb(120, 90, 150, '#e9a23b')} />
-                <div style={orb(980, 130, 110, '#d8623a')} />
-                <div style={orb(150, 430, 120, '#a8a06a')} />
-                <div style={orb(1000, 440, 140, '#c4703a')} />
+                <div style={orb(120, 90, 150, '#39ff6a')} />
+                <div style={orb(980, 130, 110, '#00b341')} />
+                <div style={orb(150, 430, 120, '#8cff9e')} />
+                <div style={orb(1000, 440, 140, '#17a83f')} />
 
-                {/* name in the warm gradient */}
+                {/* name in phosphor */}
                 <div
                     style={{
                         display: 'flex',
-                        backgroundImage: 'linear-gradient(90deg, #e9a23b, #d8623a)',
-                        backgroundClip: 'text',
-                        color: 'transparent',
+                        color: '#39ff6a',
                         fontSize: 92,
                         fontWeight: 900,
                         letterSpacing: '-2px',
@@ -81,11 +79,11 @@ export default async function Image() {
                 </div>
 
                 {/* positioning */}
-                <div style={{ display: 'flex', fontSize: 34, color: '#f3ead7', marginTop: 16 }}>
+                <div style={{ display: 'flex', fontSize: 34, color: '#cdf6d6', marginTop: 16 }}>
                     GTM Engineer · builds AI tooling & automation
                 </div>
 
-                <div style={{ display: 'flex', fontSize: 24, color: '#a8a06a', marginTop: 28 }}>
+                <div style={{ display: 'flex', fontSize: 24, color: '#4f9c63', marginTop: 28 }}>
                     an interactive spatial portfolio · ask it anything
                 </div>
 
@@ -95,7 +93,7 @@ export default async function Image() {
                         bottom: 44,
                         display: 'flex',
                         fontSize: 20,
-                        color: '#6b5f4a',
+                        color: '#35704a',
                     }}
                 >
                     vrishab-portfolio.vercel.app
