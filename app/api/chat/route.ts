@@ -247,7 +247,12 @@ export async function POST(req: Request) {
                 ...recentMessages,
                 reinforcementMessage
             ],
-            model: 'llama-3.3-70b-versatile',
+            // llama-3.3-70b-versatile was decommissioned by Groq and started
+            // 404ing, which took the whole chat down. gpt-oss-120b is current;
+            // low reasoning effort keeps the first token fast, and the stream
+            // below reads only `delta.content`, so its reasoning never leaks.
+            model: 'openai/gpt-oss-120b',
+            reasoning_effort: 'low',
             stream: true,
             temperature: 0.3,
         });

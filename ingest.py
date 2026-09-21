@@ -36,12 +36,17 @@ SOURCE = "resume.md"
 EMBED_MODEL = "embed-english-v3.0"
 EMBED_BATCH = 96
 UPSERT_BATCH = 100
-# Fast current-gen model for the per-chunk situating sentence. Llama 4 Scout is
-# the free, modern successor to the (soon-deprecated) llama-3.1-8b-instant.
-CONTEXT_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
-# Per-chunk calls run concurrently; this caps simultaneous requests so we stay
-# polite to Groq's rate limits while still finishing in seconds.
-CONTEXT_WORKERS = 5
+# Fast current-gen model for the per-chunk situating sentence. Llama 4 Scout was
+# decommissioned and started 404ing (silently degrading every chunk to a bare
+# heading prefix), so this is gpt-oss-20b, which the key can actually see.
+CONTEXT_MODEL = "openai/gpt-oss-20b"
+# Per-chunk calls are SERIAL and paced. The free tier allows 8,000 tokens per
+# minute and each call costs ~700, so five concurrent workers spent the whole
+# minute's budget in seconds and every chunk fell back to a bare heading. One
+# worker with a gap between calls is slower (~3 min for 30 chunks) but actually
+# produces the situating sentences, which is the entire point of the step.
+CONTEXT_WORKERS = 1
+CONTEXT_PACE_SECONDS = 5.0
 # Mirror of the embedded chunks so the chat route can run client-side BM25
 # (hybrid retrieval) without a second vector store or extra infra.
 CHUNKS_JSON = os.path.join("data", "rag-chunks.json")
@@ -119,7 +124,7 @@ _SITUATE_INSTRUCTION = (
 )
 
 
-def contextualize_one(chunk: str, outline: str, retries: int = 3) -> str:
+def contextualize_one(chunk: str, outline: str, retries: int = 5) -> str:
     """Anthropic-style Contextual Retrieval: one situating sentence (role/project/
     section + key entities and dates) so the chunk stays retrievable on its own.
 
@@ -141,12 +146,25 @@ def contextualize_one(chunk: str, outline: str, retries: int = 3) -> str:
                 model=CONTEXT_MODEL,
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0,
-                max_tokens=80,
+                # gpt-oss is a reasoning model: it spends tokens thinking before
+                # it emits any content. At max_tokens=80 the entire budget went
+                # to reasoning and `content` came back EMPTY with no error, so
+                # every chunk silently fell back to a bare heading. Low effort
+                # plus real headroom is what makes it return a sentence.
+                reasoning_effort="low",
+                max_tokens=250,
             )
-            return (resp.choices[0].message.content or "").strip()
+            sentence = (resp.choices[0].message.content or "").strip()
+            time.sleep(CONTEXT_PACE_SECONDS)  # stay inside the per-minute budget
+            # Empty content is a failure, not a result — raise so the retry runs.
+            if not sentence:
+                raise RuntimeError("empty content from model")
+            return sentence
         except Exception as e:
             if attempt < retries - 1:
-                time.sleep(2 * (attempt + 1))  # backoff on rate limit / transient
+                # Exponential, because a 429 means the minute's budget is gone
+                # and a 2s retry just burns another attempt against a full bucket.
+                time.sleep(min(60, 5 * 2 ** attempt))
                 continue
             print(f"   (context failed after {retries} tries, heading only: {e})")
             return ""
