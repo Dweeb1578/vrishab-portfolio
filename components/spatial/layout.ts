@@ -53,9 +53,15 @@ export interface NodeLayout {
 // instead, and squashing it horizontally keeps it inside 390px. Without this,
 // no camera distance works: pulling back far enough to fit the ring's width
 // makes every orb a speck.
+// The ring grows with the project count, so the camera has to grow with it too
+// or new work simply falls off the edges of the frame.
+export function ringRadius(radiusScale = 1): number {
+    return (8 + projects.length * 0.3) * radiusScale;
+}
+
 export function buildLayout(radiusScale = 1, vertical = false): NodeLayout[] {
+    const radius = ringRadius(radiusScale);
     const n = projects.length;
-    const radius = (8 + n * 0.35) * radiusScale;
     return projects.map((project, i) => {
         const a = (i / n) * Math.PI * 2;
         const keywords = [

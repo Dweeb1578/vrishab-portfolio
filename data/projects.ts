@@ -17,6 +17,12 @@ import {
     Zap,
     Package,
     Activity,
+    AudioLines,
+    Radio,
+    Inbox,
+    LayoutDashboard,
+    GitBranch,
+    Globe,
 } from 'lucide-react';
 
 export type ProjectColor =
@@ -84,6 +90,68 @@ export const projects: Project[] = [
         tags: ['PostHog', 'HogQL', 'Attio', 'Python'],
         color: 'amber',
         icon: Activity,
+    },
+    {
+        slug: 'voicemos-quality-predictor',
+        title: 'VoiceMOS Quality Predictor',
+        hook: 'Scores how good synthetic speech sounds, with no in-domain human ratings.',
+        description:
+            'My entry for the VoiceMOS Challenge 2026 (Track 1): a zero-shot speech-quality predictor combining a Whisper-based model with an ensemble of existing quality metrics, reaching 0.7434 ACR and 0.4960 CCR utterance-level correlation against human opinion scores. The side result is the interesting part: the same score predicts when speech recognition will fail on a clip, which turns a subjective quality metric into a reliability gate for an ASR pipeline. Basis of my first research paper, still in progress.',
+        tags: ['PyTorch', 'Whisper', 'Speech quality', 'Research'],
+        color: 'indigo',
+        icon: AudioLines,
+        featured: true,
+    },
+    {
+        slug: 'signal-room',
+        title: 'Signal Room',
+        hook: 'A buying-signal queue a human accepts or rejects, never one that fires on its own.',
+        description:
+            'Bounded watchers track target accounts for hiring, website and LinkedIn changes, and every signal lands in Slack for review instead of triggering outreach automatically. Watchers may only append evidence, never overwrite ownership, routing or suppression, so the CRM stays the system of action and an agent mistake stays recoverable. A new watcher\'s first collection is stored as a silent baseline, so switching on an account cannot flood the channel with its whole history.',
+        tags: ['Python', 'Attio', 'Slack', 'Apify'],
+        color: 'emerald',
+        icon: Radio,
+    },
+    {
+        slug: 'plain-support-router',
+        title: 'Plain Support Router',
+        hook: 'Routes every support thread to the right owner, and re-routes when it changes.',
+        description:
+            'The triage layer on Speechify\'s support inbox: it classifies each incoming thread, routes it to the right owner, and re-triages when a follow-up message changes what the thread is actually about. Live in production on real customer conversations.',
+        tags: ['Python', 'GraphQL', 'Plain', 'Slack'],
+        color: 'blue',
+        icon: Inbox,
+    },
+    {
+        slug: 'outbound-metrics-dashboard',
+        title: 'Outbound Metrics Dashboard',
+        hook: 'Pipeline by channel, joining the CRM against ad spend and product analytics.',
+        description:
+            'The dashboard the revenue team opens to see what each channel actually produced, joining Attio records against Google Ads spend and PostHog behaviour in one view. Getting paid search to a real dollar value meant routing it through in-ad lead forms, after proving the site\'s own forms captured nothing that could tie a click to revenue.',
+        tags: ['Next.js', 'Vercel', 'Attio', 'PostHog'],
+        color: 'purple',
+        icon: LayoutDashboard,
+    },
+    {
+        slug: 'agent-continuity-broker',
+        title: 'Agent Continuity Broker',
+        hook: 'Lets Claude, Codex and Antigravity resume each other\'s work. Zero model calls.',
+        description:
+            'A shared local record of task prompts, conclusions, test results, errors and git state, keyed by git worktree and branch, so three different coding agents can pick up where another left off. It makes no model, embedding or network calls at all: it is hooks and a SQLite file, so it costs nothing to run and cannot ship a private repository to anyone. Credentials are redacted, sensitive paths suppressed, and test evidence is stamped with the git state that produced it so it can be marked stale when that state moves.',
+        tags: ['Python', 'SQLite', 'MCP', 'Claude Code'],
+        color: 'amber',
+        icon: GitBranch,
+    },
+    {
+        slug: 'speechify-site-clusters',
+        title: 'speechify.ai Comparison Pages',
+        hook: 'Comparison, alternatives and partner pages, plus a real cost calculator.',
+        description:
+            'Designed and shipped the public comparison and alternatives clusters on speechify.ai in Astro and Tailwind, including an interactive calculator that prices a real workload against competitor rates. Written to be honest about where a competitor is genuinely better, on the argument that a comparison page the buyer does not trust is worth nothing to either side.',
+        tags: ['Astro', 'Tailwind', 'GSC', 'GA4'],
+        color: 'rose',
+        icon: Globe,
+        liveUrl: 'https://speechify.ai/compare',
     },
     {
         slug: 'marketing-mcp-server',

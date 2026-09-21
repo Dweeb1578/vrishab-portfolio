@@ -30,11 +30,34 @@ I'm Vrishab Nair, a builder focused on AI tooling and automation. I was the **fo
 * Optimized unbranded content for Answer Engine Optimization (AEO), winning Google AI Overview citations for high-intent queries like "Chargebee alternatives," "Zuora alternatives," and "best complex usage-based billing software" — work attributed to ~$50K in sourced pipeline.
 * Grew LLM / AI-assistant referral traffic from 220 to 546 monthly visits, climbing ~34% week over week.
 
-**Portfolio RAG AI** | *Next.js, Pinecone, AI SDK, Groq, Llama 3*
-* Built an intelligent portfolio assistant that answers recruiter questions in real-time by "reading" resume data.
-* Engineered a RAG (Retrieval-Augmented Generation) pipeline using **Pinecone** for vector storage and **Cohere** for semantic embeddings.
-* Implemented **Llama 3-70b** via Groq for ultra-low latency inference (<1s), ensuring a seamless chat experience.
-* Designed a responsive, dark-mode UI with **Next.js 14** and Tailwind CSS, featuring mobile-optimized chat widgets.
+**Portfolio RAG AI** | *Next.js 16, react-three-fiber, Pinecone, Cohere, Groq*
+* Built the portfolio you are reading: a 3D spatial scene where every project is an orb you can drag, throw and open, with an assistant that answers recruiter questions in my own voice.
+* Engineered hybrid retrieval: dense vectors in **Pinecone**, a client-side **BM25** pass for exact terms the embeddings miss, fused with Reciprocal Rank Fusion and reranked by **Cohere**.
+* Streams answers from **Groq** with a sandwiched anti-fabrication prompt, so it refuses to invent a company, date or metric that is not in the indexed resume.
+* One command regenerates the whole knowledge layer from a single markdown file: the vector index, the BM25 mirror, and the public llms.txt that AI crawlers read.
+
+**Speechify Signal Room** | *Python, Attio, Slack, Scrapling, Apify, Gemini*
+* Built a human-reviewed buying-signal queue for the sales team: bounded watchers track target accounts for hiring, website and LinkedIn changes, and every signal lands in Slack for a person to accept or reject rather than firing outreach automatically.
+* Designed it so watchers may only APPEND evidence and never overwrite ownership, routing or suppression fields, which keeps the CRM the single system of action and makes an agent mistake recoverable.
+* The first collection for any watcher is stored as a baseline and deliberately produces no alert, so switching on a new account cannot flood the channel with its entire history.
+* Free scraping paths were benchmarked against paid actors before spending anything: the free path returned correct company headcount, so paid enrichment was reserved for qualified finalists only.
+
+**Plain Support Router** | *Python, GraphQL, Plain, Slack*
+* Built the routing layer for Speechify's support inbox: classifies each incoming thread and routes it to the right owner, and re-triages when a follow-up message changes what the thread is actually about.
+* Live in production and handling real customer threads.
+
+**Outbound Metrics Dashboard** | *Next.js, Vercel, Attio, Google Ads, PostHog*
+* Built and deployed the dashboard the revenue team uses to see pipeline by channel, joining CRM records against ad spend and product analytics in one view.
+* Traced paid-search spend to real pipeline value through in-ad lead forms after proving the site's own forms captured nothing that could attribute a click to a dollar.
+
+**Agent Continuity Broker** | *Python, SQLite, MCP*
+* Built a shared local memory so Claude Code, Codex and Antigravity can resume each other's work: task prompts, conclusions, test results, errors and git state, keyed by git worktree and branch.
+* Deliberately makes **zero model, embedding or network calls**. It is hooks and a SQLite file, so it costs nothing to run and cannot leak a repository to a third party.
+* Redacts credentials, suppresses output from sensitive paths, stamps test evidence with the git state that produced it, and marks that evidence stale when the state moves.
+
+**speechify.ai Comparison & Alternatives Clusters** | *Astro, Tailwind, Google Search Console, GA4*
+* Designed and shipped the public comparison, alternatives and partner pages on speechify.ai, including an interactive cost calculator that prices a real workload against competitor rates.
+* Wrote them to be honest about where competitors are genuinely better, on the argument that a comparison page a buyer does not trust is worth nothing.
 
 **PM Coach AI** | *Llama 7B, Unsloth, ChromaDB, Python*
 * Developed a specialized AI mentor for aspiring Product Managers, capable of conducting mock interviews.
@@ -79,6 +102,14 @@ I'm Vrishab Nair, a builder focused on AI tooling and automation. I was the **fo
 * Runs a two-stage Groq LLM classifier under strict rate-limit budgets to score relevance and bucket each hit by intent, deduping through Supabase.
 * Posts the highest-intent hits to Slack with daily digests.
 
+# Research
+## VoiceMOS Speech-Quality Predictor (first research paper, in progress)
+* **Stack:** PyTorch, Whisper, WhisperMOSNet, DNSMOS/NISQA/SQUIM
+* Built a zero-shot speech-quality predictor for the **VoiceMOS Challenge 2026 (Track 1)** that scores how good synthetic speech sounds without ever seeing an in-domain human rating, combining a Whisper-based model with an ensemble of existing quality metrics.
+* Reached **0.7434 ACR** and **0.4960 CCR** utterance-level Spearman correlation against human mean-opinion scores.
+* Found a side result the challenge does not measure: the same quality score predicts when speech recognition will fail on a clip (correlation -0.51), which turns a subjective quality metric into a usable reliability gate for an ASR pipeline.
+* This is the basis of my first research paper, written with a collaborator and still in progress.
+
 # Leadership & Volunteering
 ## President at 180 Degrees Consulting (BITS Hyderabad)
 * **Timeline:** Aug 2025 – Present
@@ -102,9 +133,12 @@ I'm Vrishab Nair, a builder focused on AI tooling and automation. I was the **fo
 * **Certification:** Building Wireframes and Low-Fidelity Prototypes, Google [Jan 2025]
 
 # Technical Skills
-* **Product & Design:** Figma, Canva, Wireframing, Low-Fi Prototyping.
-* **Data & Automation:** Python, n8n (Workflow Automation), Excel.
-* **Creative Tools:** Photoshop, Premiere Pro.
+* **Languages & frameworks:** Python, TypeScript, FastAPI, Next.js, Astro, Tailwind.
+* **Infrastructure:** Google Cloud Run, Cloud Scheduler, Firestore, Vercel, Supabase, Docker.
+* **AI engineering:** RAG (Pinecone, hybrid BM25 + dense retrieval, Cohere rerank), MCP servers, multi-agent pipelines, Groq, Gemini, Whisper, LLM evals.
+* **GTM systems:** Attio, HubSpot, PostHog, Slack apps, Gmail API, Resend, Plain, Apify, Scrapling, Serper.
+* **Growth & analytics:** Google Search Console, GA4, Google Ads, LinkedIn Ads, schema markup, AEO/GEO.
+* **Product & design:** Figma, wireframing, low-fi prototyping.
 
 # Interests
 * Outside work I read a lot, play piano, and listen to a lot of music.

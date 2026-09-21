@@ -5,7 +5,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Sparkles, PerformanceMonitor } from '@react-three/drei';
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import { FogExp2, Color, PerspectiveCamera, type LineBasicMaterial } from 'three';
-import { buildLayout, SCENE_BG, PHOSPHOR, type NodeLayout } from './layout';
+import { buildLayout, ringRadius, SCENE_BG, PHOSPHOR, type NodeLayout } from './layout';
 import ProjectNode from './ProjectNode';
 import CenterCore from './CenterCore';
 
@@ -40,13 +40,21 @@ function useNarrowViewport(): boolean {
 
 // <Canvas camera={...}> is only read on mount, so a rotation from portrait to
 // landscape has to move the camera imperatively.
+// Perspective magnifies the near side of the ring, so the orbs that clip the
+// edges are the ones at roughly 45 degrees, not the ones furthest out. Framing
+// those is what sets the distance, hence the factor on the radius rather than a
+// constant that silently stops working every time a project is added.
+function cameraDistance(narrow: boolean): number {
+    const r = ringRadius(narrow ? 0.7 : 1);
+    return narrow ? Math.max(26, r * 2.2) : Math.max(28, r * 2.05);
+}
+
 function ResponsiveCamera({ narrow }: { narrow: boolean }) {
     const camera = useThree((s) => s.camera);
     useEffect(() => {
         if (!(camera instanceof PerspectiveCamera)) return;
         const dist = camera.position.length() || 1;
-        const target = narrow ? 26 : 28;
-        camera.position.multiplyScalar(target / dist);
+        camera.position.multiplyScalar(cameraDistance(narrow) / dist);
         camera.fov = narrow ? 58 : 50;
         camera.updateProjectionMatrix();
     }, [camera, narrow]);
@@ -105,7 +113,7 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
     return (
         <Canvas
             camera={{
-                position: narrow ? [0, 0, 26] : [0, 6, 28],
+                position: narrow ? [0, 0, cameraDistance(true)] : [0, 6, cameraDistance(false)],
                 fov: narrow ? 58 : 50,
                 near: 0.1,
                 far: 200,
@@ -197,7 +205,7 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
                 enableDamping
                 dampingFactor={0.06}
                 minDistance={narrow ? 9 : 10}
-                maxDistance={narrow ? 40 : 50}
+                maxDistance={Math.max(narrow ? 40 : 50, cameraDistance(narrow) * 1.6)}
                 maxPolarAngle={narrow ? Math.PI : Math.PI * 0.62}
                 autoRotate={autoRotate && !reducedMotion}
                 autoRotateSpeed={0.45}

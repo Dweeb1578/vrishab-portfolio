@@ -161,8 +161,27 @@ export async function POST(req: Request) {
                     documents: candidates,
                     topN: Math.min(5, candidates.length),
                 });
+                // Cohere's relevance scores are RELATIVE, not calibrated. A
+                // confident hit scores ~0.99, but a perfectly good answer to a
+                // vaguely worded question scores ~0.005. The old flat 0.05
+                // cutoff therefore threw away correct chunks and made the bot
+                // deny its own work: "do you have a dashboard?" ranked the
+                // dashboard first at 0.0051 and then discarded it.
+                // Keep whatever sits near the top of this query's own scale,
+                // and treat a best score down in the noise as no context at
+                // all, so a vague question gets an honest "not something I've
+                // worked on" instead of an answer built from an unrelated chunk.
+                // There is deliberately no absolute floor. "Tell me about your
+                // research" ranks the right chunk FIRST at 0.00085, so any
+                // fixed cutoff that filters noise also deletes correct answers.
+                // Passing a loosely-related chunk through is safe here because
+                // the grounding rules make the model disown what it cannot
+                // support: asked about Kubernetes it says it has not touched
+                // it and names Docker and Cloud Run instead, rather than
+                // claiming the retrieved chunk.
+                const top = reranked.results[0]?.relevanceScore ?? 0;
                 contextText = reranked.results
-                    .filter((r) => (r.relevanceScore ?? 0) > 0.05)
+                    .filter((r) => (r.relevanceScore ?? 0) >= top * 0.3)
                     .map((r) => candidates[r.index])
                     .join('\n\n---\n\n');
             } catch (rerankErr) {
