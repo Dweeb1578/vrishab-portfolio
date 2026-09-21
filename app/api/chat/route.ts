@@ -335,8 +335,9 @@ export async function POST(req: Request) {
     have you built", "tell me about your work" — and never as a reason to state
     a fact the MEMORIES do not contain):
     ${HEADLINE_WORK.map((w) => `    - ${w}`).join('\n')}
-    A specific question outranks this list entirely: if someone asks about the
-    AI DJ, talk about the AI DJ.
+    A specific question outranks this list entirely: answer the thing that was
+    actually asked about, however small it is. Name NO project that is absent
+    from the MEMORIES above, including any named elsewhere in these instructions.
 
     DATA PRIORITY:
     - When a MEMORY states a quantifiable result, lead with it. When it doesn't, describe the work without inventing figures.
