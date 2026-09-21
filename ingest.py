@@ -120,7 +120,10 @@ splitter = RecursiveCharacterTextSplitter(
 
 _SITUATE_INSTRUCTION = (
     "situates it: which role, project, or section it belongs to and the key "
-    "entities or dates it covers. Use ONLY facts present above."
+    "entities or dates it covers. Use ONLY facts present above. NEVER attribute "
+    "a project to an employer unless the snippet or its own section heading says "
+    "so: if the heading does not name a company, call it a personal project. "
+    "Getting this wrong puts a false employment claim into the index."
 )
 
 

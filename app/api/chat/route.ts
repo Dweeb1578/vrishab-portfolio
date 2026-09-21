@@ -3,6 +3,7 @@ import { Pinecone } from '@pinecone-database/pinecone';
 import { CohereClient } from 'cohere-ai';
 import { createClient } from '@supabase/supabase-js';
 import ragChunks from '@/data/rag-chunks.json';
+import { weightMultiplier, HEADLINE_WORK } from '@/data/priority';
 
 // 1. Initialize Clients
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -19,6 +20,7 @@ const cohere = new CohereClient({ token: process.env.COHERE_API_KEY! });
 type Chunk = { id: string; section: string; text: string };
 const CHUNKS = ragChunks as Chunk[];
 const CHUNK_TEXT = new Map(CHUNKS.map((c) => [c.id, c.text]));
+const CHUNK_SECTION = new Map(CHUNKS.map((c) => [c.id, c.section]));
 const DOC_TOKENS = CHUNKS.map((c) => tokenize(c.text));
 const AVG_DL = DOC_TOKENS.reduce((s, d) => s + d.length, 0) / Math.max(CHUNKS.length, 1);
 const DF = (() => {
@@ -146,9 +148,14 @@ export async function POST(req: Request) {
         const sparseRanking = bm25Ranking(lastMessage);
         const fusedIds = rrf([denseRanking, sparseRanking]);
 
-        const candidates = fusedIds
-            .map(textById)
-            .filter((text): text is string => typeof text === 'string' && text.length > 0);
+        const keptIds = fusedIds.filter((id) => {
+            const t = textById(id);
+            return typeof t === 'string' && t.length > 0;
+        });
+        const candidates = keptIds.map((id) => textById(id) as string);
+        // Parallel to `candidates`, so a reranked result can be traced back to
+        // the section it came from and weighted by how much that work matters.
+        const candidateSections = keptIds.map((id) => CHUNK_SECTION.get(id));
 
         // 4. Rerank candidates against the question (Cohere rerank is far more
         // precise than raw cosine similarity), keep the most relevant few.
@@ -179,10 +186,25 @@ export async function POST(req: Request) {
                 // support: asked about Kubernetes it says it has not touched
                 // it and names Docker and Cloud Run instead, rather than
                 // claiming the retrieved chunk.
-                const top = reranked.results[0]?.relevanceScore ?? 0;
-                contextText = reranked.results
-                    .filter((r) => (r.relevanceScore ?? 0) >= top * 0.3)
-                    .map((r) => candidates[r.index])
+                //
+                // Then weight by how much the underlying work actually matters.
+                // The reranker only measures overlap with the wording of the
+                // question, so on a broad one ("what's your best project?") it
+                // picks more or less arbitrarily among loosely-matching chunks,
+                // and a QR code generator can outrank the funnel audit. The
+                // multiplier is gentle on purpose: a direct question scores
+                // ~0.99 on the right chunk and must still win, so weight
+                // settles ties rather than overruling relevance.
+                const scored = reranked.results
+                    .map((r) => ({
+                        text: candidates[r.index],
+                        score: (r.relevanceScore ?? 0) * weightMultiplier(candidateSections[r.index]),
+                    }))
+                    .sort((a, b) => b.score - a.score);
+                const top = scored[0]?.score ?? 0;
+                contextText = scored
+                    .filter((r) => r.score >= top * 0.3)
+                    .map((r) => r.text)
                     .join('\n\n---\n\n');
             } catch (rerankErr) {
                 // If rerank fails, fall back to the raw vector order.
@@ -240,6 +262,13 @@ export async function POST(req: Request) {
     [Bubble 1]: The direct answer in one specific sentence grounded in a MEMORY, in my voice.
     |||
     [Bubble 2]: The detail — what the situation was, what I built, and the result or metric ONLY if the MEMORIES state one. If they don't, describe the work and omit the number; never fabricate one. Bullets here only if it is genuinely three or more things.
+
+    WHAT TO LEAD WITH (only when the question is broad — "best project", "what
+    have you built", "tell me about your work" — and never as a reason to state
+    a fact the MEMORIES do not contain):
+    ${HEADLINE_WORK.map((w) => `    - ${w}`).join('\n')}
+    A specific question outranks this list entirely: if someone asks about the
+    AI DJ, talk about the AI DJ.
 
     DATA PRIORITY:
     - When a MEMORY states a quantifiable result, lead with it. When it doesn't, describe the work without inventing figures.

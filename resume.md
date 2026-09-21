@@ -30,11 +30,8 @@ I'm Vrishab Nair, a builder focused on AI tooling and automation. I was the **fo
 * Optimized unbranded content for Answer Engine Optimization (AEO), winning Google AI Overview citations for high-intent queries like "Chargebee alternatives," "Zuora alternatives," and "best complex usage-based billing software" — work attributed to ~$50K in sourced pipeline.
 * Grew LLM / AI-assistant referral traffic from 220 to 546 monthly visits, climbing ~34% week over week.
 
-**Portfolio RAG AI** | *Next.js 16, react-three-fiber, Pinecone, Cohere, Groq*
-* Built the portfolio you are reading: a 3D spatial scene where every project is an orb you can drag, throw and open, with an assistant that answers recruiter questions in my own voice.
-* Engineered hybrid retrieval: dense vectors in **Pinecone**, a client-side **BM25** pass for exact terms the embeddings miss, fused with Reciprocal Rank Fusion and reranked by **Cohere**.
-* Streams answers from **Groq** with a sandwiched anti-fabrication prompt, so it refuses to invent a company, date or metric that is not in the indexed resume.
-* One command regenerates the whole knowledge layer from a single markdown file: the vector index, the BM25 mirror, and the public llms.txt that AI crawlers read.
+# Projects Built at SpeechifyAI
+Built during the SpeechifyAI role, alongside the work listed under Professional Experience.
 
 **Speechify Signal Room** | *Python, Attio, Slack, Scrapling, Apify, Gemini*
 * Built a human-reviewed buying-signal queue for the sales team: bounded watchers track target accounts for hiring, website and LinkedIn changes, and every signal lands in Slack for a person to accept or reject rather than firing outreach automatically.
@@ -50,14 +47,23 @@ I'm Vrishab Nair, a builder focused on AI tooling and automation. I was the **fo
 * Built and deployed the dashboard the revenue team uses to see pipeline by channel, joining CRM records against ad spend and product analytics in one view.
 * Traced paid-search spend to real pipeline value through in-ad lead forms after proving the site's own forms captured nothing that could attribute a click to a dollar.
 
+**speechify.ai Comparison & Alternatives Clusters** | *Astro, Tailwind, Google Search Console, GA4*
+* Designed and shipped the public comparison, alternatives and partner pages on speechify.ai, including an interactive cost calculator that prices a real workload against competitor rates.
+* Wrote them to be honest about where competitors are genuinely better, on the argument that a comparison page a buyer does not trust is worth nothing.
+
+# Personal & Side Projects
+Built independently, on my own time. These are not work for any employer.
+
+**Portfolio RAG AI** | *Next.js 16, react-three-fiber, Pinecone, Cohere, Groq*
+* Built the portfolio you are reading: a 3D spatial scene where every project is an orb you can drag, throw and open, with an assistant that answers recruiter questions in my own voice.
+* Engineered hybrid retrieval: dense vectors in **Pinecone**, a client-side **BM25** pass for exact terms the embeddings miss, fused with Reciprocal Rank Fusion and reranked by **Cohere**.
+* Streams answers from **Groq** with a sandwiched anti-fabrication prompt, so it refuses to invent a company, date or metric that is not in the indexed resume.
+* One command regenerates the whole knowledge layer from a single markdown file: the vector index, the BM25 mirror, and the public llms.txt that AI crawlers read.
+
 **Agent Continuity Broker** | *Python, SQLite, MCP*
 * Built a shared local memory so Claude Code, Codex and Antigravity can resume each other's work: task prompts, conclusions, test results, errors and git state, keyed by git worktree and branch.
 * Deliberately makes **zero model, embedding or network calls**. It is hooks and a SQLite file, so it costs nothing to run and cannot leak a repository to a third party.
 * Redacts credentials, suppresses output from sensitive paths, stamps test evidence with the git state that produced it, and marks that evidence stale when the state moves.
-
-**speechify.ai Comparison & Alternatives Clusters** | *Astro, Tailwind, Google Search Console, GA4*
-* Designed and shipped the public comparison, alternatives and partner pages on speechify.ai, including an interactive cost calculator that prices a real workload against competitor rates.
-* Wrote them to be honest about where competitors are genuinely better, on the argument that a comparison page a buyer does not trust is worth nothing.
 
 **PM Coach AI** | *Llama 7B, Unsloth, ChromaDB, Python*
 * Developed a specialized AI mentor for aspiring Product Managers, capable of conducting mock interviews.
