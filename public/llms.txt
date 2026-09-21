@@ -11,7 +11,7 @@
 * **Links:** LinkedIn | GitHub | Portfolio
 
 # Summary
-I'm Vrishab Nair, a builder focused on AI tooling and automation. I was the **founding GTM engineer at SpeechifyAI** (Jun 2026 – Sep 2026), the B2B voice-AI platform, where I built the company's entire revenue system from zero: no CRM, no pipeline and no acquisition channel existed when I joined, and it ended up sourcing $40K in booked revenue and $105K in pipeline. Most of that work was code, not process: six production agents on Google Cloud Run, an approval-first inbound service, a funnel audit across PostHog and Attio, two open-source TTS integrations on npm and GitHub, and the speechify.ai marketing site. Before Speechify I did GTM engineering at Zenskar, a B2B billing-automation startup, where I grew AI-assistant referral traffic and won AI Overview citations for competitive billing queries. I study a dual degree in Physics and Electrical Engineering at BITS Pilani, Hyderabad, and I lead 180 Degrees Consulting on campus.
+I'm Vrishab Nair, a builder focused on AI tooling and automation. I was the **founding GTM engineer at SpeechifyAI** (Jun 2026 – Sep 2026), the B2B voice-AI platform, where I built the company's entire revenue system from zero: no CRM, no pipeline and no acquisition channel existed when I joined, and it ended up sourcing $40K in booked revenue and $105K in pipeline. Most of that work was code, not process: six production agents on Google Cloud Run, an approval-first inbound service, a funnel audit across PostHog and Attio, two open-source TTS integrations on npm and GitHub, and the speechify.ai marketing site. Before Speechify I did GTM engineering at Zenskar, a B2B billing-automation startup, where I grew AI-assistant referral traffic and won AI Overview citations for competitive billing queries. Outside of GTM work I won Track 1 of the VoiceMOS Challenge 2026, an international speech-quality benchmark, which is also my first research paper. I study a dual degree in Physics and Electrical Engineering at BITS Pilani, Hyderabad, and I lead 180 Degrees Consulting on campus.
 
 # Education
 ## BITS Pilani, Hyderabad Campus
@@ -115,12 +115,13 @@ Built independently, on my own time. These are not work for any employer.
 * Posts the highest-intent hits to Slack with daily digests.
 
 # Research
-## VoiceMOS Speech-Quality Predictor (first research paper, in progress)
+## VoiceMOS Challenge 2026 winner (Track 1), and my first research paper
 * **Stack:** PyTorch, Whisper, WhisperMOSNet, DNSMOS/NISQA/SQUIM
-* Built a zero-shot speech-quality predictor for the **VoiceMOS Challenge 2026 (Track 1)** that scores how good synthetic speech sounds without ever seeing an in-domain human rating, combining a Whisper-based model with an ensemble of existing quality metrics.
+* **Won Track 1 of the VoiceMOS Challenge 2026**, the international benchmark for predicting how good synthetic speech sounds to human listeners. My system paper for it is my first research paper.
+* Built the winning entry as a zero-shot predictor: it scores speech quality without ever seeing an in-domain human rating, combining a Whisper-based model with an ensemble of existing quality metrics.
 * Reached **0.7434 ACR** and **0.4960 CCR** utterance-level Spearman correlation against human mean-opinion scores.
 * Found a side result the challenge does not measure: the same quality score predicts when speech recognition will fail on a clip (correlation -0.51), which turns a subjective quality metric into a usable reliability gate for an ASR pipeline.
-* This is the basis of my first research paper, written with a collaborator and still in progress.
+* Written with a collaborator, who contributed the clinical retrieval half of the paper.
 
 # Leadership & Volunteering
 ## President at 180 Degrees Consulting (BITS Hyderabad)

@@ -90,10 +90,10 @@ export const projects: Project[] = [
     },
     {
         slug: 'voicemos-quality-predictor',
-        title: 'VoiceMOS Quality Predictor',
-        hook: 'Scores how good synthetic speech sounds, with no in-domain human ratings.',
+        title: 'VoiceMOS 2026 Winner',
+        hook: 'Won Track 1 of the VoiceMOS Challenge 2026, with no in-domain human ratings.',
         description:
-            'My entry for the VoiceMOS Challenge 2026 (Track 1): a zero-shot speech-quality predictor combining a Whisper-based model with an ensemble of existing quality metrics, reaching 0.7434 ACR and 0.4960 CCR utterance-level correlation against human opinion scores. The side result is the interesting part: the same score predicts when speech recognition will fail on a clip, which turns a subjective quality metric into a reliability gate for an ASR pipeline. Basis of my first research paper, still in progress.',
+            'The winning entry for Track 1 of the VoiceMOS Challenge 2026, the international benchmark for predicting how good synthetic speech sounds to human listeners. It is zero-shot: it scores quality without ever seeing an in-domain human rating, combining a Whisper-based model with an ensemble of existing quality metrics, and reached 0.7434 ACR and 0.4960 CCR utterance-level correlation against human opinion scores. The side result is the interesting part: the same score predicts when speech recognition will fail on a clip, which turns a subjective quality metric into a reliability gate for an ASR pipeline. The system paper is my first research paper.',
         tags: ['PyTorch', 'Whisper', 'Speech quality', 'Research'],
         color: 'indigo',
         icon: AudioLines,

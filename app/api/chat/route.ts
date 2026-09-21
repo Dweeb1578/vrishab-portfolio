@@ -66,6 +66,19 @@ function bm25Ranking(query: string, k1 = 1.5, b = 0.75): string[] {
     return scored.filter((s) => s.score > 0).sort((a, b) => b.score - a.score).map((s) => s.id);
 }
 
+// One retry with a short pause. These are third-party network calls on the hot
+// path of every question, and a single transient failure otherwise costs the
+// visitor the whole answer.
+async function withRetry<T>(label: string, fn: () => Promise<T>): Promise<T> {
+    try {
+        return await fn();
+    } catch (err) {
+        console.warn(`⚠️ ${label} failed, retrying once:`, err);
+        await new Promise((r) => setTimeout(r, 400));
+        return fn();
+    }
+}
+
 // Reciprocal Rank Fusion — rank-based, so the dense (cosine) and sparse (BM25)
 // scores never need to be put on the same scale.
 function rrf(lists: string[][], k = 60, topN = 12): string[] {
@@ -124,37 +137,45 @@ export async function POST(req: Request) {
             }
         }
 
-        // 2. Generate Embedding
-        const embedResponse = await cohere.embed({
-            texts: [lastMessage],
-            model: 'embed-english-v3.0',
-            inputType: 'search_query',
-        });
-
-        const embeddingsArray = embedResponse.embeddings as number[][];
-        if (!embeddingsArray || embeddingsArray.length === 0) {
-            throw new Error("Failed to generate embedding");
-        }
-        const queryVector = embeddingsArray[0];
-
-        // 3. Dense search (Pinecone) — wide candidate set by semantic similarity.
-        const index = pinecone.index('portfolio-rag');
-        const searchResults = await index.query({
-            vector: queryVector,
-            topK: 12,
-            includeMetadata: true,
-        });
-        const denseRanking = searchResults.matches.map((m) => m.id);
-
-        // 3b. Sparse search (client-side BM25) for exact-term recall, then fuse
-        // dense + sparse with RRF — hybrid retrieval. Prefer the JSON chunk store,
-        // but fall back to Pinecone metadata so a transient json/index drift
-        // (e.g. mismatched ids) still returns an answer instead of nothing. The
-        // fallback is per-request so the module-level store stays immutable.
+        // 2 & 3. Dense retrieval: embed the question, then search Pinecone.
+        //
+        // Both are network calls to third parties and both have failed in
+        // normal use ("Request failed to reach Pinecone"), which surfaced to
+        // the visitor as "I couldn't reach my memory just now" on a question
+        // the site can answer perfectly well. So: retry once, and if dense
+        // retrieval is still unavailable, carry on WITHOUT it. The BM25 index
+        // is a local JSON file and needs no network, so a degraded answer beats
+        // an error page. `denseRanking` simply stays empty and RRF fuses one
+        // list instead of two.
         const denseFallback = new Map<string, string>();
-        for (const m of searchResults.matches) {
-            const metaText = m.metadata?.text;
-            if (typeof metaText === 'string') denseFallback.set(m.id, metaText);
+        let denseRanking: string[] = [];
+        try {
+            const embeddingsArray = (await withRetry('cohere.embed', () =>
+                cohere.embed({
+                    texts: [lastMessage],
+                    model: 'embed-english-v3.0',
+                    inputType: 'search_query',
+                }),
+            )).embeddings as number[][];
+            if (!embeddingsArray || embeddingsArray.length === 0) {
+                throw new Error('Failed to generate embedding');
+            }
+
+            const index = pinecone.index('portfolio-rag');
+            const searchResults = await withRetry('pinecone.query', () =>
+                index.query({ vector: embeddingsArray[0], topK: 12, includeMetadata: true }),
+            );
+            denseRanking = searchResults.matches.map((m) => m.id);
+
+            // Prefer the JSON chunk store, but keep Pinecone's metadata as a
+            // per-request fallback so a transient json/index drift (e.g.
+            // mismatched ids) still returns an answer instead of nothing.
+            for (const m of searchResults.matches) {
+                const metaText = m.metadata?.text;
+                if (typeof metaText === 'string') denseFallback.set(m.id, metaText);
+            }
+        } catch (denseErr) {
+            console.error('⚠️ Dense retrieval unavailable, answering from BM25 alone:', denseErr);
         }
         const textById = (id: string) => CHUNK_TEXT.get(id) ?? denseFallback.get(id);
 

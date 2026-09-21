@@ -15,7 +15,7 @@ export const NEUTRAL_WEIGHT = 3;
 export const SECTION_WEIGHT: Record<string, number> = {
     // The headline work: production systems, real money, or genuinely novel.
     'Founding GTM Engineer at SpeechifyAI': 5,
-    'VoiceMOS Speech-Quality Predictor (first research paper, in progress)': 5,
+    'VoiceMOS Challenge 2026 winner (Track 1), and my first research paper': 5,
     'Speechify Signal Room': 5,
     'Portfolio RAG AI': 5,
     'GTM Engineer Intern at Zenskar': 4.5,
@@ -64,5 +64,5 @@ export function weightMultiplier(section: string | undefined): number {
 export const HEADLINE_WORK = [
     'the SpeechifyAI revenue system as a whole, including the six production agents and speed-to-lead',
     'the signup funnel audit that found the fraud operation and the 26 uncontacted buyers',
-    'the VoiceMOS speech-quality predictor, which is the basis of my first research paper',
+    'winning Track 1 of the VoiceMOS Challenge 2026, which is also my first research paper',
 ];
