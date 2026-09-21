@@ -16,6 +16,10 @@ interface Props {
         scales 1.7x, which scales its label too: at desktop sizing the title
         then renders wider than a 390px screen and clips on both edges. */
     labelScale: number;
+    /** Fraction of the camera distance a focused orb flies to. Higher means it
+        stops further away: on a phone the desktop value fills the whole screen
+        with one orb and reads as a rendering fault rather than a zoom. */
+    heroFactor: number;
     focused: boolean;
     /** true when SOME orb is focused — the non-focused ones part to make way */
     focusActive: boolean;
@@ -32,7 +36,7 @@ type Controls = { enabled: boolean } | null;
 const MIN_R = 6;
 const MAX_R = 24;
 
-export default function ProjectNode({ node, labelAlways, labelScale, focused, focusActive, reducedMotion, thinking, onSelect }: Props) {
+export default function ProjectNode({ node, labelAlways, labelScale, heroFactor, focused, focusActive, reducedMotion, thinking, onSelect }: Props) {
     const groupRef = useRef<Group>(null);
     const crystalRef = useRef<Mesh>(null);
     const [hovered, setHovered] = useState(false);
@@ -192,9 +196,9 @@ export default function ProjectNode({ node, labelAlways, labelScale, focused, fo
         let wx = h.x, wy = h.y, wz = h.z;
         if (isHero) {
             const cam = state.camera.position;
-            wx = cam.x * 0.6;
-            wy = cam.y * 0.6;
-            wz = cam.z * 0.6;
+            wx = cam.x * heroFactor;
+            wy = cam.y * heroFactor;
+            wz = cam.z * heroFactor;
         } else if (isReceding && !reducedMotion) {
             const len = h.length() || 1;
             wx = h.x + (h.x / len) * 4.4;
@@ -276,11 +280,13 @@ export default function ProjectNode({ node, labelAlways, labelScale, focused, fo
                 {((labelAlways && labelNear) || focused || hovered) && (
                 <Billboard position={[0, 2.1, 0]}>
                     <Text
-                        fontSize={0.44 * labelScale}
+                        // A focused orb's group scales 1.7x, which scales its
+                        // label with it and made the title span the viewport.
+                        fontSize={0.44 * labelScale * (focused ? 0.5 : 1)}
                         color={PHOSPHOR.text}
                         anchorX="center"
                         anchorY="middle"
-                        maxWidth={5.2 * labelScale}
+                        maxWidth={(5.2 * labelScale) / (focused ? 1.7 : 1)}
                         textAlign="center"
                         outlineWidth={0.012}
                         outlineColor={SCENE_BG}

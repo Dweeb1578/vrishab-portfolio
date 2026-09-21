@@ -169,6 +169,7 @@ export default function SpatialScene({ focusSlug, autoRotate, reducedMotion, thi
                     node={node}
                     labelAlways={!narrow}
                     labelScale={narrow ? 0.5 : 1}
+                    heroFactor={narrow ? 0.8 : 0.6}
                     focused={focusSlug === node.project.slug}
                     focusActive={focusSlug !== null}
                     reducedMotion={reducedMotion}

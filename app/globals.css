@@ -29,6 +29,20 @@ body {
   font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+/* The one photograph on the site. A full-colour snapshot on a monochrome green
+   scene reads as pasted-in, so it is pushed toward phosphor and returns to its
+   real colours on hover. `filter` is one property, so the hover rule has to
+   restate the whole chain rather than override a piece of it. */
+.phosphor-photo {
+  filter: grayscale(0.6) sepia(0.4) hue-rotate(72deg) saturate(1.7) contrast(1.04) brightness(1.05);
+  transition: filter 450ms ease;
+}
+
+.phosphor-photo:hover,
+.phosphor-photo:focus-visible {
+  filter: none;
+}
+
 /* CRT scanlines. A fixed overlay rather than a body background so it sits above
    the WebGL canvas, which paints its own background. Kept faint: at higher
    opacity the 1px lines alias into moiré bands on a phone's DPR. */

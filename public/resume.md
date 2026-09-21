@@ -18,7 +18,7 @@ I'm Vrishab Nair, a builder focused on AI tooling and automation. I was the **fo
 * Built the first revenue system for the B2B voice-AI vertical (TTS API and Voice Agents) end to end, starting with no CRM, no pipeline and no acquisition channel. Stood up 8 channels solo (Attio CRM, inbound, outbound, lifecycle email, newsletters, Google Ads, LinkedIn Ads), which sourced $40K in booked revenue and $105K in pipeline.
 * Built and deployed 6 production agents on Google Cloud Run that handle the research and CRM upkeep around every sales call: pre-call briefings, deal proposals from meetings, call-transcript intelligence written back to CRM fields, transcript-to-task handoffs, task digests, and tiered signup alerts. They run on schedulers daily for the whole SpeechifyAI team.
 * Built speed-to-lead, an approval-first inbound service (FastAPI, Firestore, Slack, Gmail API) that screens each inbound form fill with an LLM, enriches the account with a free-first chain (Scrapling, Serper, Apify), drafts outreach, and posts a Slack approval card with live calendar slots before anything sends. First touch dropped from a business day to roughly 30 seconds.
-* Audited 1,587 signups across PostHog and Attio and found the funnel leaking end to end: checkout completing at 14.5%, 12.6% of signups traced to a single fraud operation running on 18 mail-only domains, and 26 companies that reached checkout, never paid, and had never been contacted.
+* Ran a signup funnel audit (an audit of the self-serve funnel end to end) over 1,587 signups across PostHog and Attio, and found leaks at every stage: checkout completing at 14.5%, 12.6% of signups traced to a single fraud operation running on 18 mail-only domains, and 26 companies that reached checkout, never paid, and had never been contacted.
 * Opened a developer acquisition channel by publishing **@speechify/vercel** to npm and **pipecat-speechify** to GitHub, making Speechify TTS a native provider inside the Vercel AI SDK and Pipecat voice-agent framework, then fixed the User-Agent bug that was hiding all AI-SDK traffic from the API's own attribution.
 * Owned the speechify.ai marketing site after proving the company was absent from 4 of 4 buying-intent LLM answers despite ranking #1 on the Artificial Analysis TTS leaderboard. Rebuilt the comparison, alternatives, paid-landing and developer-hub clusters in Astro and Tailwind, wired to Google Search Console and GA4 funnels.
 * Built the outbound signal layer: LinkedIn post-engager mining, job-posting buyer-intent tracking, and competitor-affiliate harvesting, each suppressed against Firestore contact history so no prospect is contacted twice.
@@ -105,6 +105,11 @@ I'm Vrishab Nair, a builder focused on AI tooling and automation. I was the **fo
 * **Product & Design:** Figma, Canva, Wireframing, Low-Fi Prototyping.
 * **Data & Automation:** Python, n8n (Workflow Automation), Excel.
 * **Creative Tools:** Photoshop, Premiere Pro.
+
+# Interests
+* Outside work I read a lot, play piano, and listen to a lot of music.
+* I like building things that make other people's work disappear: agents, automations, and internal tools that turn a three-hour task into a Slack message.
+* Happy to chat product, tech, or anything adjacent.
 
 # Featured Product Decks
 ## ECOX LABS (Agri-Waste Supply Chain)

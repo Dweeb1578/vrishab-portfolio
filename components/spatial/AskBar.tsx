@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import type { NodeLayout } from './layout';
 import { pickFocus } from './layout';
 
@@ -20,11 +21,23 @@ const CHIPS = [
 ];
 
 // strip the hidden protocol tokens the API streams (bubble splits + suggestion)
+// and normalise punctuation. The system prompt asks for plain ASCII dashes and
+// the model ignores it about half the time, so it is enforced here where it
+// cannot regress. Dashes are escaped rather than literal because an en dash and
+// an em dash are indistinguishable in source.
 function clean(raw: string): string {
     return raw
         .replace(/\[SUGGESTION:[\s\S]*?\]/g, '')
         .replace(/\|\|\|/g, '\n\n')
         .replace(/^\*\s/gm, '• ')
+        // fancy hyphen variants inside a word: sign[U+2011]ups -> sign-ups
+        .replace(/[‐‑‒]/g, '-')
+        // numeric range: 10[en]20% -> 10-20%
+        .replace(/(\d)\s*[–—]\s*(\d)/g, '$1-$2')
+        // date range: Jun 2026 [en] Sep 2026 -> Jun 2026 to Sep 2026
+        .replace(/(\d{4})\s*[–—]\s*([A-Z][a-z]+)/g, '$1 to $2')
+        // anything left is prose, where a comma is what he would have written
+        .replace(/\s*[–—]\s*/g, ', ')
         .trim();
 }
 
@@ -139,13 +152,22 @@ export default function AskBar({ layout, onFocus, onThinking }: Props) {
             {(answer || streaming) && (
                 <div className="pointer-events-auto fixed inset-x-4 bottom-[11.5rem] z-20 max-h-[34vh] overflow-y-auto rounded-2xl border border-[#00b341]/35 bg-[#040a06]/85 px-5 py-4 text-[#cdf6d6] shadow-[0_8px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:inset-x-auto sm:bottom-28 sm:left-6 sm:max-h-[44vh] sm:w-[min(340px,82vw)]">
                     <div className="flex items-start justify-between gap-3">
-                        {focusTitle ? (
-                            <span className="font-mono text-[11px] uppercase tracking-wider text-[#39ff6a]">
-                                ✦ {focusTitle}
-                            </span>
-                        ) : (
-                            <span />
-                        )}
+                        {/* The photo marks who is talking, which matters more
+                            now the replies are written in his own voice. */}
+                        <span className="flex min-w-0 items-center gap-2">
+                            <Image
+                                src="/avatar.png"
+                                alt=""
+                                width={56}
+                                height={56}
+                                className="phosphor-photo h-6 w-6 shrink-0 rounded-full object-cover ring-1 ring-[#39ff6a]/45"
+                            />
+                            {focusTitle && (
+                                <span className="truncate font-mono text-[11px] uppercase tracking-wider text-[#39ff6a]">
+                                    {focusTitle}
+                                </span>
+                            )}
+                        </span>
                         {/* Dismiss once the answer lands — clears the card and
                             releases the camera for a fresh question. */}
                         {answer && !streaming && (

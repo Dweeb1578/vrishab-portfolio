@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { buildLayout } from '../components/spatial/layout';
 import AskBar from '../components/spatial/AskBar';
 import ProjectDetail from '../components/spatial/ProjectDetail';
@@ -58,7 +59,16 @@ export default function Home() {
             <ProjectDetail node={detailNode} onClose={() => { setDetailSlug(null); setFocusSlug(null); }} />
 
             {/* brand */}
-            <div className="pointer-events-none fixed left-5 top-5 z-20 text-[#cdf6d6] sm:left-9 sm:top-8">
+            <div className="pointer-events-none fixed left-5 top-5 z-20 flex items-start gap-3 text-[#cdf6d6] sm:left-9 sm:top-8">
+                <Image
+                    src="/avatar.png"
+                    alt=""
+                    width={96}
+                    height={96}
+                    priority
+                    className="phosphor-photo pointer-events-auto mt-[2px] h-11 w-11 shrink-0 rounded-full object-cover ring-1 ring-[#39ff6a]/45 sm:h-12 sm:w-12"
+                />
+                <div>
                 <h1 className="font-mono text-[19px] font-semibold tracking-wide sm:text-[22px]">Vrishab Nair</h1>
                 <p className="mt-1 font-mono text-[12px] uppercase tracking-[0.15em] opacity-60">
                     Spatial Portfolio
@@ -72,6 +82,7 @@ export default function Home() {
                     >
                         linkedin ↗
                     </a>
+                </div>
                 </div>
             </div>
 
